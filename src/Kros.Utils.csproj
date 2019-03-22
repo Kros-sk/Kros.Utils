@@ -15,12 +15,11 @@
   </PropertyGroup>
   <PropertyGroup>
     <DocumentationFile>$(OutDir)Kros.Utils.xml</DocumentationFile>
-    <PackageProjectUrl>https://github.com/Kros-sk/Kros.Libs/blob/master/README.md</PackageProjectUrl>
-    <PackageTags>Kros;Utils;Utility;Helpers;Extensions;DatabaseSchema;BulkInsert;BulkOperation; BulkUpdate;
-    Bulk Insert; Bulk Update;</PackageTags>
+    <PackageProjectUrl>https://github.com/Kros-sk/Kros.Utils/blob/master/README.md</PackageProjectUrl>
+    <PackageTags>Kros;Utils;Utility;Helpers;Extensions; DatabaseSchema;BulkOperation;BulkUpdate;Bulk Insert;Bulk Update;</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageIconUrl>https://en.gravatar.com/userimage/137934964/524e95fbd8c2e8779e02819ab6902bef.png</PackageIconUrl>
-    <PackageReleaseNotes>https://github.com/Kros-sk/Kros.Libs/releases</PackageReleaseNotes>
+    <PackageReleaseNotes>https://github.com/Kros-sk/Kros.Utils/releases</PackageReleaseNotes>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="System.Data.SqlClient" Version="4.5.0" />    
