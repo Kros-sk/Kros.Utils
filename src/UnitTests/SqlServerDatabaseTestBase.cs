@@ -15,7 +15,7 @@ namespace Kros.UnitTests
     /// <para>
     /// Descendant classes must override <see cref="BaseConnectionString"/> to set the connection to SQL Server.
     /// </para>
-    /// <code language="cs" source="..\..\..\..\Documentation\Examples\Kros.Utils\SqlServerDatabaseTestBaseExamples.cs" region="SqlServerDatabaseTestBase"/>
+    /// <code language="cs" source="..\..\Documentation\Examples\Kros.Utils\SqlServerDatabaseTestBaseExamples.cs" region="SqlServerDatabaseTestBase"/>
     /// </remarks>
     public abstract class SqlServerDatabaseTestBase
         : IDisposable

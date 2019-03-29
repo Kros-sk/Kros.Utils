@@ -14,7 +14,7 @@ namespace Kros.Utils
     /// (nested work suspending).
     /// </remarks>
     /// <example>
-    /// <code language = "cs" source="..\..\..\..\Documentation\Examples\Kros.Utils\SuspenderExamples.cs" region="Init" />
+    /// <code language = "cs" source="..\..\Documentation\Examples\Kros.Utils\SuspenderExamples.cs" region="Init" />
     /// </example>
     public class Suspender
     {
@@ -64,7 +64,7 @@ namespace Kros.Utils
         /// to use <c>using</c> block.
         /// </returns>
         /// <example>
-        /// <code language = "cs" source="..\..\..\..\Documentation\Examples\Kros.Utils\SuspenderExamples.cs" region="Init" />
+        /// <code language = "cs" source="..\..\Documentation\Examples\Kros.Utils\SuspenderExamples.cs" region="Init" />
         /// </example>
         public IDisposable Suspend()
         {

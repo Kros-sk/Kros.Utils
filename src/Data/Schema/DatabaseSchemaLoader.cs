@@ -22,7 +22,7 @@ namespace Kros.Data.Schema
     /// </para>
     /// </remarks>
     /// <example>
-    /// <code language="cs" source="..\..\..\..\Documentation\Examples\Kros.Utils\SchemaExamples.cs" region="SchemaLoader"/>
+    /// <code language="cs" source="..\..\..\Documentation\Examples\Kros.Utils\SchemaExamples.cs" region="SchemaLoader"/>
     /// </example>
     public class DatabaseSchemaLoader
         : IDatabaseSchemaLoader

@@ -10,7 +10,7 @@ namespace Kros.Utils
     /// Current time is accessible in <see cref="Now"/> property. Own time can be injected using
     /// <see cref="InjectActualDateTime(DateTime)"/>.
     /// </para>
-    /// <code language="cs" source="..\..\..\..\Documentation\Examples\Kros.Utils\DateTimeProviderExamples.cs" region="BasicExample"/>
+    /// <code language="cs" source="..\..\Documentation\Examples\Kros.Utils\DateTimeProviderExamples.cs" region="BasicExample"/>
     /// <para>
     /// Set value is valid for current thread only, so it is possible to have different values in different threads.
     /// </para>

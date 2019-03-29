@@ -9,7 +9,7 @@ namespace Kros.Data.SqlServer
     /// <seealso cref="SqlServerIdGenerator"/>
     /// <seealso cref="IdGeneratorFactories"/>
     /// <example>
-    /// <code language="cs" source="..\..\..\..\Documentation\Examples\Kros.Utils\IdGeneratorExamples.cs" region="IdGeneratorFactory"/>
+    /// <code language="cs" source="..\..\..\Documentation\Examples\Kros.Utils\IdGeneratorExamples.cs" region="IdGeneratorFactory"/>
     /// </example>
     public class SqlServerIdGeneratorFactory
         : IIdGeneratorFactory

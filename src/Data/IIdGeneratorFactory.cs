@@ -6,7 +6,7 @@
     /// <seealso cref="SqlServer.SqlServerIdGeneratorFactory"/>
     /// <seealso cref="IdGeneratorFactories"/>
     /// <example>
-    /// <code language="cs" source="..\..\..\..\Documentation\Examples\Kros.Utils\IdGeneratorExamples.cs" region="IdGeneratorFactory"/>
+    /// <code language="cs" source="..\..\Documentation\Examples\Kros.Utils\IdGeneratorExamples.cs" region="IdGeneratorFactory"/>
     /// </example>
     public interface IIdGeneratorFactory
     {

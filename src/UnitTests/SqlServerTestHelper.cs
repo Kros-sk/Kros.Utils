@@ -16,7 +16,7 @@ namespace Kros.UnitTests
     /// available in <see cref="Connection"/> property.
     /// </remarks>
     /// <example>
-    /// <code language = "cs" source="..\..\..\..\Documentation\Examples\Kros.Utils\SqlServerTestHelperExamples.cs" region="SqlServerTestHelper" />
+    /// <code language = "cs" source="..\..\Documentation\Examples\Kros.Utils\SqlServerTestHelperExamples.cs" region="SqlServerTestHelper" />
     /// </example>
     public class SqlServerTestHelper
         : IDisposable

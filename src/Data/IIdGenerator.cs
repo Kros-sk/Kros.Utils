@@ -8,7 +8,7 @@ namespace Kros.Data
     /// <remarks>Usually one generator generates IDs for just one table.</remarks>
     /// <seealso cref="SqlServer.SqlServerIdGenerator"/>
     /// <example>
-    /// <code language="cs" source="..\..\..\..\Documentation\Examples\Kros.Utils\IdGeneratorExamples.cs" region="IdGeneratorFactory"/>
+    /// <code language="cs" source="..\..\Documentation\Examples\Kros.Utils\IdGeneratorExamples.cs" region="IdGeneratorFactory"/>
     /// </example>
     public interface IIdGenerator : IDisposable
     {

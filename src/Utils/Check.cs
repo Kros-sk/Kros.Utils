@@ -14,10 +14,10 @@ namespace Kros.Utils
     /// </summary>
     /// <remarks>
     /// Default way of validating method parameters is:
-    /// <code language="cs" source="..\..\..\..\Documentation\Examples\Kros.Utils\CheckExamples.cs" region="CheckArgumentsOld"/>
+    /// <code language="cs" source="..\..\Documentation\Examples\Kros.Utils\CheckExamples.cs" region="CheckArgumentsOld"/>
     /// With the help of <c>Check</c> class, this is very easy. If it is possible, the validation methods return input value,
     /// so the parameter's value can be validated and assigned on one line:
-    /// <code language = "cs" source="..\..\..\..\Documentation\Examples\Kros.Utils\CheckExamples.cs" region="CheckArgumentsNew"/>
+    /// <code language = "cs" source="..\..\Documentation\Examples\Kros.Utils\CheckExamples.cs" region="CheckArgumentsNew"/>
     /// </remarks>
     public static class Check
     {

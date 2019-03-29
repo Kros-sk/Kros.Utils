@@ -12,7 +12,7 @@ namespace Kros.Data.SqlServer
     /// <seealso cref="SqlServerIdGeneratorFactory" />
     /// <remarks>In general, the generator should be created using <see cref="SqlServerIdGeneratorFactory"/>.</remarks>
     /// <example>
-    /// <code language="cs" source="..\..\..\..\Documentation\Examples\Kros.Utils\IdGeneratorExamples.cs" region="IdGeneratorFactory"/>
+    /// <code language="cs" source="..\..\..\Documentation\Examples\Kros.Utils\IdGeneratorExamples.cs" region="IdGeneratorFactory"/>
     /// </example>
     public class SqlServerIdGenerator : IdGeneratorBase
     {
