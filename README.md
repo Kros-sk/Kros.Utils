@@ -10,7 +10,7 @@ Library is compiled for __.NET Standard 2.0__. .NET Framework 4.7 is supported.
 
 ## Documentation
 
-For configuration, general information and examples [see the documentation](https://kros-sk.github.io/Kros.Libs.Documentation/).
+For configuration, general information and examples [see the documentation](https://kros-sk.github.io/docs/Kros.Utils/).
 
 ## Download
 
