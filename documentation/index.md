@@ -1,4 +1,4 @@
-# Welcome to [Kros.Utils](xref:Kros.Utils)
+# Welcome to [Kros.Utils](xref:Kros.Caching)
 
 Kros.Utils is universal library of various tools to simplify the work of the programmer.
 
