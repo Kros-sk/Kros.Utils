@@ -6,6 +6,6 @@
     public class DatabaseTestBase
         : Kros.UnitTests.SqlServerDatabaseTestBase
     {
-        protected override string BaseConnectionString => "Server=tcp:githubbuildserver.database.windows.net,1433;Initial Catalog=GitHubBuildDb;Persist Security Info=True;User ID=kros;Password=21Admin12;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
+        protected override string BaseConnectionString => "Server=tcp:githubbuildserver.database.windows.net,1433;Persist Security Info=True;User ID=kros;Password=21Admin12;";
     }
 }
