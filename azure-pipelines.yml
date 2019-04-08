@@ -25,3 +25,9 @@ steps:
       command: 'build'
       projects: '**/Kros.Utils.csproj'
       arguments: --configuration $(BuildConfiguration) --no-restore
+
+  - task: VSTest@2
+    displayName: 'Tests'
+    inputs:
+      testSelector: 'testAssemblies'
+      testAssemblyVer2: '**\Kros.Utils.UnitTests.dll!'
