@@ -24,7 +24,7 @@ steps:
     inputs: 
       command: 'build'
       projects: '**/Kros.Utils.csproj'
-      arguments: --configuration $(BuildConfiguration)
+      arguments: --configuration $(BuildConfiguration) --no-restore
 
 # - script: 
 #     dotnet restore
