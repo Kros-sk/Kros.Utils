@@ -9,7 +9,8 @@ pool:
 
 variables:
   - group: Nuget
-  buildConfiguration: 'Release'
+  - name: buildConfiguration
+    value: 'Release'
 
 steps:
   - task: DotNetCoreCLI@2
