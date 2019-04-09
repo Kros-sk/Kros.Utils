@@ -1,16 +1,16 @@
-# ASP.NET Core
-# Build and test ASP.NET Core projects targeting .NET Core.
-# Add steps that run tests, create a NuGet package, deploy, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
-
 trigger:
-- testbuild
+  batch: true
+  tags:
+    include:
+    - v*.*
 
 pool:
   vmImage: 'windows-2019'
 
 variables:
   buildConfiguration: 'Release'
+  version: '3.0.0'
+  nugetFeed: 'nuget.org'
 
 steps:
   - task: DotNetCoreCLI@2
@@ -21,13 +21,25 @@ steps:
 
   - task: DotNetCoreCLI@2
     displayName: 'Build'
-    inputs: 
+    inputs:
       command: 'build'
       projects: '**/Kros.Utils.csproj'
       arguments: --configuration $(BuildConfiguration) --no-restore
 
   - task: DotNetCoreCLI@2
-    displayName: "Tests"
+    displayName: 'Tests'
     inputs:
       command: test
       projects: '**/Kros.Utils.UnitTests.csproj'
+
+  - task: PublishBuildArtifacts@1
+
+  - script: dotnet pack /p:PackageVersion=$(version)  # define version variable elsewhere in your pipeline
+
+  - task: NuGetCommand@2
+    inputs:
+      command: push
+      nuGetFeedType: external
+      publishFeedCredentials: $(nugetFeed)
+      versioningScheme: byEnvVar
+      versionEnvVar: version
