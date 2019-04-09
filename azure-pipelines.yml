@@ -8,9 +8,8 @@ pool:
   vmImage: 'windows-2019'
 
 variables:
+  - group: Nuget
   buildConfiguration: 'Release'
-  version: '3.0.0'
-  nugetFeed: 'nuget.org'
 
 steps:
   - task: DotNetCoreCLI@2
@@ -32,14 +31,13 @@ steps:
       command: test
       projects: '**/Kros.Utils.UnitTests.csproj'
 
-  - task: PublishBuildArtifacts@1
-
-  - script: dotnet pack /p:PackageVersion=$(version)  # define version variable elsewhere in your pipeline
+  - task: NuGetCommand@2
+    inputs:
+      command: pack
+      packagesToPack: '**/Kros.Utils.csproj'
 
   - task: NuGetCommand@2
     inputs:
       command: push
       nuGetFeedType: external
-      publishFeedCredentials: $(nugetFeed)
-      versioningScheme: byEnvVar
-      versionEnvVar: version
+      publishFeedCredentials: $(nuget.feed)
