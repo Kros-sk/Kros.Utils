@@ -11,40 +11,44 @@ variables:
   - group: Nuget
   - name: buildConfiguration
     value: 'Release'
+  - name: projectName
+    value: 'Kros.Utils'
 
 steps:
   - task: DotNetCoreCLI@2
-    displayName: 'Restore'
+    displayName: 'Nuget restore'
     inputs:
       command: 'restore'
-      projects: '**/Kros.Utils.csproj'
+      projects: '**/$(projectName).csproj'
 
   - task: DotNetCoreCLI@2
     displayName: 'Build'
     inputs:
       command: build
-      projects: '**/Kros.Utils.csproj'
+      projects: '**/$(projectName).csproj'
       arguments: '--configuration $(BuildConfiguration) --no-restore'
 
   # - task: DotNetCoreCLI@2
   #   displayName: 'Tests'
   #   inputs:
   #     command: test
-  #     projects: '**/Kros.Utils.UnitTests.csproj'
+  #     projects: '**/$(projectName).UnitTests.csproj'
 
   # - task: DotNetCoreCLI@2
   #   displayName: 'Publish'
   #   inputs:
   #     command: publish
-  #     projects: '**/Kros.Utils.csproj'
+  #     projects: '**/$(projectName).csproj'
   #     arguments: --configuration $(BuildConfiguration) --no-restore --output $(Build.ArtifactStagingDirectory) --framework netstandard2.0
   #     publishWebProjects: false
   #     zipAfterPublish: True
 
   - task: CopyFiles@2
-    displayName: 'Copy'
+    displayName: 'Copy package files to staging directory'
     inputs:
+      Contents: '**/$(projectName)*.nupkg'
       TargetFolder: '$(build.artifactStagingDirectory)'
+      FlattenFolders: true
 
   # - task: PublishBuildArtifacts@1
   #   inputs:
@@ -56,10 +60,10 @@ steps:
   #   inputs:
   #     command: pack
   #     configuration: $(BuildConfiguration)
-  #     packagesToPack: '**/Kros.Utils.csproj'
+  #     packagesToPack: '**/$(projectName).csproj'
 
   - task: NuGetCommand@2
-    displayName: 'Push'
+    displayName: 'Nuget push to $(nuget.feed)'
     inputs:
       command: push
       nuGetFeedType: external
