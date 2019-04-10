@@ -38,6 +38,9 @@ steps:
     inputs:
       command: publish
       arguments: --configuration $(BuildConfiguration) --no-restore --output $(Build.ArtifactStagingDirectory)
+      publishWebProjects: false
+      projects: '$(Parameters.RestoreBuildProjects)'    
+      zipAfterPublish: True
 
   - task: PublishBuildArtifacts@1
     inputs:
