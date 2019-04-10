@@ -4,8 +4,7 @@ trigger:
     include:
     - master
 
-pool:
-  vmImage: 'default'
+pool: 'default'
 
 variables:
   - group: Nuget
