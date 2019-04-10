@@ -37,7 +37,7 @@ steps:
     inputs:
       command: publish
       projects: '**/Kros.Utils.csproj'
-      arguments: --configuration $(BuildConfiguration) --no-restore --output $(Build.ArtifactStagingDirectory)
+      arguments: --configuration $(BuildConfiguration) --no-restore --output $(Build.ArtifactStagingDirectory) --framework netstandard2.0
       publishWebProjects: false
       zipAfterPublish: True
 
