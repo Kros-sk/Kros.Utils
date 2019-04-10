@@ -32,12 +32,16 @@ steps:
 #       command: test
 #       projects: '**/Kros.Utils.UnitTests.csproj'
 
+  - task: PublishBuildArtifacts@1
+
   - task: NuGetCommand@2
+    displayName: 'Pack'
     inputs:
       command: pack
       packagesToPack: '**/Kros.Utils.csproj'
 
   - task: NuGetCommand@2
+    displayName: 'Push'
     inputs:
       command: push
       nuGetFeedType: external
