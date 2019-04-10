@@ -5,7 +5,7 @@ trigger:
     - master
 
 pool:
-  vmImage: 'windows-2019'
+  vmImage: 'default'
 
 variables:
   - group: Nuget
@@ -28,8 +28,8 @@ steps:
       projects: '**/$(projectName).csproj'
       arguments: '--configuration $(BuildConfiguration) --no-restore'
 
-  # - task: DotNetCoreCLI@2
-  #   displayName: 'Tests'
-  #   inputs:
-  #     command: test
-  #     projects: '**/$(projectName).UnitTests.csproj'
+  - task: DotNetCoreCLI@2
+    displayName: 'Tests'
+    inputs:
+      command: test
+      projects: '**/$(projectName).UnitTests.csproj'
