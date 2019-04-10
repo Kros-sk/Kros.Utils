@@ -64,4 +64,4 @@ steps:
       command: push
       nuGetFeedType: external
       publishFeedCredentials: $(nuget.feed)
-      packagesToPush: '$(build.artifactStagingDirectory)/*.nupkg'
+      packagesToPush: '$(build.artifactStagingDirectory)/**/*.nupkg'
