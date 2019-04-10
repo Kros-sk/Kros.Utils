@@ -45,12 +45,12 @@ steps:
   #   inputs:
   #     PathtoPublish: $(Build.ArtifactStagingDirectory)
 
-  - task: NuGetCommand@2
-    displayName: 'Pack'
-    inputs:
-      command: pack
-      configuration: $(BuildConfiguration)
-      packagesToPack: '**/Kros.Utils.csproj'
+  # - task: NuGetCommand@2
+  #   displayName: 'Pack'
+  #   inputs:
+  #     command: pack
+  #     configuration: $(BuildConfiguration)
+  #     packagesToPack: '**/Kros.Utils.csproj'
 
   - task: NuGetCommand@2
     displayName: 'Push'
