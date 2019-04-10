@@ -26,11 +26,11 @@ steps:
       projects: '**/Kros.Utils.csproj'
       arguments: --configuration $(BuildConfiguration) --no-restore
 
-  - task: DotNetCoreCLI@2
-    displayName: 'Tests'
-    inputs:
-      command: test
-      projects: '**/Kros.Utils.UnitTests.csproj'
+#   - task: DotNetCoreCLI@2
+#     displayName: 'Tests'
+#     inputs:
+#       command: test
+#       projects: '**/Kros.Utils.UnitTests.csproj'
 
   - task: NuGetCommand@2
     inputs:
