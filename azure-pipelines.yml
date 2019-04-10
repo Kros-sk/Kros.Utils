@@ -1,17 +1,60 @@
-# ASP.NET Core
-# Build and test ASP.NET Core projects targeting .NET Core.
-# Add steps that run tests, create a NuGet package, deploy, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
-
 trigger:
-- testbuild
+  batch: true
+  tags:
+    include:
+    - v*.*
 
 pool:
-  vmImage: 'Ubuntu-16.04'
+  vmImage: 'windows-2019'
 
 variables:
-  buildConfiguration: 'Release'
+  - group: Nuget
+  - name: buildConfiguration
+    value: 'Release'
 
 steps:
-- script: dotnet build --configuration $(buildConfiguration)
-  displayName: 'dotnet build $(buildConfiguration)'
+  - task: DotNetCoreCLI@2
+    displayName: 'Restore'
+    inputs:
+      command: 'restore'
+      projects: '**/Kros.Utils.csproj'
+
+  - task: DotNetCoreCLI@2
+    displayName: 'Build'
+    inputs:
+      command: build
+      projects: '**/Kros.Utils.csproj'
+      arguments: --configuration $(BuildConfiguration) --no-restore
+
+
+#   - task: DotNetCoreCLI@2
+#     displayName: 'Tests'
+#     inputs:
+#       command: test
+#       projects: '**/Kros.Utils.UnitTests.csproj'
+
+  - task: DotNetCoreCLI@2
+    displayName: 'Publish'
+    inputs:
+      command: publish
+      arguments: --configuration $(BuildConfiguration) --no-restore --output $(Build.ArtifactStagingDirectory)
+      publishWebProjects: false
+      projects: '$(Parameters.RestoreBuildProjects)'    
+      zipAfterPublish: True
+
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathtoPublish: $(Build.ArtifactStagingDirectory)
+
+  - task: NuGetCommand@2
+    displayName: 'Pack'
+    inputs:
+      command: pack
+      packagesToPack: '**/Kros.Utils.csproj'
+
+  - task: NuGetCommand@2
+    displayName: 'Push'
+    inputs:
+      command: push
+      nuGetFeedType: external
+      publishFeedCredentials: $(nuget.feed)
