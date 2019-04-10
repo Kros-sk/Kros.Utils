@@ -26,29 +26,30 @@ steps:
       projects: '**/Kros.Utils.csproj'
       arguments: --configuration $(BuildConfiguration) --no-restore
 
-#   - task: DotNetCoreCLI@2
-#     displayName: 'Tests'
-#     inputs:
-#       command: test
-#       projects: '**/Kros.Utils.UnitTests.csproj'
+  # - task: DotNetCoreCLI@2
+  #   displayName: 'Tests'
+  #   inputs:
+  #     command: test
+  #     projects: '**/Kros.Utils.UnitTests.csproj'
 
-  - task: DotNetCoreCLI@2
-    displayName: 'Publish'
-    inputs:
-      command: publish
-      projects: '**/Kros.Utils.csproj'
-      arguments: --configuration $(BuildConfiguration) --no-restore --output $(Build.ArtifactStagingDirectory) --framework netstandard2.0
-      publishWebProjects: false
-      zipAfterPublish: True
+  # - task: DotNetCoreCLI@2
+  #   displayName: 'Publish'
+  #   inputs:
+  #     command: publish
+  #     projects: '**/Kros.Utils.csproj'
+  #     arguments: --configuration $(BuildConfiguration) --no-restore --output $(Build.ArtifactStagingDirectory) --framework netstandard2.0
+  #     publishWebProjects: false
+  #     zipAfterPublish: True
 
-  - task: PublishBuildArtifacts@1
-    inputs:
-      PathtoPublish: $(Build.ArtifactStagingDirectory)
+  # - task: PublishBuildArtifacts@1
+  #   inputs:
+  #     PathtoPublish: $(Build.ArtifactStagingDirectory)
 
   - task: NuGetCommand@2
     displayName: 'Pack'
     inputs:
       command: pack
+      configuration: $(BuildConfiguration)
       packagesToPack: '**/Kros.Utils.csproj'
 
   - task: NuGetCommand@2
@@ -57,3 +58,4 @@ steps:
       command: push
       nuGetFeedType: external
       publishFeedCredentials: $(nuget.feed)
+      packagesToPush: '$(build.artifactStagingDirectory)/*.nupkg'
