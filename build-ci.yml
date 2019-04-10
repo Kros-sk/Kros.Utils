@@ -4,7 +4,8 @@ trigger:
     include:
     - master
 
-pool: 'default'
+pool:
+  name: Default
 
 variables:
   - group: Nuget
