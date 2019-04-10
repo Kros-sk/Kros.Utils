@@ -39,7 +39,7 @@ steps:
       projects: '**/Kros.Utils.csproj'
       arguments: --configuration $(BuildConfiguration) --no-restore --output $(Build.ArtifactStagingDirectory) --framework netstandard2.0
       publishWebProjects: false
-      zipAfterPublish: True
+      # zipAfterPublish: True
 
   - task: PublishBuildArtifacts@1
     inputs:
