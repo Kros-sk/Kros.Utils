@@ -43,7 +43,7 @@ steps:
 
   - task: PublishBuildArtifacts@1
     inputs:
-      PathtoPublish: '**/*.nupkg'
+      PathtoPublish: '$(build.artifactStagingDirectory)'
 
   # - task: NuGetCommand@2
   #   displayName: 'Pack'
@@ -58,4 +58,4 @@ steps:
       command: push
       nuGetFeedType: external
       publishFeedCredentials: $(nuget.feed)
-      packagesToPush: '$(build.artifactStagingDirectory)/**/*.nupkg'
+      packagesToPush: '$(build.artifactStagingDirectory)/*.nupkg'
