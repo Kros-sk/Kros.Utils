@@ -6,6 +6,6 @@
     public class DatabaseTestBase
         : Kros.UnitTests.SqlServerDatabaseTestBase
     {
-        protected override string BaseConnectionString => "Server=tcp:githubbuildserver.database.windows.net,1433;Persist Security Info=True;User ID=kros;Password=21Admin12;";
+        protected override string BaseConnectionString => "Server=CENSQL\\SQL16ENT;Persist Security Info=True;User ID=KrosPlus;Password=7040;";
     }
 }
