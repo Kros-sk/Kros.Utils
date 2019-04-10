@@ -46,10 +46,10 @@ steps:
     inputs:
       TargetFolder: '$(build.artifactStagingDirectory)'
 
-  - task: PublishBuildArtifacts@1
-    inputs:
-      PathtoPublish: '$(build.artifactStagingDirectory)'
-    condition: succeededOrFailed()
+  # - task: PublishBuildArtifacts@1
+  #   inputs:
+  #     PathtoPublish: '$(build.artifactStagingDirectory)'
+  #   condition: succeededOrFailed()
 
   # - task: NuGetCommand@2
   #   displayName: 'Pack'
