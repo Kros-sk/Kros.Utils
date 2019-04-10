@@ -19,12 +19,12 @@ steps:
       command: 'restore'
       projects: '**/Kros.Utils.csproj'
 
-  - task: DotNetCoreCLI@2
-    displayName: 'Build'
-    inputs:
-      command: build
-      projects: '**/Kros.Utils.csproj'
-      arguments: --configuration $(BuildConfiguration) --no-restore
+  # - task: DotNetCoreCLI@2
+  #   displayName: 'Build'
+  #   inputs:
+  #     command: build
+  #     projects: '**/Kros.Utils.csproj'
+  #     arguments: '--configuration $(BuildConfiguration) --no-restore'
 
   # - task: DotNetCoreCLI@2
   #   displayName: 'Tests'
@@ -32,18 +32,19 @@ steps:
   #     command: test
   #     projects: '**/Kros.Utils.UnitTests.csproj'
 
-  # - task: DotNetCoreCLI@2
-  #   displayName: 'Publish'
-  #   inputs:
-  #     command: publish
-  #     projects: '**/Kros.Utils.csproj'
-  #     arguments: --configuration $(BuildConfiguration) --no-restore --output $(Build.ArtifactStagingDirectory) --framework netstandard2.0
-  #     publishWebProjects: false
-  #     zipAfterPublish: True
+  - task: DotNetCoreCLI@2
+    displayName: 'Publish'
+    inputs:
+      command: publish
+      projects: '**/Kros.Utils.csproj'
+      arguments: --configuration $(BuildConfiguration) --no-restore --output $(Build.ArtifactStagingDirectory) --framework netstandard2.0
+      publishWebProjects: false
+      zipAfterPublish: True
 
   - task: PublishBuildArtifacts@1
     inputs:
       PathtoPublish: '$(build.artifactStagingDirectory)'
+    condition: succeededOrFailed()
 
   # - task: NuGetCommand@2
   #   displayName: 'Pack'
