@@ -22,7 +22,7 @@ steps:
   - task: DotNetCoreCLI@2
     displayName: 'Build'
     inputs:
-      command: 'build'
+      command: build
       projects: '**/Kros.Utils.csproj'
       arguments: --configuration $(BuildConfiguration) --no-restore
 
@@ -33,12 +33,14 @@ steps:
 #       command: test
 #       projects: '**/Kros.Utils.UnitTests.csproj'
 
-  - task: CopyFiles@2
+  - task: DotNetCoreCLI@2
     inputs:
-      contents: '$(Agent.BuildDirectory)/**'
-      targetFolder: $(Build.ArtifactStagingDirectory)
+      command: publish
+      arguments: --configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)
 
   - task: PublishBuildArtifacts@1
+    inputs:
+      PathtoPublish: $(Build.ArtifactStagingDirectory)
 
   - task: NuGetCommand@2
     displayName: 'Pack'
