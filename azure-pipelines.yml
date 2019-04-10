@@ -19,12 +19,12 @@ steps:
       command: 'restore'
       projects: '**/Kros.Utils.csproj'
 
-  # - task: DotNetCoreCLI@2
-  #   displayName: 'Build'
-  #   inputs:
-  #     command: build
-  #     projects: '**/Kros.Utils.csproj'
-  #     arguments: '--configuration $(BuildConfiguration) --no-restore'
+  - task: DotNetCoreCLI@2
+    displayName: 'Build'
+    inputs:
+      command: build
+      projects: '**/Kros.Utils.csproj'
+      arguments: '--configuration $(BuildConfiguration) --no-restore'
 
   # - task: DotNetCoreCLI@2
   #   displayName: 'Tests'
