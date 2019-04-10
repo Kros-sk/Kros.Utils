@@ -41,9 +41,9 @@ steps:
   #     publishWebProjects: false
   #     zipAfterPublish: True
 
-  # - task: PublishBuildArtifacts@1
-  #   inputs:
-  #     PathtoPublish: $(Build.ArtifactStagingDirectory)
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathtoPublish: $(Build.ArtifactStagingDirectory)
 
   # - task: NuGetCommand@2
   #   displayName: 'Pack'
