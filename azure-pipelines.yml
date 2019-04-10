@@ -32,14 +32,19 @@ steps:
   #     command: test
   #     projects: '**/Kros.Utils.UnitTests.csproj'
 
-  - task: DotNetCoreCLI@2
-    displayName: 'Publish'
+  # - task: DotNetCoreCLI@2
+  #   displayName: 'Publish'
+  #   inputs:
+  #     command: publish
+  #     projects: '**/Kros.Utils.csproj'
+  #     arguments: --configuration $(BuildConfiguration) --no-restore --output $(Build.ArtifactStagingDirectory) --framework netstandard2.0
+  #     publishWebProjects: false
+  #     zipAfterPublish: True
+
+  - task: CopyFiles@2
+    displayName: 'Copy'
     inputs:
-      command: publish
-      projects: '**/Kros.Utils.csproj'
-      arguments: --configuration $(BuildConfiguration) --no-restore --output $(Build.ArtifactStagingDirectory) --framework netstandard2.0
-      publishWebProjects: false
-      # zipAfterPublish: True
+      TargetFolder: '$(build.artifactStagingDirectory)'
 
   - task: PublishBuildArtifacts@1
     inputs:
