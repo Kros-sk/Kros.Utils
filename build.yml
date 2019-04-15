@@ -35,6 +35,7 @@ steps:
 
   - task: FileTransform@1
     inputs:
+      folderPath: '$(System.DefaultWorkingDirectory)/**/UnitTests'
       fileType: 'json'
       targetFiles: '**/appsettings.json'
 
