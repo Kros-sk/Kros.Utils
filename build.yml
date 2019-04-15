@@ -46,6 +46,6 @@ steps:
       TargetFolder: '$(build.artifactStagingDirectory)'
       FlattenFolders: true
 
-- template: steps/nuget-push.yml@templates
+  - template: steps/nuget-push.yml@templates
     parameters:
       feed: '$(nuget.feed)'
