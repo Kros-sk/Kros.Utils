@@ -37,7 +37,7 @@ steps:
     inputs:
       folderPath: '$(System.DefaultWorkingDirectory)/**/UnitTests'
       fileType: 'json'
-      targetFiles: '**/appsettings.json'
+      targetFiles: 'appsettings.json'
 
   - task: DotNetCoreCLI@2
     displayName: 'Tests'
