@@ -33,6 +33,11 @@ steps:
       projects: '**/$(projectName).csproj'
       arguments: '--configuration $(BuildConfiguration) --no-restore'
 
+  - task: FileTransform@1
+    inputs:
+      fileType: 'json'
+      targetFiles: 'appsettings.json'
+
   - task: DotNetCoreCLI@2
     displayName: 'Tests'
     inputs:
@@ -46,6 +51,6 @@ steps:
       TargetFolder: '$(build.artifactStagingDirectory)'
       FlattenFolders: true
 
-- template: steps/nuget-push.yml@templates
+  - template: steps/nuget-push.yml@templates
     parameters:
       feed: '$(nuget.feed)'
