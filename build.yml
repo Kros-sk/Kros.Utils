@@ -33,6 +33,11 @@ steps:
       projects: '**/$(projectName).csproj'
       arguments: '--configuration $(BuildConfiguration) --no-restore'
 
+  - task: FileTransform@1
+    inputs:
+      fileType: 'json'
+      targetFiles: 'appsettings.json'
+
   - task: DotNetCoreCLI@2
     displayName: 'Tests'
     inputs:
