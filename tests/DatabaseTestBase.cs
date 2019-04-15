@@ -6,6 +6,7 @@
     public class DatabaseTestBase
         : Kros.UnitTests.SqlServerDatabaseTestBase
     {
-        protected override string BaseConnectionString => "Server=CENSQL\\SQL16ENT;Persist Security Info=True;User ID=KrosPlus;Password=7040;";
+        protected override string BaseConnectionString
+            => ConfigurationHelper.GetConfiguration().GetSection("connectionString").Value;
     }
 }
