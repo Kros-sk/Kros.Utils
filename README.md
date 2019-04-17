@@ -1,4 +1,4 @@
-# Kros.Utils [![Build Status](https://dev.azure.com/krossk/DevShared/_apis/build/status/Kros.Utils/Kros.Utils?branchName=testbuild)](https://dev.azure.com/krossk/DevShared/_build/latest?definitionId=55&branchName=testbuild)
+# Kros.Utils [![Build Status](https://dev.azure.com/krossk/DevShared/_apis/build/status/Kros.Utils/Kros.Utils?branchName=testbuild)](https://dev.azure.com/krossk/DevShared/_build/latest?definitionId=55&branchName=master)
 
 __Kros.Utils__ is universal library of various tools to simplify the work of the programmer.
 Library is:
