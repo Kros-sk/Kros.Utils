@@ -1,0 +1,57 @@
+trigger:
+  batch: true
+  tags:
+    include:
+    - v*
+
+pool: Default
+
+resources:
+  repositories:
+    - repository: templates
+      type: git
+      name: DevShared/Templates
+
+variables:
+  - group: Nuget
+  - name: buildConfiguration
+    value: 'Release'
+  - name: projectName
+    value: 'Kros.Utils'
+
+steps:
+  - task: DotNetCoreCLI@2
+    displayName: 'Nuget restore'
+    inputs:
+      command: 'restore'
+      projects: '**/$(projectName).csproj'
+
+  - task: FileTransform@1
+    inputs:
+      folderPath: '$(System.DefaultWorkingDirectory)'
+      fileType: 'json'
+      targetFiles: '**/*[Tt]ests*/appsettings.json'
+
+  - task: DotNetCoreCLI@2
+    displayName: 'Build'
+    inputs:
+      command: build
+      projects: '**/$(projectName).csproj'
+      arguments: '--configuration $(BuildConfiguration) --no-restore'
+
+  - task: DotNetCoreCLI@2
+    displayName: 'Tests'
+    inputs:
+      command: test
+      projects: '**/$(projectName).UnitTests.csproj'
+
+  - task: CopyFiles@2
+    displayName: 'Copy package files to staging directory'
+    inputs:
+      Contents: '**/$(projectName)*.nupkg'
+      TargetFolder: '$(build.artifactStagingDirectory)'
+      FlattenFolders: true
+
+  - template: steps/nuget-push.yml@templates
+    parameters:
+      feed: '$(nuget.feed)'

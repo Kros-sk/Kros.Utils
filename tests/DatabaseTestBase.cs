@@ -1,4 +1,4 @@
-namespace Kros.Utils.UnitTests
+﻿namespace Kros.Utils.UnitTests
 {
     /// <summary>
     /// Základná trieda pre databázové integračné testy.
@@ -6,6 +6,7 @@ namespace Kros.Utils.UnitTests
     public class DatabaseTestBase
         : Kros.UnitTests.SqlServerDatabaseTestBase
     {
-        protected override string BaseConnectionString => "Server=(local)\\SQL2016; UID=sa;PWD=Password12!; Persist Security Info = 'TRUE'";
+        protected override string BaseConnectionString
+            => ConfigurationHelper.GetConfiguration().GetSection("connectionString").Value;
     }
 }
