@@ -1,41 +1,40 @@
 trigger:
-    batch: true
-    branches:
-        include:
-            - master
+  batch: true
+  branches:
+    include:
+    - master
 
-pool:
-    name: Default
+pool: Default
 
 variables:
-    - group: Nuget
-    - name: buildConfiguration
-      value: 'Release'
-    - name: projectName
-      value: 'Kros.Utils'
+  - group: Nuget
+  - name: buildConfiguration
+    value: 'Release'
+  - name: projectName
+    value: 'Kros.Utils'
 
 steps:
-    - task: DotNetCoreCLI@2
-      displayName: 'Nuget restore'
-      inputs:
-          command: 'restore'
-          projects: '**/$(projectName).csproj'
+  - task: DotNetCoreCLI@2
+    displayName: 'Nuget restore'
+    inputs:
+      command: 'restore'
+      projects: '**/$(projectName).csproj'
 
-    - task: FileTransform@1
-      inputs:
-          folderPath: '$(System.DefaultWorkingDirectory)'
-          fileType: 'json'
-          targetFiles: '**/*[Tt]ests*/appsettings.json'
+  - task: FileTransform@1
+    inputs:
+      folderPath: '$(System.DefaultWorkingDirectory)'
+      fileType: 'json'
+      targetFiles: '**/*[Tt]ests*/appsettings.json'
 
-    - task: DotNetCoreCLI@2
-      displayName: 'Build'
-      inputs:
-          command: build
-          projects: '**/$(projectName).csproj'
-          arguments: '--configuration $(BuildConfiguration) --no-restore'
+  - task: DotNetCoreCLI@2
+    displayName: 'Build'
+    inputs:
+      command: build
+      projects: '**/$(projectName).csproj'
+      arguments: '--configuration $(BuildConfiguration) --no-restore'
 
-    - task: DotNetCoreCLI@2
-      displayName: 'Tests'
-      inputs:
-          command: test
-          projects: '**/$(projectName).UnitTests.csproj'
+  - task: DotNetCoreCLI@2
+    displayName: 'Tests'
+    inputs:
+      command: test
+      projects: '**/$(projectName).UnitTests.csproj'
