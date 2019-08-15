@@ -1,4 +1,6 @@
-﻿namespace Kros.Utils.UnitTests
+﻿using Microsoft.Extensions.Configuration;
+
+namespace Kros.Utils.UnitTests
 {
     /// <summary>
     /// Základná trieda pre databázové integračné testy.
@@ -7,6 +9,6 @@
         : Kros.UnitTests.SqlServerDatabaseTestBase
     {
         protected override string BaseConnectionString
-            => ConfigurationHelper.GetConfiguration().GetSection("connectionString").Value;
+            => ConfigurationHelper.GetConfiguration().GetConnectionString("DefaultConnection");
     }
 }
