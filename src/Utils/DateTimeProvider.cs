@@ -21,6 +21,9 @@ namespace Kros.Utils
         [ThreadStatic]
         private static DateTime? _injectedDateTime;
 
+        [ThreadStatic]
+        private static DateTimeOffset? _injectedDateTimeOffset;
+
         private DateTimeProvider()
         {
         }
@@ -29,23 +32,47 @@ namespace Kros.Utils
         /// Returns own date and time, if it was set by <see cref="InjectActualDateTime(DateTime)"/>. If it was not set,
         /// <see cref="DateTime.Now">DateTime.Now</see> is returned.
         /// </summary>
-        public static DateTime Now
+        public static DateTime Now => _injectedDateTime?.ToLocalTime() ?? DateTime.Now;
+
+        /// <summary>
+        /// Returns own date and time, if it was set by <see cref="InjectActualDateTime(DateTime)"/>. If it was not set,
+        /// <see cref="DateTime.UtcNow">DateTime.UtcNow</see> is returned.
+        /// </summary>
+        public static DateTime UtcNow => _injectedDateTime ?? DateTime.UtcNow;
+
+        /// <summary>
+        /// Returns own date and time, if it was set by <see cref="InjectActualDateTime(DateTimeOffset)"/>.
+        /// If it was not set, <see cref="DateTimeOffset.Now">DateTimeOffset.Now</see> is returned.
+        /// </summary>
+        public static DateTimeOffset DateTimeOffsetNow => _injectedDateTimeOffset?.ToLocalTime() ?? DateTimeOffset.Now;
+
+        /// <summary>
+        /// Returns own date and time, if it was set by <see cref="InjectActualDateTime(DateTimeOffset)"/>.
+        /// If it was not set, <see cref="DateTimeOffset.UtcNow">DateTimeOffset.UtcNow</see> is returned.
+        /// </summary>
+        public static DateTimeOffset DateTimeOffsetUtcNow => _injectedDateTimeOffset ?? DateTimeOffset.UtcNow;
+
+        /// <summary>
+        /// Sets datetime <paramref name="value"/>, which will be returned by all properties.
+        /// Use it in <c>using</c> block.
+        /// </summary>
+        /// <param name="value">Required date and time value.</param>
+        public static IDisposable InjectActualDateTime(DateTime value)
         {
-            get
-            {
-                return _injectedDateTime ?? DateTime.Now;
-            }
+            _injectedDateTime = value.ToUniversalTime();
+            _injectedDateTimeOffset = new DateTimeOffset(_injectedDateTime.Value);
+            return new DateTimeProvider();
         }
 
         /// <summary>
-        /// Sets time <paramref name="actualDateTime"/>, which will be returned in <see cref="Now"/> property.
+        /// Sets time <paramref name="value"/>, which will be returned by all properties.
         /// Use it in <c>using</c> block.
         /// </summary>
-        /// <param name="actualDateTime">Required date and time value.</param>
-        public static IDisposable InjectActualDateTime(DateTime actualDateTime)
+        /// <param name="value">Required date and time value.</param>
+        public static IDisposable InjectActualDateTime(DateTimeOffset value)
         {
-            _injectedDateTime = actualDateTime;
-
+            _injectedDateTimeOffset = value;
+            _injectedDateTime = _injectedDateTimeOffset.Value.UtcDateTime;
             return new DateTimeProvider();
         }
 
@@ -53,6 +80,7 @@ namespace Kros.Utils
         public void Dispose()
         {
             _injectedDateTime = null;
+            _injectedDateTimeOffset = null;
         }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
