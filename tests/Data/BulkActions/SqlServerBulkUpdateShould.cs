@@ -1,5 +1,7 @@
-﻿using Kros.Data.BulkActions;
+﻿using FluentAssertions;
+using Kros.Data.BulkActions;
 using Kros.Data.BulkActions.SqlServer;
+using Kros.UnitTests;
 using Nito.AsyncEx;
 using System;
 using System.Collections.Generic;
@@ -26,6 +28,21 @@ namespace Kros.Utils.UnitTests.Data.BulkActions
             public string ColShortText { get; set; }
 
             public BulkUpdateItem Clone() => (BulkUpdateItem)MemberwiseClone();
+        }
+
+        private class BulkUpdateItemWithIdentity
+        {
+            public int Id { get; set; }
+            public string Value { get; set; }
+            public override bool Equals(object obj)
+            {
+                if (obj is BulkUpdateItemWithIdentity item)
+                {
+                    return (Id == item.Id) && (Value == item.Value);
+                }
+                return base.Equals(obj);
+            }
+            public override int GetHashCode() => HashCode.Combine(Id, Value);
         }
 
         #endregion
@@ -60,6 +77,20 @@ namespace Kros.Utils.UnitTests.Data.BulkActions
                       VALUES (2)
                INSERT INTO {TABLE_NAME} 
                       VALUES (3, 1, 9.9, '2018-01-30 10:26:36', 'abcdefab-1234-5678-9123-abcdefabcdef', 1, 'ipsum')";
+
+        private const string Identity_TableName = "BulkUpdate_Identity";
+
+        private static readonly string Identity_CreateTable =
+$@"CREATE TABLE [dbo].[{Identity_TableName}](
+    [Id] [int] IDENTITY(1, 1) NOT NULL,
+    [Value] [nvarchar](50) NULL,
+    CONSTRAINT [PK_{Identity_TableName}] PRIMARY KEY CLUSTERED ([id] ASC)
+)";
+
+        private static readonly string Identity_InsertData =
+$@"INSERT INTO [{Identity_TableName}] ([Value]) VALUES ('one')
+INSERT INTO [{Identity_TableName}] ([Value]) VALUES ('two')
+INSERT INTO [{Identity_TableName}] ([Value]) VALUES ('three')";
 
         #endregion
 
@@ -209,6 +240,35 @@ namespace Kros.Utils.UnitTests.Data.BulkActions
             SqlServerBulkHelper.CompareTables(actualData, expectedData);
         }
 
+        [Fact]
+        public async Task BulkUpdateDataInTableWithIdentityPrimaryColumn()
+        {
+            List<BulkUpdateItemWithIdentity> actualData = null;
+
+            using (var helper = new SqlServerTestHelper(
+                BaseConnectionString, DATABASE_NAME, new[] { Identity_CreateTable, Identity_InsertData }))
+            using (var bulkUpdate = new SqlServerBulkUpdate(helper.Connection))
+            {
+                var dataToUpdate = new EnumerableDataReader<BulkUpdateItemWithIdentity>(
+                    new[] { new BulkUpdateItemWithIdentity() { Id = 2, Value = "lorem ipsum" } },
+                    new[] { nameof(BulkUpdateItemWithIdentity.Id), nameof(BulkUpdateItemWithIdentity.Value) });
+
+                bulkUpdate.DestinationTableName = Identity_TableName;
+                bulkUpdate.PrimaryKeyColumn = nameof(BulkUpdateItemWithIdentity.Id);
+                await bulkUpdate.UpdateAsync(dataToUpdate);
+
+                helper.Connection.Open();
+                actualData = LoadDataForTableWithIdentity(helper.Connection);
+            }
+
+            actualData.Should().Equal(new List<BulkUpdateItemWithIdentity>(new[]
+            {
+                new BulkUpdateItemWithIdentity() { Id = 1, Value = "one" },
+                new BulkUpdateItemWithIdentity() { Id = 2, Value = "lorem ipsum" },
+                new BulkUpdateItemWithIdentity() { Id = 3, Value = "three" }
+            }));
+        }
+
         #endregion
 
         #region Helpers
@@ -269,6 +329,21 @@ namespace Kros.Utils.UnitTests.Data.BulkActions
                 adapter.Fill(data);
             }
 
+            return data;
+        }
+
+        private List<BulkUpdateItemWithIdentity> LoadDataForTableWithIdentity(SqlConnection cn)
+        {
+            var data = new List<BulkUpdateItemWithIdentity>();
+
+            using (var cmd = new SqlCommand($"SELECT [id], [value] FROM [{Identity_TableName}]", cn))
+            using (var reader = cmd.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    data.Add(new BulkUpdateItemWithIdentity() { Id = reader.GetInt32(0), Value = reader.GetString(1) });
+                }
+            }
             return data;
         }
 

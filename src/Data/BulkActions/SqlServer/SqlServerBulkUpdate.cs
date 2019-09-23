@@ -72,16 +72,26 @@ namespace Kros.Data.BulkActions.SqlServer
         protected override string GetTempTableName() => $"{PrefixTempTable}{DestinationTableName}_{Guid.NewGuid()}";
 
         /// <inheritdoc/>
-        protected override void CreateTempTable(IDataReader reader, string tempTableName)
+        protected override string CreateTempTableCore(IDataReader reader, string tempTableName)
         {
+            string identityColumnName = null;
             using (var cmd = _connection.CreateCommand())
             {
                 cmd.Transaction = ExternalTransaction;
-                cmd.CommandText = $"SELECT {GetColumnNamesForTempTable(reader)} INTO [{tempTableName}] " +
-                                  $"FROM [{DestinationTableName}] " +
-                                  $"WHERE (1 = 2)";
+
+                cmd.CommandText = "SELECT name FROM sys.identity_columns " +
+                    $"WHERE OBJECT_NAME(object_id) = '{DestinationTableName}'";
+                identityColumnName = (string)cmd.ExecuteScalar();
+                if (!PrimaryKeyColumn.Equals(identityColumnName, StringComparison.OrdinalIgnoreCase))
+                {
+                    identityColumnName = null;
+                }
+
+                cmd.CommandText = $"SELECT {GetColumnNamesForTempTable(reader, identityColumnName)} INTO [{tempTableName}] " +
+                    $"FROM [{DestinationTableName}] WHERE (1 = 2)";
                 cmd.ExecuteNonQuery();
             }
+            return identityColumnName;
         }
 
         /// <inheritdoc/>
