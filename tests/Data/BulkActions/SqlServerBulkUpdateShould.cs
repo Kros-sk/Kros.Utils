@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+using FluentAssertions;
 using Kros.Data.BulkActions;
 using Kros.Data.BulkActions.SqlServer;
 using Kros.UnitTests;
@@ -49,34 +49,30 @@ namespace Kros.Utils.UnitTests.Data.BulkActions
 
         #region Constants
 
-        private const double DOUBLE_MINIMUM = -999999999999999999999.999999999999;
-        private const double DOUBLE_MAXIMUM = 999999999999999999999.999999999999;
-        private const string DATABASE_NAME = "KrosUtilsTestBulkUpdate";
-        private const string TABLE_NAME = "BulkUpdateTest";
-        private const string PRIMARY_KEY_COLUMN = "Id";
-        private const string SHORT_TEXT_ACTION = "dolor sit amet";
+        private const double DoubleMinimum = -999999999999999999999.999999999999;
+        private const double DoubleMaximum = 999999999999999999999.999999999999;
+        private const string DatabaseName = "KrosUtilsTestBulkUpdate";
+        private const string TableName = "BulkUpdateTest";
+        private const string PrimaryKeyColumn = "Id";
+        private const string ShortTextAction = "dolor sit amet";
 
-        private string CreateTable_BulkUpdateTest =
-            $@"CREATE TABLE[dbo].[{TABLE_NAME}] (
-                   [Id] [int] NOT NULL,
-                   [ColInt32] [int] NULL,
-                   [ColDouble] [float] NULL,
-                   [ColDate] [datetime2] (7) NULL,
-                   [ColGuid] [uniqueidentifier] NULL,
-                   [ColBool] [bit] NULL,
-                   [ColShortText] [nvarchar] (20) NULL
-               
-                   CONSTRAINT [PK_{TABLE_NAME}] PRIMARY KEY CLUSTERED ([Id] ASC) ON [PRIMARY]
-               
-               ) ON [PRIMARY];
-               ";
-        private string Insert_BulkUpdateTest =
-            $@"INSERT INTO {TABLE_NAME} 
-                      VALUES (1, 0, 0.0, '1900-01-01 00:00:00', '00000000-0000-0000-0000-000000000000', 0, '')
-               INSERT INTO {TABLE_NAME} (Id)
-                      VALUES (2)
-               INSERT INTO {TABLE_NAME} 
-                      VALUES (3, 1, 9.9, '2018-01-30 10:26:36', 'abcdefab-1234-5678-9123-abcdefabcdef', 1, 'ipsum')";
+        private readonly string CreateTable_BulkUpdateTest =
+$@"CREATE TABLE[dbo].[{TableName}] (
+    [Id] [int] NOT NULL,
+    [ColInt32] [int] NULL,
+    [ColDouble] [float] NULL,
+    [ColDate] [datetime2] (7) NULL,
+    [ColGuid] [uniqueidentifier] NULL,
+    [ColBool] [bit] NULL,
+    [ColShortText] [nvarchar] (20) NULL
+
+    CONSTRAINT [PK_{TableName}] PRIMARY KEY CLUSTERED ([Id] ASC) ON [PRIMARY]
+) ON [PRIMARY];";
+
+        private readonly string Insert_BulkUpdateTest =
+$@"INSERT INTO {TableName} VALUES (1, 0, 0.0, '1900-01-01 00:00:00', '00000000-0000-0000-0000-000000000000', 0, '')
+INSERT INTO {TableName} (Id) VALUES (2)
+INSERT INTO {TableName} VALUES (3, 1, 9.9, '2018-01-30 10:26:36', 'abcdefab-1234-5678-9123-abcdefabcdef', 1, 'ipsum')";
 
         private const string Identity_TableName = "BulkUpdate_Identity";
 
@@ -96,7 +92,7 @@ INSERT INTO [{Identity_TableName}] ([Value]) VALUES ('three')";
 
         #region DatabaseTestBase Overrides
 
-        protected override string BaseDatabaseName => DATABASE_NAME;
+        protected override string BaseDatabaseName => DatabaseName;
 
         protected override IEnumerable<string> DatabaseInitScripts =>
             new string[] { CreateTable_BulkUpdateTest, Insert_BulkUpdateTest };
@@ -116,8 +112,8 @@ INSERT INTO [{Identity_TableName}] ([Value]) VALUES ('three')";
                 using (IDataReader reader = expectedData.CreateDataReader())
                 using (var bulkUpdate = new SqlServerBulkUpdate(ServerHelper.Connection))
                 {
-                    bulkUpdate.DestinationTableName = TABLE_NAME;
-                    bulkUpdate.PrimaryKeyColumn = PRIMARY_KEY_COLUMN;
+                    bulkUpdate.DestinationTableName = TableName;
+                    bulkUpdate.PrimaryKeyColumn = PrimaryKeyColumn;
                     bulkUpdate.Update(reader);
                 }
 
@@ -131,17 +127,16 @@ INSERT INTO [{Identity_TableName}] ([Value]) VALUES ('three')";
         public async Task BulkUpdateDataFromIDataReaderAsynchronously()
         {
             DataTable expectedData = CreateExpectedData();
-            DataTable actualData = null;
 
             using (IDataReader reader = expectedData.CreateDataReader())
             using (var bulkUpdate = new SqlServerBulkUpdate(ServerHelper.Connection))
             {
-                bulkUpdate.DestinationTableName = TABLE_NAME;
-                bulkUpdate.PrimaryKeyColumn = PRIMARY_KEY_COLUMN;
+                bulkUpdate.DestinationTableName = TableName;
+                bulkUpdate.PrimaryKeyColumn = PrimaryKeyColumn;
                 await bulkUpdate.UpdateAsync(reader);
             }
 
-            actualData = LoadData(ServerHelper.Connection);
+            DataTable actualData = LoadData(ServerHelper.Connection);
 
             SqlServerBulkHelper.CompareTables(actualData, expectedData);
         }
@@ -150,17 +145,16 @@ INSERT INTO [{Identity_TableName}] ([Value]) VALUES ('three')";
         public void BulkUpdateDataFromIBulkInsertDataReader()
         {
             DataTable expectedData = CreateExpectedData();
-            DataTable actualData = null;
 
             using (IBulkActionDataReader reader = CreateDataReaderForUpdate())
             using (var bulkUpdate = new SqlServerBulkUpdate(ServerHelper.Connection))
             {
-                bulkUpdate.DestinationTableName = TABLE_NAME;
-                bulkUpdate.PrimaryKeyColumn = PRIMARY_KEY_COLUMN;
+                bulkUpdate.DestinationTableName = TableName;
+                bulkUpdate.PrimaryKeyColumn = PrimaryKeyColumn;
                 bulkUpdate.Update(reader);
             }
 
-            actualData = LoadData(ServerHelper.Connection);
+            DataTable actualData = LoadData(ServerHelper.Connection);
 
             SqlServerBulkHelper.CompareTables(actualData, expectedData);
         }
@@ -169,17 +163,16 @@ INSERT INTO [{Identity_TableName}] ([Value]) VALUES ('three')";
         public async Task BulkUpdateDataFromIBulkInsertDataReaderAsynchronously()
         {
             DataTable expectedData = CreateExpectedData();
-            DataTable actualData = null;
 
             using (IBulkActionDataReader reader = CreateDataReaderForUpdate())
             using (var bulkUpdate = new SqlServerBulkUpdate(ServerHelper.Connection))
             {
-                bulkUpdate.DestinationTableName = TABLE_NAME;
-                bulkUpdate.PrimaryKeyColumn = PRIMARY_KEY_COLUMN;
+                bulkUpdate.DestinationTableName = TableName;
+                bulkUpdate.PrimaryKeyColumn = PrimaryKeyColumn;
                 await bulkUpdate.UpdateAsync(reader);
             }
 
-            actualData = LoadData(ServerHelper.Connection);
+            DataTable actualData = LoadData(ServerHelper.Connection);
 
             SqlServerBulkHelper.CompareTables(actualData, expectedData);
         }
@@ -193,8 +186,8 @@ INSERT INTO [{Identity_TableName}] ([Value]) VALUES ('three')";
             using (IBulkActionDataReader reader = CreateDataReaderForUpdate())
             using (var bulkUpdate = new SqlServerBulkUpdate(ServerHelper.Connection))
             {
-                bulkUpdate.DestinationTableName = TABLE_NAME;
-                bulkUpdate.PrimaryKeyColumn = PRIMARY_KEY_COLUMN;
+                bulkUpdate.DestinationTableName = TableName;
+                bulkUpdate.PrimaryKeyColumn = PrimaryKeyColumn;
                 bulkUpdate.TempTableAction = UpdateTempItems;
                 bulkUpdate.Update(reader);
             }
@@ -208,16 +201,15 @@ INSERT INTO [{Identity_TableName}] ([Value]) VALUES ('three')";
         public void BulkUpdateDataFromDataTable()
         {
             DataTable expectedData = CreateExpectedData();
-            DataTable actualData = null;
 
             using (var bulkUpdate = new SqlServerBulkUpdate(ServerHelper.Connection))
             {
-                bulkUpdate.DestinationTableName = TABLE_NAME;
-                bulkUpdate.PrimaryKeyColumn = PRIMARY_KEY_COLUMN;
+                bulkUpdate.DestinationTableName = TableName;
+                bulkUpdate.PrimaryKeyColumn = PrimaryKeyColumn;
                 bulkUpdate.Update(expectedData);
             }
 
-            actualData = LoadData(ServerHelper.Connection);
+            DataTable actualData = LoadData(ServerHelper.Connection);
 
             SqlServerBulkHelper.CompareTables(actualData, expectedData);
         }
@@ -226,16 +218,15 @@ INSERT INTO [{Identity_TableName}] ([Value]) VALUES ('three')";
         public async Task BulkUpdateDataFromDataTableAsynchronously()
         {
             DataTable expectedData = CreateExpectedData();
-            DataTable actualData = null;
 
             using (var bulkUpdate = new SqlServerBulkUpdate(ServerHelper.Connection))
             {
-                bulkUpdate.DestinationTableName = TABLE_NAME;
-                bulkUpdate.PrimaryKeyColumn = PRIMARY_KEY_COLUMN;
+                bulkUpdate.DestinationTableName = TableName;
+                bulkUpdate.PrimaryKeyColumn = PrimaryKeyColumn;
                 await bulkUpdate.UpdateAsync(expectedData);
             }
 
-            actualData = LoadData(ServerHelper.Connection);
+            DataTable actualData = LoadData(ServerHelper.Connection);
 
             SqlServerBulkHelper.CompareTables(actualData, expectedData);
         }
@@ -246,7 +237,7 @@ INSERT INTO [{Identity_TableName}] ([Value]) VALUES ('three')";
             List<BulkUpdateItemWithIdentity> actualData = null;
 
             using (var helper = new SqlServerTestHelper(
-                BaseConnectionString, DATABASE_NAME, new[] { Identity_CreateTable, Identity_InsertData }))
+                BaseConnectionString, DatabaseName, new[] { Identity_CreateTable, Identity_InsertData }))
             using (var bulkUpdate = new SqlServerBulkUpdate(helper.Connection))
             {
                 var dataToUpdate = new EnumerableDataReader<BulkUpdateItemWithIdentity>(
@@ -273,7 +264,7 @@ INSERT INTO [{Identity_TableName}] ([Value]) VALUES ('three')";
 
         #region Helpers
 
-        private static List<BulkUpdateItem> _rawData = new List<BulkUpdateItem>
+        private static readonly List<BulkUpdateItem> _rawData = new List<BulkUpdateItem>
         {
             new BulkUpdateItem()
             {
@@ -289,7 +280,7 @@ INSERT INTO [{Identity_TableName}] ([Value]) VALUES ('three')";
             {
                 Id = 2,
                 ColInt32 = int.MinValue,
-                ColDouble = DOUBLE_MINIMUM,
+                ColDouble = DoubleMinimum,
                 ColDate =new DateTime(1900, 1, 1),
                 ColGuid =new Guid("abcdef00-1234-5678-9000-abcdefabcdef"),
                 ColBool = false,
@@ -299,7 +290,7 @@ INSERT INTO [{Identity_TableName}] ([Value]) VALUES ('three')";
             {
                 Id = 3,
                 ColInt32 = int.MaxValue,
-                ColDouble = DOUBLE_MAXIMUM,
+                ColDouble = DoubleMaximum,
                 ColDate = DateTime.MaxValue,
                 ColGuid = Guid.Empty,
                 ColBool = true,
@@ -312,17 +303,16 @@ INSERT INTO [{Identity_TableName}] ([Value]) VALUES ('three')";
             using (var cmd = connection.CreateCommand())
             {
                 cmd.Transaction = transaction;
-                cmd.CommandText = $"UPDATE [{tempTableName}] " +
-                                  $"SET ColGuid = '{Guid.Empty}', ColShortText = '{SHORT_TEXT_ACTION}'";
+                cmd.CommandText = $"UPDATE [{tempTableName}] SET ColGuid = '{Guid.Empty}', ColShortText = '{ShortTextAction}'";
                 cmd.ExecuteNonQuery();
             }
         }
 
         private DataTable LoadData(SqlConnection cn)
         {
-            DataTable data = new DataTable(TABLE_NAME);
+            DataTable data = new DataTable(TableName);
 
-            using (SqlCommand cmd = new SqlCommand($"SELECT * FROM {TABLE_NAME}", cn))
+            using (SqlCommand cmd = new SqlCommand($"SELECT * FROM {TableName}", cn))
             using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
             {
                 adapter.FillSchema(data, SchemaType.Source);
@@ -367,13 +357,12 @@ INSERT INTO [{Identity_TableName}] ([Value]) VALUES ('three')";
         private List<BulkUpdateItem> GetActionRawData()
         {
             var actionRawData = new List<BulkUpdateItem>();
-            BulkUpdateItem cloneItem = null;
 
             foreach (var item in _rawData)
             {
-                cloneItem = item.Clone();
+                BulkUpdateItem cloneItem = item.Clone();
                 cloneItem.ColGuid = Guid.Empty;
-                cloneItem.ColShortText = SHORT_TEXT_ACTION;
+                cloneItem.ColShortText = ShortTextAction;
                 actionRawData.Add(cloneItem);
             }
 
@@ -392,7 +381,7 @@ INSERT INTO [{Identity_TableName}] ([Value]) VALUES ('three')";
             table.Columns.Add("ColBool", typeof(bool));
             table.Columns.Add("ColShortText", typeof(string));
 
-            table.PrimaryKey = new DataColumn[] { table.Columns[PRIMARY_KEY_COLUMN] };
+            table.PrimaryKey = new DataColumn[] { table.Columns[PrimaryKeyColumn] };
 
             return table;
         }
