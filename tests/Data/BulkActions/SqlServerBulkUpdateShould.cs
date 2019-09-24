@@ -1,4 +1,4 @@
-using FluentAssertions;
+﻿using FluentAssertions;
 using Kros.Data.BulkActions;
 using Kros.Data.BulkActions.SqlServer;
 using Kros.UnitTests;
@@ -152,6 +152,39 @@ INSERT INTO [{CompositeWithIdentity_TableName}] ([Id1], [Value]) VALUES (3, '3 -
         #endregion
 
         #region Tests
+
+        [Fact]
+        public void ThrowExceptionWhenInputDataIsNull()
+        {
+            Action action = () =>
+            {
+                using (var helper = CreateHelper(null))
+                using (var bulkUpdate = new SqlServerBulkUpdate(helper.Connection))
+                {
+                    bulkUpdate.DestinationTableName = TableName;
+                    bulkUpdate.PrimaryKeyColumn = PrimaryKeyColumn;
+                    bulkUpdate.Update((IDataReader)null);
+                }
+            };
+
+            action.Should().Throw<ArgumentNullException>();
+        }
+
+        [Fact]
+        public void ThrowExceptionWhenPrimaryKeyIsNotSet()
+        {
+            Action action = () =>
+            {
+                using (var helper = CreateHelper(null))
+                using (var bulkUpdate = new SqlServerBulkUpdate(helper.Connection))
+                {
+                    bulkUpdate.DestinationTableName = TableName;
+                    bulkUpdate.Update(new DataTable());
+                }
+            };
+
+            action.Should().Throw<InvalidOperationException>();
+        }
 
         [Fact]
         public void BulkUpdateDataFromIDataReaderSynchronouslyWithoutDeadLock()

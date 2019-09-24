@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Kros.Properties;
+using Kros.Utils;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -99,6 +101,12 @@ namespace Kros.Data.BulkActions
 
         private async Task UpdateCoreAsync(IDataReader reader, bool useAsync)
         {
+            Check.NotNull(reader, nameof(reader));
+            if ((_primaryKeyColumns is null) || (_primaryKeyColumns.Length == 0))
+            {
+                throw new InvalidOperationException(Resources.BulkUpdatePrimaryKeyIsNotSet);
+            }
+
             using (ConnectionHelper.OpenConnection(_connection))
             {
                 var tempTableName = CreateTempTable(reader);
