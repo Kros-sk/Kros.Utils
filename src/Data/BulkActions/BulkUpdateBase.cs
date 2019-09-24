@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -20,6 +22,8 @@ namespace Kros.Data.BulkActions
         #endregion
 
         #region Private fields
+
+        private string[] _primaryKeyColumns;
 
         /// <summary>
         /// Connection.
@@ -53,9 +57,21 @@ namespace Kros.Data.BulkActions
         public Action<IDbConnection, IDbTransaction, string> TempTableAction { get; set; }
 
         /// <summary>
-        /// Primary key.
+        /// Primary key. The value can contain composite primary key (multiple columns). The columns of composite primary key
+        /// is set in one string, where columns are separated by comma (for example <c>Id1, Id2</c>).
         /// </summary>
-        public string PrimaryKeyColumn { get; set; }
+        public string PrimaryKeyColumn
+        {
+            get => _primaryKeyColumns is null ? string.Empty : string.Join(", ", _primaryKeyColumns);
+            set => _primaryKeyColumns = string.IsNullOrWhiteSpace(value)
+                ? null
+                : value.Split(new[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
+        }
+
+        /// <summary>
+        /// List of primary key columns. The value is <see langword="null"/> if <see cref="PrimaryKeyColumn"/> is not set.
+        /// </summary>
+        public IEnumerable<string> PrimaryKeyColumns => _primaryKeyColumns;
 
         /// <inheritdoc/>
         public void Update(IBulkActionDataReader reader)
@@ -201,9 +217,10 @@ namespace Kros.Data.BulkActions
                     cmd.CommandText = $"ALTER TABLE [{tempTableName}] ADD [{columnName}] [{dataType}] NOT NULL";
                     cmd.ExecuteNonQuery();
                 }
+                string pkList = string.Join(", ", PrimaryKeyColumns.Select(item => $"[{item}]"));
                 cmd.CommandText = $"ALTER TABLE [{tempTableName}] " +
                     $"ADD CONSTRAINT [PK_{tempTableName.Trim(PrefixTempTable)}] " +
-                    $"PRIMARY KEY NONCLUSTERED ({PrimaryKeyColumn})";
+                    $"PRIMARY KEY NONCLUSTERED ({pkList})";
                 cmd.ExecuteNonQuery();
             }
         }
@@ -255,18 +272,15 @@ namespace Kros.Data.BulkActions
         protected string GetUpdateColumnNames(IDataReader reader, string tempTableName)
         {
             var ret = new StringBuilder();
-            var columnName = string.Empty;
 
             for (int i = 0; i < reader.FieldCount; i++)
             {
-                columnName = reader.GetName(i);
-
-                if (!PrimaryKeyColumn.Equals(columnName, StringComparison.OrdinalIgnoreCase))
+                string columnName = reader.GetName(i);
+                if (!Enumerable.Contains(PrimaryKeyColumns, columnName, StringComparer.OrdinalIgnoreCase))
                 {
                     ret.AppendFormat("[{0}].[{1}] = [{2}].[{1}], ", DestinationTableName, columnName, tempTableName);
                 }
             }
-
             ret.Length -= 2;
 
             return ret.ToString();

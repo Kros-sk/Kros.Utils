@@ -3,6 +3,7 @@ using System;
 using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Kros.Data.BulkActions.SqlServer
@@ -82,7 +83,7 @@ namespace Kros.Data.BulkActions.SqlServer
                 cmd.CommandText = "SELECT name FROM sys.identity_columns " +
                     $"WHERE OBJECT_NAME(object_id) = '{DestinationTableName}'";
                 identityColumnName = (string)cmd.ExecuteScalar();
-                if (!PrimaryKeyColumn.Equals(identityColumnName, StringComparison.OrdinalIgnoreCase))
+                if (!Enumerable.Contains(PrimaryKeyColumns, identityColumnName, StringComparer.OrdinalIgnoreCase))
                 {
                     identityColumnName = null;
                 }
@@ -109,13 +110,18 @@ namespace Kros.Data.BulkActions.SqlServer
         {
             using (var cmd = _connection.CreateCommand())
             {
-                var innerJoin = $"[{DestinationTableName}].[{PrimaryKeyColumn}] = [{tempTableName}].[{PrimaryKeyColumn}]";
+                var innerJoin = new System.Text.StringBuilder();
+                foreach (string pkColumn in PrimaryKeyColumns)
+                {
+                    innerJoin.Append($"([{DestinationTableName}].[{pkColumn}] = [{tempTableName}].[{pkColumn}]) AND ");
+                }
+                innerJoin.Length -= 5;
 
                 cmd.Transaction = ExternalTransaction;
-                cmd.CommandText = $"UPDATE [{DestinationTableName}] " +
-                                  $"SET {GetUpdateColumnNames(reader, tempTableName)} " +
-                                  $"FROM [{DestinationTableName}] INNER JOIN [{tempTableName}] " +
-                                                                $"ON ({innerJoin})";
+                cmd.CommandText = $"UPDATE [{DestinationTableName}]\r\n" +
+                    $"SET {GetUpdateColumnNames(reader, tempTableName)}\r\n" +
+                    $"FROM [{DestinationTableName}]\r\n" +
+                    $"INNER JOIN [{tempTableName}] ON ({innerJoin.ToString()})";
 
                 await ExecuteNonQueryAsync(useAsync, cmd);
             }

@@ -30,19 +30,35 @@ namespace Kros.Utils.UnitTests.Data.BulkActions
             public BulkUpdateItem Clone() => (BulkUpdateItem)MemberwiseClone();
         }
 
-        private class BulkUpdateItemWithIdentity
+        private class BulkUpdateItemIdentity
         {
             public int Id { get; set; }
             public string Value { get; set; }
             public override bool Equals(object obj)
             {
-                if (obj is BulkUpdateItemWithIdentity item)
+                if (obj is BulkUpdateItemIdentity item)
                 {
                     return (Id == item.Id) && (Value == item.Value);
                 }
                 return base.Equals(obj);
             }
             public override int GetHashCode() => HashCode.Combine(Id, Value);
+        }
+
+        private class BulkUpdateItemComposite
+        {
+            public int Id1 { get; set; }
+            public int Id2 { get; set; }
+            public string Value { get; set; }
+            public override bool Equals(object obj)
+            {
+                if (obj is BulkUpdateItemComposite item)
+                {
+                    return (Id1 == item.Id1) && (Id2 == item.Id2) && (Value == item.Value);
+                }
+                return base.Equals(obj);
+            }
+            public override int GetHashCode() => HashCode.Combine(Id1, Id2, Value);
         }
 
         #endregion
@@ -57,7 +73,7 @@ namespace Kros.Utils.UnitTests.Data.BulkActions
         private const string ShortTextAction = "dolor sit amet";
 
         private readonly string CreateTable_BulkUpdateTest =
-$@"CREATE TABLE[dbo].[{TableName}] (
+$@"CREATE TABLE [{TableName}] (
     [Id] [int] NOT NULL,
     [ColInt32] [int] NULL,
     [ColDouble] [float] NULL,
@@ -77,7 +93,7 @@ INSERT INTO {TableName} VALUES (3, 1, 9.9, '2018-01-30 10:26:36', 'abcdefab-1234
         private const string Identity_TableName = "BulkUpdate_Identity";
 
         private static readonly string Identity_CreateTable =
-$@"CREATE TABLE [dbo].[{Identity_TableName}](
+$@"CREATE TABLE [{Identity_TableName}](
     [Id] [int] IDENTITY(1, 1) NOT NULL,
     [Value] [nvarchar](50) NULL,
     CONSTRAINT [PK_{Identity_TableName}] PRIMARY KEY CLUSTERED ([id] ASC)
@@ -87,6 +103,24 @@ $@"CREATE TABLE [dbo].[{Identity_TableName}](
 $@"INSERT INTO [{Identity_TableName}] ([Value]) VALUES ('one')
 INSERT INTO [{Identity_TableName}] ([Value]) VALUES ('two')
 INSERT INTO [{Identity_TableName}] ([Value]) VALUES ('three')";
+
+        private const string Composite_TableName = "BulkUpdate_Composite";
+
+        private static readonly string Composite_CreateTable =
+$@"CREATE TABLE [{Composite_TableName}](
+    [Id1] [int] NOT NULL,
+    [Id2] [int] NOT NULL,
+    [Value] [nvarchar](50) NULL,
+    CONSTRAINT [PK_{Composite_TableName}] PRIMARY KEY CLUSTERED ([Id1] ASC, [Id2] ASC)
+)";
+
+        private static readonly string Composite_InsertData =
+$@"INSERT INTO [{Composite_TableName}] ([Id1], [Id2], [Value]) VALUES (1, 1, '1 - 1')
+INSERT INTO [{Composite_TableName}] ([Id1], [Id2], [Value]) VALUES (1, 2, '1 - 2')
+INSERT INTO [{Composite_TableName}] ([Id1], [Id2], [Value]) VALUES (2, 1, '2 - 1')
+INSERT INTO [{Composite_TableName}] ([Id1], [Id2], [Value]) VALUES (2, 2, '2 - 2')
+INSERT INTO [{Composite_TableName}] ([Id1], [Id2], [Value]) VALUES (3, 1, '3 - 1')
+INSERT INTO [{Composite_TableName}] ([Id1], [Id2], [Value]) VALUES (3, 2, '3 - 2')";
 
         #endregion
 
@@ -232,37 +266,74 @@ INSERT INTO [{Identity_TableName}] ([Value]) VALUES ('three')";
         }
 
         [Fact]
-        public async Task BulkUpdateDataInTableWithIdentityPrimaryColumn()
+        public async Task BulkUpdateDataInTableWithIdentityPrimaryKey()
         {
-            List<BulkUpdateItemWithIdentity> actualData = null;
+            List<BulkUpdateItemIdentity> actualData = null;
 
-            using (var helper = new SqlServerTestHelper(
-                BaseConnectionString, DatabaseName, new[] { Identity_CreateTable, Identity_InsertData }))
+            using (var helper = CreateHelper(new[] { Identity_CreateTable, Identity_InsertData }))
             using (var bulkUpdate = new SqlServerBulkUpdate(helper.Connection))
             {
-                var dataToUpdate = new EnumerableDataReader<BulkUpdateItemWithIdentity>(
-                    new[] { new BulkUpdateItemWithIdentity() { Id = 2, Value = "lorem ipsum" } },
-                    new[] { nameof(BulkUpdateItemWithIdentity.Id), nameof(BulkUpdateItemWithIdentity.Value) });
+                var dataToUpdate = new EnumerableDataReader<BulkUpdateItemIdentity>(
+                    new[] { new BulkUpdateItemIdentity() { Id = 2, Value = "lorem ipsum" } },
+                    new[] { nameof(BulkUpdateItemIdentity.Id), nameof(BulkUpdateItemIdentity.Value) });
 
                 bulkUpdate.DestinationTableName = Identity_TableName;
-                bulkUpdate.PrimaryKeyColumn = nameof(BulkUpdateItemWithIdentity.Id);
+                bulkUpdate.PrimaryKeyColumn = nameof(BulkUpdateItemIdentity.Id);
                 await bulkUpdate.UpdateAsync(dataToUpdate);
 
                 helper.Connection.Open();
                 actualData = LoadDataForTableWithIdentity(helper.Connection);
             }
 
-            actualData.Should().Equal(new List<BulkUpdateItemWithIdentity>(new[]
+            actualData.Should().Equal(new List<BulkUpdateItemIdentity>(new[]
             {
-                new BulkUpdateItemWithIdentity() { Id = 1, Value = "one" },
-                new BulkUpdateItemWithIdentity() { Id = 2, Value = "lorem ipsum" },
-                new BulkUpdateItemWithIdentity() { Id = 3, Value = "three" }
+                new BulkUpdateItemIdentity() { Id = 1, Value = "one" },
+                new BulkUpdateItemIdentity() { Id = 2, Value = "lorem ipsum" },
+                new BulkUpdateItemIdentity() { Id = 3, Value = "three" }
+            }));
+        }
+
+        [Fact]
+        public async Task BulkUpdateDataInTableWithCompositePrimaryKey()
+        {
+            List<BulkUpdateItemComposite> actualData = null;
+
+            using (var helper = CreateHelper(new[] { Composite_CreateTable, Composite_InsertData }))
+            using (var bulkUpdate = new SqlServerBulkUpdate(helper.Connection))
+            {
+                var dataToUpdate = new EnumerableDataReader<BulkUpdateItemComposite>(
+                    new[] {
+                        new BulkUpdateItemComposite() { Id1 = 1, Id2 = 2, Value = "lorem ipsum 1" },
+                        new BulkUpdateItemComposite() { Id1 = 2, Id2 = 2, Value = "lorem ipsum 2" },
+                        new BulkUpdateItemComposite() { Id1 = 3, Id2 = 2, Value = "lorem ipsum 3" }
+                    },
+                    new[] { nameof(BulkUpdateItemComposite.Id1), nameof(BulkUpdateItemComposite.Id2), nameof(BulkUpdateItemIdentity.Value) });
+
+                bulkUpdate.DestinationTableName = Composite_TableName;
+                bulkUpdate.PrimaryKeyColumn = nameof(BulkUpdateItemComposite.Id1) + ", " + nameof(BulkUpdateItemComposite.Id2);
+                await bulkUpdate.UpdateAsync(dataToUpdate);
+
+                helper.Connection.Open();
+                actualData = LoadDataForTableWithCompositePk(helper.Connection);
+            }
+
+            actualData.Should().Equal(new List<BulkUpdateItemComposite>(new[]
+            {
+                new BulkUpdateItemComposite() { Id1 = 1, Id2 = 1, Value = "1 - 1" },
+                new BulkUpdateItemComposite() { Id1 = 1, Id2 = 2, Value = "lorem ipsum 1" },
+                new BulkUpdateItemComposite() { Id1 = 2, Id2 = 1, Value = "2 - 1" },
+                new BulkUpdateItemComposite() { Id1 = 2, Id2 = 2, Value = "lorem ipsum 2" },
+                new BulkUpdateItemComposite() { Id1 = 3, Id2 = 1, Value = "3 - 1" },
+                new BulkUpdateItemComposite() { Id1 = 3, Id2 = 2, Value = "lorem ipsum 3" },
             }));
         }
 
         #endregion
 
         #region Helpers
+
+        private SqlServerTestHelper CreateHelper(IEnumerable<string> initDatabaseScripts)
+            => new SqlServerTestHelper(BaseConnectionString, DatabaseName, initDatabaseScripts);
 
         private static readonly List<BulkUpdateItem> _rawData = new List<BulkUpdateItem>
         {
@@ -322,16 +393,30 @@ INSERT INTO [{Identity_TableName}] ([Value]) VALUES ('three')";
             return data;
         }
 
-        private List<BulkUpdateItemWithIdentity> LoadDataForTableWithIdentity(SqlConnection cn)
+        private List<BulkUpdateItemIdentity> LoadDataForTableWithIdentity(SqlConnection cn)
         {
-            var data = new List<BulkUpdateItemWithIdentity>();
+            var data = new List<BulkUpdateItemIdentity>();
 
-            using (var cmd = new SqlCommand($"SELECT [id], [value] FROM [{Identity_TableName}]", cn))
+            using (var cmd = new SqlCommand($"SELECT [Id], [Value] FROM [{Identity_TableName}] ORDER BY [Id]", cn))
             using (var reader = cmd.ExecuteReader())
             {
                 while (reader.Read())
                 {
-                    data.Add(new BulkUpdateItemWithIdentity() { Id = reader.GetInt32(0), Value = reader.GetString(1) });
+                    data.Add(new BulkUpdateItemIdentity() { Id = reader.GetInt32(0), Value = reader.GetString(1) });
+                }
+            }
+            return data;
+        }
+        private List<BulkUpdateItemComposite> LoadDataForTableWithCompositePk(SqlConnection cn)
+        {
+            var data = new List<BulkUpdateItemComposite>();
+
+            using (var cmd = new SqlCommand($"SELECT [Id1], [Id2], [Value] FROM [{Composite_TableName}] ORDER BY [Id1], [Id2]", cn))
+            using (var reader = cmd.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    data.Add(new BulkUpdateItemComposite() { Id1 = reader.GetInt32(0), Id2 = reader.GetInt32(1), Value = reader.GetString(2) });
                 }
             }
             return data;
