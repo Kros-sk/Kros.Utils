@@ -122,6 +122,24 @@ INSERT INTO [{Composite_TableName}] ([Id1], [Id2], [Value]) VALUES (2, 2, '2 - 2
 INSERT INTO [{Composite_TableName}] ([Id1], [Id2], [Value]) VALUES (3, 1, '3 - 1')
 INSERT INTO [{Composite_TableName}] ([Id1], [Id2], [Value]) VALUES (3, 2, '3 - 2')";
 
+        private const string CompositeWithIdentity_TableName = "BulkUpdate_CompositeWithIdentity";
+
+        private static readonly string CompositeWithIdentity_CreateTable =
+$@"CREATE TABLE [{CompositeWithIdentity_TableName}] (
+    [Id1] [int] NOT NULL,
+    [Id2] [int] IDENTITY(1,1) NOT NULL,
+    [Value] [nvarchar](50) NULL,
+    CONSTRAINT [PK_{CompositeWithIdentity_TableName}] PRIMARY KEY CLUSTERED ([Id1] ASC, [Id2] ASC)
+)";
+
+        private static readonly string CompositeWithIdentity_InsertData =
+$@"INSERT INTO [{CompositeWithIdentity_TableName}] ([Id1], [Value]) VALUES (1, '1 - 1')
+INSERT INTO [{CompositeWithIdentity_TableName}] ([Id1], [Value]) VALUES (1, '1 - 2')
+INSERT INTO [{CompositeWithIdentity_TableName}] ([Id1], [Value]) VALUES (2, '2 - 3')
+INSERT INTO [{CompositeWithIdentity_TableName}] ([Id1], [Value]) VALUES (2, '2 - 4')
+INSERT INTO [{CompositeWithIdentity_TableName}] ([Id1], [Value]) VALUES (3, '3 - 5')
+INSERT INTO [{CompositeWithIdentity_TableName}] ([Id1], [Value]) VALUES (3, '3 - 6')";
+
         #endregion
 
         #region DatabaseTestBase Overrides
@@ -314,7 +332,7 @@ INSERT INTO [{Composite_TableName}] ([Id1], [Id2], [Value]) VALUES (3, 2, '3 - 2
                 await bulkUpdate.UpdateAsync(dataToUpdate);
 
                 helper.Connection.Open();
-                actualData = LoadDataForTableWithCompositePk(helper.Connection);
+                actualData = LoadDataForTableWithCompositePk(helper.Connection, Composite_TableName);
             }
 
             actualData.Should().Equal(new List<BulkUpdateItemComposite>(new[]
@@ -325,6 +343,41 @@ INSERT INTO [{Composite_TableName}] ([Id1], [Id2], [Value]) VALUES (3, 2, '3 - 2
                 new BulkUpdateItemComposite() { Id1 = 2, Id2 = 2, Value = "lorem ipsum 2" },
                 new BulkUpdateItemComposite() { Id1 = 3, Id2 = 1, Value = "3 - 1" },
                 new BulkUpdateItemComposite() { Id1 = 3, Id2 = 2, Value = "lorem ipsum 3" },
+            }));
+        }
+
+        [Fact]
+        public async Task BulkUpdateDataInTableWithCompositeAndIdentityPrimaryKey()
+        {
+            List<BulkUpdateItemComposite> actualData = null;
+
+            using (var helper = CreateHelper(new[] { CompositeWithIdentity_CreateTable, CompositeWithIdentity_InsertData }))
+            using (var bulkUpdate = new SqlServerBulkUpdate(helper.Connection))
+            {
+                var dataToUpdate = new EnumerableDataReader<BulkUpdateItemComposite>(
+                    new[] {
+                        new BulkUpdateItemComposite() { Id1 = 1, Id2 = 2, Value = "lorem ipsum 2" },
+                        new BulkUpdateItemComposite() { Id1 = 2, Id2 = 3, Value = "lorem ipsum 3" },
+                        new BulkUpdateItemComposite() { Id1 = 3, Id2 = 6, Value = "lorem ipsum 6" }
+                    },
+                    new[] { nameof(BulkUpdateItemComposite.Id1), nameof(BulkUpdateItemComposite.Id2), nameof(BulkUpdateItemIdentity.Value) });
+
+                bulkUpdate.DestinationTableName = CompositeWithIdentity_TableName;
+                bulkUpdate.PrimaryKeyColumn = nameof(BulkUpdateItemComposite.Id1) + ", " + nameof(BulkUpdateItemComposite.Id2);
+                await bulkUpdate.UpdateAsync(dataToUpdate);
+
+                helper.Connection.Open();
+                actualData = LoadDataForTableWithCompositePk(helper.Connection, CompositeWithIdentity_TableName);
+            }
+
+            actualData.Should().Equal(new List<BulkUpdateItemComposite>(new[]
+            {
+                new BulkUpdateItemComposite() { Id1 = 1, Id2 = 1, Value = "1 - 1" },
+                new BulkUpdateItemComposite() { Id1 = 1, Id2 = 2, Value = "lorem ipsum 2" },
+                new BulkUpdateItemComposite() { Id1 = 2, Id2 = 3, Value = "lorem ipsum 3" },
+                new BulkUpdateItemComposite() { Id1 = 2, Id2 = 4, Value = "2 - 4" },
+                new BulkUpdateItemComposite() { Id1 = 3, Id2 = 5, Value = "3 - 5" },
+                new BulkUpdateItemComposite() { Id1 = 3, Id2 = 6, Value = "lorem ipsum 6" },
             }));
         }
 
@@ -407,11 +460,11 @@ INSERT INTO [{Composite_TableName}] ([Id1], [Id2], [Value]) VALUES (3, 2, '3 - 2
             }
             return data;
         }
-        private List<BulkUpdateItemComposite> LoadDataForTableWithCompositePk(SqlConnection cn)
+        private List<BulkUpdateItemComposite> LoadDataForTableWithCompositePk(SqlConnection cn, string tableName)
         {
             var data = new List<BulkUpdateItemComposite>();
 
-            using (var cmd = new SqlCommand($"SELECT [Id1], [Id2], [Value] FROM [{Composite_TableName}] ORDER BY [Id1], [Id2]", cn))
+            using (var cmd = new SqlCommand($"SELECT [Id1], [Id2], [Value] FROM [{tableName}] ORDER BY [Id1], [Id2]", cn))
             using (var reader = cmd.ExecuteReader())
             {
                 while (reader.Read())
