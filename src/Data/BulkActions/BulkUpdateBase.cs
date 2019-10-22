@@ -162,9 +162,7 @@ namespace Kros.Data.BulkActions
         /// </summary>
         /// <param name="reader">Reader for accessing data.</param>
         /// <param name="tempTableName">Name of temporary table.</param>
-        /// <returns>Name of the column which will be used for primary key. name is returned only if primary key
-        /// column in destination table (<see cref="DestinationTableName"/>) is IDENTITY column.</returns>
-        protected abstract string CreateTempTableCore(IDataReader reader, string tempTableName);
+        protected abstract void CreateTempTableCore(IDataReader reader, string tempTableName);
 
         /// <summary>
         /// Returns formatted name of temporary table for BulkInsert.
@@ -199,38 +197,8 @@ namespace Kros.Data.BulkActions
         private string CreateTempTable(IDataReader reader)
         {
             var tempTableName = GetTempTableName();
-
-            string identityColumnName = CreateTempTableCore(reader, tempTableName);
-            CreateTempTablePrimaryKey(tempTableName, identityColumnName);
-
+            CreateTempTableCore(reader, tempTableName);
             return tempTableName;
-        }
-
-        /// <summary>
-        /// Creates a primary key for temporary table.
-        /// </summary>
-        /// <param name="tempTableName">Name of the temporary table.</param>
-        /// <param name="columnName">Name of the column which must be created in temp table. If the value
-        /// is <see langword="null"/>, no column is created, just the primary key.</param>
-        protected virtual void CreateTempTablePrimaryKey(string tempTableName, string columnName)
-        {
-            using (var cmd = CreateCommandForPrimaryKey())
-            {
-                if (columnName != null)
-                {
-                    cmd.CommandText = "SELECT data_type FROM information_schema.columns " +
-                        $"WHERE table_name = '{DestinationTableName}' AND column_name = '{columnName}'";
-                    string dataType = (string)cmd.ExecuteScalar();
-
-                    cmd.CommandText = $"ALTER TABLE [{tempTableName}] ADD [{columnName}] [{dataType}] NOT NULL";
-                    cmd.ExecuteNonQuery();
-                }
-                string pkList = string.Join(", ", PrimaryKeyColumns.Select(item => $"[{item}]"));
-                cmd.CommandText = $"ALTER TABLE [{tempTableName}] " +
-                    $"ADD CONSTRAINT [PK_{tempTableName.Trim(PrefixTempTable)}] " +
-                    $"PRIMARY KEY NONCLUSTERED ({pkList})";
-                cmd.ExecuteNonQuery();
-            }
         }
 
         /// <summary>

@@ -73,7 +73,7 @@ namespace Kros.Data.BulkActions.SqlServer
         protected override string GetTempTableName() => $"{PrefixTempTable}{DestinationTableName}_{Guid.NewGuid()}";
 
         /// <inheritdoc/>
-        protected override string CreateTempTableCore(IDataReader reader, string tempTableName)
+        protected override void CreateTempTableCore(IDataReader reader, string tempTableName)
         {
             string identityColumnName = null;
             using (var cmd = _connection.CreateCommand())
@@ -92,7 +92,34 @@ namespace Kros.Data.BulkActions.SqlServer
                     $"FROM [{DestinationTableName}] WHERE (1 = 2)";
                 cmd.ExecuteNonQuery();
             }
-            return identityColumnName;
+            CreateTempTablePrimaryKey(tempTableName, identityColumnName);
+        }
+
+        /// <summary>
+        /// Creates a primary key for temporary table.
+        /// </summary>
+        /// <param name="tempTableName">Name of the temporary table.</param>
+        /// <param name="columnName">Name of the column which must be created in temp table. If the value
+        /// is <see langword="null"/>, no column is created, just the primary key.</param>
+        private void CreateTempTablePrimaryKey(string tempTableName, string columnName)
+        {
+            using (var cmd = CreateCommandForPrimaryKey())
+            {
+                if (columnName != null)
+                {
+                    cmd.CommandText = "SELECT data_type FROM information_schema.columns " +
+                        $"WHERE table_name = '{DestinationTableName}' AND column_name = '{columnName}'";
+                    string dataType = (string)cmd.ExecuteScalar();
+
+                    cmd.CommandText = $"ALTER TABLE [{tempTableName}] ADD [{columnName}] [{dataType}] NOT NULL";
+                    cmd.ExecuteNonQuery();
+                }
+                string pkList = string.Join(", ", PrimaryKeyColumns.Select(item => $"[{item}]"));
+                cmd.CommandText = $"ALTER TABLE [{tempTableName}] " +
+                    $"ADD CONSTRAINT [PK_{tempTableName.Trim(PrefixTempTable)}] " +
+                    $"PRIMARY KEY NONCLUSTERED ({pkList})";
+                cmd.ExecuteNonQuery();
+            }
         }
 
         /// <inheritdoc/>
