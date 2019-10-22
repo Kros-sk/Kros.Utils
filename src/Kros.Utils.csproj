@@ -12,9 +12,10 @@
     <RootNamespace>Kros</RootNamespace>
     <TargetGroup Condition="('$(TargetFramework)' == 'netcoreapp2.1') Or ('$(TargetFramework)' == 'netstandard2.0')">netcoreapp</TargetGroup>
     <DefineConstants Condition="'$(TargetGroup)' == 'netcoreapp'">$(DefineConstants);netcoreapp</DefineConstants>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
   <PropertyGroup>
-    <DocumentationFile>$(OutDir)Kros.Utils.xml</DocumentationFile>
+    <PackageIcon>icon.png</PackageIcon>
     <PackageProjectUrl>https://github.com/Kros-sk/Kros.Utils/blob/master/README.md</PackageProjectUrl>
     <PackageTags>Kros;Utils;Utility;Helpers;Extensions; DatabaseSchema;BulkOperation;BulkUpdate;Bulk Insert;Bulk Update;</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -22,13 +23,16 @@
     <PackageReleaseNotes>https://github.com/Kros-sk/Kros.Utils/releases</PackageReleaseNotes>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="System.Data.SqlClient" Version="4.5.0" />    
+    <None Include="Resources\icon.png" Pack="true" PackagePath=""/>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="System.Data.SqlClient" Version="4.5.0" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
     <PackageReference Include="Microsoft.Net.Http.Headers">
       <Version>2.1.1</Version>
     </PackageReference>
-    <PackageReference Include="System.Net.Http" Version="4.3.3" />      
+    <PackageReference Include="System.Net.Http" Version="4.3.3" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp2.1'">
     <PackageReference Include="Microsoft.Net.Http.Headers">
@@ -38,7 +42,7 @@
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)' == 'net46'">
     <Reference Include="System.Net.Http" />
-  </ItemGroup>  
+  </ItemGroup>
   <ItemGroup>
     <None Remove="Kros.Utils.xml" />
     <None Remove="Resources\SqlIdGeneratorStoredProcedureScript.sql" />
