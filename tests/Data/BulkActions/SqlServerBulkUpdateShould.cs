@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
@@ -493,6 +494,8 @@ INSERT INTO [{CompositeWithIdentity_TableName}] ([Id1], [Value]) VALUES (3, '3 -
             }
             return data;
         }
+
+        [SuppressMessage("Security", "CA2100:Review SQL queries for security vulnerabilities")]
         private List<BulkUpdateItemComposite> LoadDataForTableWithCompositePk(SqlConnection cn, string tableName)
         {
             var data = new List<BulkUpdateItemComposite>();

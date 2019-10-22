@@ -151,7 +151,7 @@ namespace Kros.Net
             try
             {
                 using (var client = new HttpClient(CreateMessageHandler()) { Timeout = RequestTimeout })
-                using (var stream = client.GetStreamAsync(ServiceAddress).GetAwaiter().GetResult())
+                using (client.GetStreamAsync(ServiceAddress).GetAwaiter().GetResult())
                 {
                     _lastSuccessResponseTime = DateTimeProvider.Now;
                     return true;

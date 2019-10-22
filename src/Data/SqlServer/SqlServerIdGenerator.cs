@@ -2,6 +2,7 @@
 using System;
 using System.Data.Common;
 using System.Data.SqlClient;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Kros.Data.SqlServer
 {
@@ -84,6 +85,7 @@ namespace Kros.Data.SqlServer
             ResourceHelper.GetResourceContent("Kros.Resources.SqlIdGeneratorTableScript.sql");
 
         /// <inheritdoc/>
+        [SuppressMessage("Security", "CA2100:Review SQL queries for security vulnerabilities")]
         public override void InitDatabaseForIdGenerator()
         {
             using (ConnectionHelper.OpenConnection(Connection))

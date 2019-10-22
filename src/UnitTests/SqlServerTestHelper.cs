@@ -3,6 +3,7 @@ using Kros.Utils;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Kros.UnitTests
 {
@@ -129,6 +130,7 @@ namespace Kros.UnitTests
         /// Initializes a database. Method is executed once after creating the database and it executes scripts
         /// which were specified in constructor.
         /// </summary>
+        [SuppressMessage("Security", "CA2100:Review SQL queries for security vulnerabilities")]
         protected virtual void InitDatabase()
         {
             if (_initDatabaseScripts != null)
@@ -154,6 +156,7 @@ namespace Kros.UnitTests
             }
         }
 
+        [SuppressMessage("Security", "CA2100:Review SQL queries for security vulnerabilities")]
         private void CreateConnection()
         {
             string databaseName = GenerateDatabaseName();
@@ -182,6 +185,7 @@ namespace Kros.UnitTests
             return new SqlConnection(builder.ToString());
         }
 
+        [SuppressMessage("Security", "CA2100:Review SQL queries for security vulnerabilities")]
         private void RemoveDatabase()
         {
             if (_connection != null)
