@@ -17,7 +17,7 @@ namespace Kros.Data.SqlServer
         public static Version GetVersion(this SqlConnection connection)
         {
             Check.NotNull(connection, nameof(connection));
-            using (var helper = ConnectionHelper.OpenConnection(connection))
+            using (ConnectionHelper.OpenConnection(connection))
             {
                 return new Version(connection.ServerVersion);
             }

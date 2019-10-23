@@ -3,7 +3,7 @@ using Kros.Data.BulkActions.SqlServer;
 using System.Data.SqlClient;
 using Xunit;
 
-namespace Kros.Utils.UnitTests.Data.BulkInsert
+namespace Kros.Utils.UnitTests.Data.BulkActions
 {
     public class SqlServerBulkActionFactoryShould
     {

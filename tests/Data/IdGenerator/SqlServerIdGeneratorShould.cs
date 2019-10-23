@@ -4,6 +4,7 @@ using Kros.Data.SqlServer;
 using Kros.UnitTests;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Diagnostics.CodeAnalysis;
 using Xunit;
 
 namespace Kros.Utils.UnitTests.Data.IdGenerator
@@ -173,6 +174,7 @@ namespace Kros.Utils.UnitTests.Data.IdGenerator
         private SqlServerIdGeneratorFactory GetFactory()
             => new SqlServerIdGeneratorFactory(ServerHelper.Connection);
 
+        [SuppressMessage("Security", "CA2100:Review SQL queries for security vulnerabilities")]
         private bool HasTable(SqlConnection connection, string tableName)
         {
             using (ConnectionHelper.OpenConnection(connection))
@@ -183,6 +185,7 @@ namespace Kros.Utils.UnitTests.Data.IdGenerator
             }
         }
 
+        [SuppressMessage("Security", "CA2100:Review SQL queries for security vulnerabilities")]
         private bool HasProcedure(SqlConnection connection, string procedureName)
         {
             using (ConnectionHelper.OpenConnection(connection))

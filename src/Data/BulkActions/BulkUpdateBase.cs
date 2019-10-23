@@ -1,5 +1,9 @@
-﻿using System;
+﻿using Kros.Properties;
+using Kros.Utils;
+using System;
+using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -20,6 +24,8 @@ namespace Kros.Data.BulkActions
         #endregion
 
         #region Private fields
+
+        private string[] _primaryKeyColumns;
 
         /// <summary>
         /// Connection.
@@ -53,9 +59,21 @@ namespace Kros.Data.BulkActions
         public Action<IDbConnection, IDbTransaction, string> TempTableAction { get; set; }
 
         /// <summary>
-        /// Primary key.
+        /// Primary key. The value can contain composite primary key (multiple columns). The columns of composite primary key
+        /// is set in one string, where columns are separated by comma (for example <c>Id1, Id2</c>).
         /// </summary>
-        public string PrimaryKeyColumn { get; set; }
+        public string PrimaryKeyColumn
+        {
+            get => _primaryKeyColumns is null ? string.Empty : string.Join(", ", _primaryKeyColumns);
+            set => _primaryKeyColumns = string.IsNullOrWhiteSpace(value)
+                ? null
+                : value.Split(new[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
+        }
+
+        /// <summary>
+        /// List of primary key columns. The value is <see langword="null"/> if <see cref="PrimaryKeyColumn"/> is not set.
+        /// </summary>
+        public IEnumerable<string> PrimaryKeyColumns => _primaryKeyColumns;
 
         /// <inheritdoc/>
         public void Update(IBulkActionDataReader reader)
@@ -83,6 +101,12 @@ namespace Kros.Data.BulkActions
 
         private async Task UpdateCoreAsync(IDataReader reader, bool useAsync)
         {
+            Check.NotNull(reader, nameof(reader));
+            if ((_primaryKeyColumns is null) || (_primaryKeyColumns.Length == 0))
+            {
+                throw new InvalidOperationException(Resources.BulkUpdatePrimaryKeyIsNotSet);
+            }
+
             using (ConnectionHelper.OpenConnection(_connection))
             {
                 var tempTableName = CreateTempTable(reader);
@@ -138,7 +162,7 @@ namespace Kros.Data.BulkActions
         /// </summary>
         /// <param name="reader">Reader for accessing data.</param>
         /// <param name="tempTableName">Name of temporary table.</param>
-        protected abstract void CreateTempTable(IDataReader reader, string tempTableName);
+        protected abstract void CreateTempTableCore(IDataReader reader, string tempTableName);
 
         /// <summary>
         /// Returns formatted name of temporary table for BulkInsert.
@@ -173,37 +197,27 @@ namespace Kros.Data.BulkActions
         private string CreateTempTable(IDataReader reader)
         {
             var tempTableName = GetTempTableName();
-
-            CreateTempTable(reader, tempTableName);
-            CreatePrimaryKey(tempTableName);
-
+            CreateTempTableCore(reader, tempTableName);
             return tempTableName;
-        }
-
-        private void CreatePrimaryKey(string tempTableName)
-        {
-            using (var cmd = CreateCommandForPrimaryKey())
-            {
-                cmd.CommandText = $"ALTER TABLE [{tempTableName}] " +
-                                  $"ADD CONSTRAINT [PK_{tempTableName.Trim(PrefixTempTable)}] " +
-                                  $"PRIMARY KEY NONCLUSTERED ({PrimaryKeyColumn})";
-                cmd.ExecuteNonQuery();
-            }
         }
 
         /// <summary>
         /// List of temporary table columns.
         /// </summary>
         /// <param name="reader">Reader for accesing data.</param>
-        protected string GetColumnNamesForTempTable(IDataReader reader)
+        /// <param name="excludeColumn">Column name to exculde from list of columns.</param>
+        protected string GetColumnNamesForTempTable(IDataReader reader, string excludeColumn)
         {
             var ret = new StringBuilder();
 
             for (int i = 0; i < reader.FieldCount; i++)
             {
-                ret.AppendFormat("[{0}], ", reader.GetName(i));
+                string columnName = reader.GetName(i);
+                if (!columnName.Equals(excludeColumn, StringComparison.OrdinalIgnoreCase))
+                {
+                    ret.AppendFormat("[{0}], ", columnName);
+                }
             }
-
             ret.Length -= 2;
 
             return ret.ToString();
@@ -234,18 +248,15 @@ namespace Kros.Data.BulkActions
         protected string GetUpdateColumnNames(IDataReader reader, string tempTableName)
         {
             var ret = new StringBuilder();
-            var columnName = string.Empty;
 
             for (int i = 0; i < reader.FieldCount; i++)
             {
-                columnName = reader.GetName(i);
-
-                if (!PrimaryKeyColumn.Equals(columnName, StringComparison.OrdinalIgnoreCase))
+                string columnName = reader.GetName(i);
+                if (!Enumerable.Contains(PrimaryKeyColumns, columnName, StringComparer.OrdinalIgnoreCase))
                 {
                     ret.AppendFormat("[{0}].[{1}] = [{2}].[{1}], ", DestinationTableName, columnName, tempTableName);
                 }
             }
-
             ret.Length -= 2;
 
             return ret.ToString();
