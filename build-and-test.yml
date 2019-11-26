@@ -10,7 +10,7 @@ steps:
       targetFiles: '**/*[Tt]est*/appsettings.json'
 
   - task: DotNetCoreCLI@2
-    displayName: 'Build X'
+    displayName: 'Build'
     inputs:
       command: 'build'
       projects: '**/*.csproj'

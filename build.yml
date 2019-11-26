@@ -6,6 +6,9 @@ trigger:
 
 pool: Default
 
+workspace:
+  clean: all
+
 resources:
   repositories:
     - repository: templates
