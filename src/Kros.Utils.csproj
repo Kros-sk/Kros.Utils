@@ -1,45 +1,41 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;netcoreapp2.1;net46</TargetFrameworks>
-    <Company>KROS a.s.</Company>
-    <Title>Kros.Utils</Title>
+    <TargetFrameworks>netcoreapp2.1;net46</TargetFrameworks>
     <Version>1.10.1</Version>
-    <Authors>KROS a.s.</Authors>
+    <Authors>KROS a. s.</Authors>
+    <Company>KROS a. s.</Company>
     <Description>General utilities and helpers.</Description>
-    <Copyright>Copyright © KROS a.s.</Copyright>
-    <SignAssembly>false</SignAssembly>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Title>Kros.Utils</Title>
+    <Copyright>Copyright © KROS a. s.</Copyright>
     <RootNamespace>Kros</RootNamespace>
-    <TargetGroup Condition="('$(TargetFramework)' == 'netcoreapp2.1') Or ('$(TargetFramework)' == 'netstandard2.0')">netcoreapp</TargetGroup>
-    <DefineConstants Condition="'$(TargetGroup)' == 'netcoreapp'">$(DefineConstants);netcoreapp</DefineConstants>
+    <DefineConstants Condition="'$(TargetFramework)' == 'netcoreapp2.1'">$(DefineConstants);netcoreapp</DefineConstants>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
   <PropertyGroup>
     <PackageIcon>icon.png</PackageIcon>
-    <PackageProjectUrl>https://github.com/Kros-sk/Kros.Utils/blob/master/README.md</PackageProjectUrl>
-    <PackageTags>Kros;Utils;Utility;Helpers;Extensions; DatabaseSchema;BulkOperation;BulkUpdate;Bulk Insert;Bulk Update;</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/Kros-sk/Kros.Utils</PackageProjectUrl>
     <PackageReleaseNotes>https://github.com/Kros-sk/Kros.Utils/releases</PackageReleaseNotes>
+    <PackageTags>Kros;Utils;Utility;Helpers;Extensions; DatabaseSchema;BulkOperation;BulkUpdate;Bulk Insert;Bulk Update;</PackageTags>
   </PropertyGroup>
-  <ItemGroup>
-    <None Include="Resources\icon.png" Pack="true" PackagePath="" />
-  </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="System.Data.SqlClient" Version="4.7.0" />
   </ItemGroup>
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-    <PackageReference Include="Microsoft.Net.Http.Headers" Version="2.2.0" />
-    <PackageReference Include="System.Net.Http" Version="4.3.4" />
-  </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp2.1'">
-    <PackageReference Include="Microsoft.Net.Http.Headers" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Net.Http.Headers" Version="2.2.8" />
     <PackageReference Include="System.Net.Http" Version="4.3.4" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)' == 'net46'">
     <Reference Include="System.Net.Http" />
   </ItemGroup>
+
   <ItemGroup>
-    <None Remove="Kros.Utils.xml" />
+    <None Include="Resources\icon.png" Pack="true" PackagePath="" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Resources\SqlIdGeneratorStoredProcedureScript.sql" />
     <None Remove="Resources\SqlIdGeneratorTableScript.sql" />
   </ItemGroup>
@@ -47,6 +43,7 @@
     <EmbeddedResource Include="Resources\SqlIdGeneratorStoredProcedureScript.sql" />
     <EmbeddedResource Include="Resources\SqlIdGeneratorTableScript.sql" />
   </ItemGroup>
+
   <ItemGroup>
     <Compile Update="Properties\Resources.Designer.cs">
       <DesignTime>True</DesignTime>
