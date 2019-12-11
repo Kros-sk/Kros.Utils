@@ -3,8 +3,8 @@
     /// <summary>
     /// Some of the error codes for Microsoft SQL Server.
     /// </summary>
-    /// <remarks>Error code is in exception <see cref="System.Data.SqlClient.SqlException"/>,
-    /// in the <see cref="System.Data.SqlClient.SqlException.Number"/> property. List of all error codes is at
+    /// <remarks>Error code is in exception <see cref="Microsoft.Data.SqlClient.SqlException"/>,
+    /// in the <see cref="Microsoft.Data.SqlClient.SqlException.Number"/> property. List of all error codes is at
     /// <see href="https://msdn.microsoft.com/en-us/library/cc645603.aspx"/>.</remarks>
     public enum SqlServerErrorCode
     {

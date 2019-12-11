@@ -1,7 +1,7 @@
 using Kros.Data.SqlServer;
 using Kros.Utils;
 using System.Data.Common;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 
 namespace Kros.Data.BulkActions.SqlServer
 {

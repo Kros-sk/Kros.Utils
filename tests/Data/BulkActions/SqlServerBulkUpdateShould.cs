@@ -2,11 +2,11 @@
 using Kros.Data.BulkActions;
 using Kros.Data.BulkActions.SqlServer;
 using Kros.UnitTests;
+using Microsoft.Data.SqlClient;
 using Nito.AsyncEx;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
