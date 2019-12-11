@@ -1,7 +1,7 @@
-﻿using System;
-using System.Data;
 ﻿using Kros.Data.SqlServer;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
+using System;
+using System.Data;
 using System.Linq;
 
 namespace Kros.Data

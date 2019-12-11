@@ -2,8 +2,8 @@
 using Kros.Data;
 using Kros.Data.SqlServer;
 using Kros.UnitTests;
+using Microsoft.Data.SqlClient;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Diagnostics.CodeAnalysis;
 using Xunit;
 

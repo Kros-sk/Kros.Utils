@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
 using Kros.Data.BulkActions.SqlServer;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using Xunit;
 
 namespace Kros.Utils.UnitTests.Data.BulkActions
