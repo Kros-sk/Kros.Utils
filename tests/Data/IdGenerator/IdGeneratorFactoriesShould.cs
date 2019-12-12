@@ -1,8 +1,8 @@
 ﻿using FluentAssertions;
 using Kros.Data;
 using Kros.Data.SqlServer;
+using Microsoft.Data.SqlClient;
 using System;
-using System.Data.SqlClient;
 using Xunit;
 
 namespace Kros.Utils.UnitTests.Data

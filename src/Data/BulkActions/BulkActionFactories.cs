@@ -66,7 +66,7 @@ namespace Kros.Data.BulkActions
         /// The connection string.
         /// </param>
         /// <param name="adoClientName">
-        /// Name of the ado client. (e.g. <see cref="System.Data.SqlClient.SqlConnection"/> it's: System.Data.SqlClient)
+        /// Name of the ADO client. (e.g. <see cref="Microsoft.Data.SqlClient.SqlConnection"/> it's: Microsoft.Data.SqlClient)
         /// </param>
         /// <returns>
         /// The <see cref="IBulkActionFactory"/> instance.

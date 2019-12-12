@@ -38,7 +38,7 @@ namespace Kros.Data
         /// <typeparam name="TConnection">Database connection type.</typeparam>
         /// <param name="adoClientName">
         /// Name of the database client. It identifies specific database. For example client name for
-        /// <see cref="SqlServer.SqlServerIdGeneratorFactory"/> is "System.Data.SqlClient"
+        /// <see cref="SqlServer.SqlServerIdGeneratorFactory"/> is "Microsoft.Data.SqlClient"
         /// (<see cref="SqlServer.SqlServerDataHelper.ClientId"/>).
         /// </param>
         /// <param name="factoryByConnection">

@@ -1,7 +1,6 @@
 ﻿using Kros.Utils;
-using System.Collections.Generic;
+using Microsoft.Data.SqlClient;
 using System.Data;
-using System.Data.SqlClient;
 
 namespace Kros.Data.Schema.SqlServer
 {

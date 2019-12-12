@@ -1,9 +1,9 @@
 ﻿using Kros.Data.Schema;
 using Kros.Properties;
 using Kros.Utils;
+using Microsoft.Data.SqlClient;
 using System;
 using System.Data;
-using System.Data.SqlClient;
 using System.Threading.Tasks;
 
 namespace Kros.Data.BulkActions.SqlServer
