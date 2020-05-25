@@ -24,15 +24,23 @@ To contribute with new topics/information or make changes, see [contributing](ht
 
 __Kros.Utils__
 
-* [Arguments Check Functions](#arguments-check-functions)
-* [Standard Extensions](#standard-extensions)
-* [File/Folder Path Helpers](#filefolder-path-helpers)
-* [Database Schema](#database-schema)
-* [Bulk Operations - Bulk Insert and Bulk Update](#bulk-operations---bulk-insert-and-bulk-update)
-* [IdGenerator](#idgenerator)
-* [IDiContainer Interface Describing Dependency Injection Container](#idicontainer-interface-describing-dependency-injection-container)
-* [Caching](#caching)
-* [Unit Testing Helpers](#unit-testing-helpers)
+- [Kros.Utils ![Build Status](https://dev.azure.com/krossk/DevShared/_build/latest?definitionId=55&branchName=master)](#krosutils-img-src%22httpsdevazurecomkrosskdevsharedbuildlatestdefinitionid55branchnamemaster%22-alt%22build-status%22)
+  - [Documentation](#documentation)
+  - [Download](#download)
+  - [Contributing Guide](#contributing-guide)
+  - [This topic contains following sections](#this-topic-contains-following-sections)
+    - [Arguments Check Functions](#arguments-check-functions)
+    - [Standard Extensions](#standard-extensions)
+      - [URI](#uri)
+    - [File/Folder Path Helpers](#filefolder-path-helpers)
+    - [Database Scheme](#database-scheme)
+    - [Bulk Operations - Bulk Insert and Bulk Update](#bulk-operations---bulk-insert-and-bulk-update)
+      - [Bulk Insert](#bulk-insert)
+      - [Bulk Update](#bulk-update)
+    - [IdGenerator](#idgenerator)
+    - [IDiContainer Interface Describing Dependency Injection Container](#idicontainer-interface-describing-dependency-injection-container)
+    - [Caching](#caching)
+    - [Unit Testing Helpers](#unit-testing-helpers)
 
 ### Arguments Check Functions
 
@@ -83,6 +91,14 @@ General extensions for:
 
 * Strings - [StringExtensions](https://kros-sk.github.io/Kros.Libs.Documentation/api/Kros.Utils/Kros.Extensions.StringExtensions.html "String Extensions")
 * Dates - [DateTimeExtensions](https://kros-sk.github.io/Kros.Libs.Documentation/api/Kros.Utils/Kros.Extensions.DateTimeExtensions.html "DateTime Extensions")
+
+#### URI
+
+```CSharp
+ "https://gmail.google.com/inbox".GetDomain()
+    .Should()
+    .Be("google.com")
+```
 
 ### File/Folder Path Helpers
 
