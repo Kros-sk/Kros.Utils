@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;netcoreapp2.1;netcoreapp3.1;net46</TargetFrameworks>
-    <Version>1.15.0</Version>
+    <Version>1.16.0</Version>
     <Authors>KROS a. s.</Authors>
     <Company>KROS a. s.</Company>
     <Description>General utilities and helpers.</Description>
@@ -13,6 +13,11 @@
     <DefineConstants Condition="'$(IsNetCoreApp)' == 'true'">$(DefineConstants);netcoreapp</DefineConstants>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
   <PropertyGroup>
     <PackageIcon>icon.png</PackageIcon>
@@ -22,8 +27,16 @@
     <PackageTags>Kros;Utils;Utility;Helpers;Extensions; DatabaseSchema;BulkOperation;BulkUpdate;Bulk Insert;Bulk Update;</PackageTags>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(TF_BUILD)' == 'true'">
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="Microsoft.Data.SqlClient" Version="1.1.1" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
   </ItemGroup>
   <ItemGroup Condition="'$(IsNetCoreApp)' == 'true'">
     <PackageReference Include="Microsoft.Net.Http.Headers" Version="2.2.8" />
