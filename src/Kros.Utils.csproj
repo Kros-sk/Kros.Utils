@@ -35,6 +35,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\IntIdGeneratorStoredProcedure.sql" />
+    <None Remove="Resources\IntIdGeneratorTable.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\IntIdGeneratorStoredProcedure.sql" />
+    <EmbeddedResource Include="Resources\IntIdGeneratorTable.sql" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.Data.SqlClient" Version="1.1.1" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
   </ItemGroup>
@@ -48,15 +57,6 @@
 
   <ItemGroup>
     <None Include="Resources\icon.png" Pack="true" PackagePath="" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Remove="Resources\SqlIdGeneratorStoredProcedureScript.sql" />
-    <None Remove="Resources\SqlIdGeneratorTableScript.sql" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\SqlIdGeneratorStoredProcedureScript.sql" />
-    <EmbeddedResource Include="Resources\SqlIdGeneratorTableScript.sql" />
   </ItemGroup>
 
   <ItemGroup>

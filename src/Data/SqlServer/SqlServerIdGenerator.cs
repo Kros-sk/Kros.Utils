@@ -76,13 +76,13 @@ namespace Kros.Data.SqlServer
         /// Returns SQL script for creating stored procedure, which generates IDs.
         /// </summary>
         public static string GetStoredProcedureCreationScript() =>
-            ResourceHelper.GetResourceContent("Kros.Resources.SqlIdGeneratorStoredProcedureScript.sql");
+            ResourceHelper.GetResourceContent("Kros.Resources.IntIdGeneratorStoredProcedure.sql");
 
         /// <summary>
         /// Returns SQL script for creating table in database for storing IDs.
         /// </summary>
         public static string GetIdStoreTableCreationScript() =>
-            ResourceHelper.GetResourceContent("Kros.Resources.SqlIdGeneratorTableScript.sql");
+            ResourceHelper.GetResourceContent("Kros.Resources.IntIdGeneratorTable.sql");
 
         /// <inheritdoc/>
         [SuppressMessage("Security", "CA2100:Review SQL queries for security vulnerabilities")]
