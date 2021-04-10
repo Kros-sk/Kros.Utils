@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;netcoreapp2.1;netcoreapp3.1;net46</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;netcoreapp3.1;net46</TargetFrameworks>
     <Version>1.16.2</Version>
     <Authors>KROS a. s.</Authors>
     <Company>KROS a. s.</Company>
@@ -9,7 +9,7 @@
     <Copyright>Copyright © KROS a. s.</Copyright>
     <RootNamespace>Kros</RootNamespace>
     <IsNetCoreApp>false</IsNetCoreApp>
-    <IsNetCoreApp Condition="'$(TargetFramework)' == 'netstandard2.0' or '$(TargetFramework)' == 'netcoreapp2.1' or '$(TargetFramework)' == 'netcoreapp3.1'">true</IsNetCoreApp>
+    <IsNetCoreApp Condition="'$(TargetFramework)' == 'netstandard2.0' or '$(TargetFramework)' == 'netcoreapp3.1'">true</IsNetCoreApp>
     <DefineConstants Condition="'$(IsNetCoreApp)' == 'true'">$(DefineConstants);netcoreapp</DefineConstants>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
