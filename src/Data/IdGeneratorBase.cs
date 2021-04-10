@@ -84,7 +84,7 @@ namespace Kros.Data
         private int _nextAccessToDb = -1;
 
         /// <inheritdoc cref="IIdGenerator.GetNext"/>
-        public virtual int GetNext()
+        public virtual object GetNext()
         {
             if (_nextAccessToDb <= _nextId)
             {

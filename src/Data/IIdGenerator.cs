@@ -18,7 +18,7 @@ namespace Kros.Data
         /// <returns>
         /// Unique ID for record in data table.
         /// </returns>
-        int GetNext();
+        object GetNext();
 
         /// <summary>
         /// Initializes database for using ID generator. Initialization can mean creating necessary table and stored procedure.
