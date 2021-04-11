@@ -43,8 +43,8 @@ namespace Kros.Data.SqlServer
         /// <inheritdoc/>
         public IIdGenerator GetGenerator(string tableName, int batchSize) =>
             _connection != null ?
-                new SqlServerIdGenerator(_connection, tableName, batchSize) :
-                new SqlServerIdGenerator(_connectionString, tableName, batchSize);
+                new SqlServerIntIdGenerator(_connection, tableName, batchSize) :
+                new SqlServerIntIdGenerator(_connectionString, tableName, batchSize);
 
         /// <summary>
         /// Registers factory methods for creating an instance of factory into <see cref="IdGeneratorFactories"/>.
