@@ -14,7 +14,7 @@ namespace Kros.Utils.UnitTests.Data
         {
             using (var conn = new SqlConnection())
             {
-                var factory = IdGeneratorFactories.GetFactory(conn);
+                var factory = IdGeneratorFactories.GetFactory(typeof(int), conn);
 
                 factory.Should().NotBeNull();
             }
@@ -23,7 +23,7 @@ namespace Kros.Utils.UnitTests.Data
         [Fact]
         public void GetFactoryByAdoClientName()
         {
-            var factory = IdGeneratorFactories.GetFactory("connectionstring", SqlServerDataHelper.ClientId);
+            var factory = IdGeneratorFactories.GetFactory(typeof(int), "connectionstring", SqlServerDataHelper.ClientId);
 
             factory.Should().NotBeNull();
         }
@@ -33,7 +33,7 @@ namespace Kros.Utils.UnitTests.Data
         {
             using (var conn = new CustomConnection())
             {
-                Action action = () => { var factory = IdGeneratorFactories.GetFactory(conn); };
+                Action action = () => { var factory = IdGeneratorFactories.GetFactory(typeof(int), conn); };
 
                 action.Should().Throw<InvalidOperationException>()
                     .WithMessage("*CustomConnection*");
@@ -43,7 +43,7 @@ namespace Kros.Utils.UnitTests.Data
         [Fact]
         public void ThrowExceptionWhenAdoClientNameIsNotRegistered()
         {
-            Action action = () => { var factory = IdGeneratorFactories.GetFactory("constring", "System.Data.CustomClient"); };
+            Action action = () => { var factory = IdGeneratorFactories.GetFactory(typeof(int), "constring", "System.Data.CustomClient"); };
 
             action.Should().Throw<InvalidOperationException>()
                 .WithMessage("*System.Data.CustomClient*");

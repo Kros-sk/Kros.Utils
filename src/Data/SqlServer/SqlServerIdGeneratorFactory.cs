@@ -50,7 +50,9 @@ namespace Kros.Data.SqlServer
         /// Registers factory methods for creating an instance of factory into <see cref="IdGeneratorFactories"/>.
         /// </summary>
         public static void Register() =>
-            IdGeneratorFactories.Register<SqlConnection>(SqlServerDataHelper.ClientId,
+            IdGeneratorFactories.Register<SqlConnection>(
+                typeof(int),
+                SqlServerDataHelper.ClientId,
                 (conn) => new SqlServerIdGeneratorFactory(conn as SqlConnection),
                 (connString) => new SqlServerIdGeneratorFactory(connString));
     }

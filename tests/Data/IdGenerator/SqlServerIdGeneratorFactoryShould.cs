@@ -13,7 +13,7 @@ namespace Kros.Utils.UnitTests.Data
             using (var conn = new SqlConnection())
             {
                 var factory = new SqlServerIdGeneratorFactory(conn);
-                var generator = factory.GetGenerator("Person", 150) as SqlServerIdGenerator;
+                var generator = factory.GetGenerator("Person", 150) as SqlServerIntIdGenerator;
 
                 generator.TableName.Should().Be("Person");
                 generator.BatchSize.Should().Be(150);

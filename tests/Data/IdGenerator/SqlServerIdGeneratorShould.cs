@@ -15,8 +15,8 @@ namespace Kros.Utils.UnitTests.Data.IdGenerator
 
         protected override IEnumerable<string> DatabaseInitScripts =>
             new List<string>() {
-                SqlServerIdGenerator.GetIdStoreTableCreationScript(),
-                SqlServerIdGenerator.GetStoredProcedureCreationScript()
+                SqlServerIntIdGenerator.GetIdStoreTableCreationScript(),
+                SqlServerIntIdGenerator.GetStoredProcedureCreationScript()
             };
 
         #endregion
@@ -142,7 +142,7 @@ namespace Kros.Utils.UnitTests.Data.IdGenerator
                 HasTable(helper.Connection, tableName).Should().BeFalse();
                 HasProcedure(helper.Connection, procedureName).Should().BeFalse();
 
-                var idGenerator = new SqlServerIdGenerator(helper.Connection, "TestTable", 1);
+                var idGenerator = new SqlServerIntIdGenerator(helper.Connection, "TestTable", 1);
                 idGenerator.InitDatabaseForIdGenerator();
 
                 HasTable(helper.Connection, tableName).Should().BeTrue();
@@ -161,7 +161,7 @@ namespace Kros.Utils.UnitTests.Data.IdGenerator
                 HasTable(helper.Connection, tableName).Should().BeTrue();
                 HasProcedure(helper.Connection, procedureName).Should().BeTrue();
 
-                var idGenerator = new SqlServerIdGenerator(helper.Connection, "TestTable", 1);
+                var idGenerator = new SqlServerIntIdGenerator(helper.Connection, "TestTable", 1);
                 idGenerator.InitDatabaseForIdGenerator();
 
                 HasTable(helper.Connection, tableName).Should().BeTrue();
