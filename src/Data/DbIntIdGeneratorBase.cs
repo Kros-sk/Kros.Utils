@@ -9,7 +9,7 @@ namespace Kros.Data
     /// and uses databse as backend.
     /// </summary>
     /// <seealso cref="IIdGenerator" />
-    public abstract class DbIntIdGeneratorBase : IIdGenerator
+    public abstract class DbIntIdGeneratorBase<T> : IIdGenerator where T : struct, IComparable<T>
     {
         private readonly bool _disposeOfConnection = false;
 
@@ -57,6 +57,8 @@ namespace Kros.Data
         {
             TableName = Check.NotNull(tableName, nameof(tableName));
             BatchSize = Check.GreaterThan(batchSize, 0, nameof(batchSize));
+            _nextId = default;
+            _nextAccessToDb = AddValue(_nextId, -1);
         }
 
         /// <summary>
@@ -81,22 +83,31 @@ namespace Kros.Data
         /// </summary>
         protected DbConnection Connection { get; }
 
-        private int _nextId = 0;
-        private int _nextAccessToDb = -1;
+        private T _nextId;
+        private T _nextAccessToDb;
 
         /// <inheritdoc cref="IIdGenerator.GetNext"/>
         public virtual object GetNext()
         {
-            if (_nextAccessToDb <= _nextId)
+            if (_nextAccessToDb.CompareTo(_nextId) <= 0)
             {
                 _nextId = GetNewIdFromDb();
-                _nextAccessToDb = _nextId + BatchSize;
+                _nextAccessToDb = AddValue(_nextId, BatchSize);
             }
-
-            return _nextId++;
+            T result = _nextId;
+            _nextId = AddValue(_nextId, 1);
+            return result;
         }
 
-        private int GetNewIdFromDb()
+        /// <summary>
+        /// Sums <paramref name="increment"/> and <paramref name="baseValue"/>.
+        /// </summary>
+        /// <param name="baseValue">Number 1.</param>
+        /// <param name="increment">Number 2.</param>
+        /// <returns>Sum of <paramref name="baseValue"/> and <paramref name="increment"/>.</returns>
+        protected abstract T AddValue(T baseValue, int increment);
+
+        private T GetNewIdFromDb()
         {
             using (ConnectionHelper.OpenConnection(Connection))
             {
@@ -108,7 +119,7 @@ namespace Kros.Data
         /// Returns new ID from database. In this method is ensured, that the <see cref="Connection"/> is opened.
         /// </summary>
         /// <returns>Next ID.</returns>
-        protected abstract int GetNewIdFromDbCore();
+        protected abstract T GetNewIdFromDbCore();
 
         /// <inheritdoc/>
         public abstract void InitDatabaseForIdGenerator();

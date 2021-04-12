@@ -15,7 +15,7 @@ namespace Kros.Data.SqlServer
     /// <example>
     /// <code language="cs" source="..\..\..\Documentation\Examples\Kros.Utils\IdGeneratorExamples.cs" region="IdGeneratorFactory"/>
     /// </example>
-    public class SqlServerIntIdGenerator : DbIntIdGeneratorBase
+    public class SqlServerIntIdGenerator : DbIntIdGeneratorBase<int>
     {
         private const string GetNewIdSpName = "spGetNewId";
 
@@ -99,5 +99,8 @@ namespace Kros.Data.SqlServer
                 cmd.ExecuteNonQuery();
             }
         }
+
+        /// <inheritdoc/>
+        protected override int AddValue(int baseValue, int increment) => baseValue + increment;
     }
 }
