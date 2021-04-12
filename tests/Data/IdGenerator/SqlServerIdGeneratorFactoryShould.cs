@@ -8,11 +8,11 @@ namespace Kros.Utils.UnitTests.Data
     public class SqlServerIdGeneratorFactoryShould
     {
         [Fact]
-        public void CreateSqlServerIdGeneratorByConnection()
+        public void CreateSqlServerIntIdGeneratorByConnection()
         {
             using (var conn = new SqlConnection())
             {
-                var factory = new SqlServerIdGeneratorFactory(conn);
+                var factory = new SqlServerIntIdGeneratorFactory(conn);
                 var generator = factory.GetGenerator("Person", 150) as SqlServerIntIdGenerator;
 
                 generator.TableName.Should().Be("Person");

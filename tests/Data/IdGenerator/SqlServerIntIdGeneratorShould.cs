@@ -97,13 +97,9 @@ namespace Kros.Utils.UnitTests.Data.IdGenerator
                 using (var nextGenerator = GetFactory().GetGenerator("People", 3))
                 {
                     nextGenerator.GetNext().Should().Be(2);
-
                     idGenerator.GetNext().Should().Be(5);
-
                     nextGenerator.GetNext().Should().Be(3);
-
                     nextGenerator.GetNext().Should().Be(4);
-
                     nextGenerator.GetNext().Should().Be(6);
                 }
 
@@ -171,8 +167,8 @@ namespace Kros.Utils.UnitTests.Data.IdGenerator
 
         #region Helpers
 
-        private SqlServerIdGeneratorFactory GetFactory()
-            => new SqlServerIdGeneratorFactory(ServerHelper.Connection);
+        private SqlServerIntIdGeneratorFactory GetFactory()
+            => new SqlServerIntIdGeneratorFactory(ServerHelper.Connection);
 
         [SuppressMessage("Security", "CA2100:Review SQL queries for security vulnerabilities")]
         private bool HasTable(SqlConnection connection, string tableName)

@@ -10,8 +10,8 @@ namespace Kros.Data.SqlServer
     /// The integer ID generator for Microsoft SQL Server.
     /// </summary>
     /// <seealso cref="IdGeneratorFactories" />
-    /// <seealso cref="SqlServerIdGeneratorFactory" />
-    /// <remarks>In general, the generator should be created using <see cref="SqlServerIdGeneratorFactory"/>.</remarks>
+    /// <seealso cref="SqlServerIntIdGeneratorFactory" />
+    /// <remarks>In general, the generator should be created using <see cref="SqlServerIntIdGeneratorFactory"/>.</remarks>
     /// <example>
     /// <code language="cs" source="..\..\..\Documentation\Examples\Kros.Utils\IdGeneratorExamples.cs" region="IdGeneratorFactory"/>
     /// </example>

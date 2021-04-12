@@ -4,34 +4,34 @@ using Microsoft.Data.SqlClient;
 namespace Kros.Data.SqlServer
 {
     /// <summary>
-    /// Creates an instances of <see cref="SqlServerIdGenerator"/> for specified database.
+    /// Factory for creating integer ID generators.
     /// </summary>
-    /// <seealso cref="SqlServerIdGenerator"/>
+    /// <seealso cref="SqlServerIntIdGenerator"/>
     /// <seealso cref="IdGeneratorFactories"/>
     /// <example>
     /// <code language="cs" source="..\..\..\Documentation\Examples\Kros.Utils\IdGeneratorExamples.cs" region="IdGeneratorFactory"/>
     /// </example>
-    public class SqlServerIdGeneratorFactory
+    public class SqlServerIntIdGeneratorFactory
         : IIdGeneratorFactory
     {
         private readonly string _connectionString;
         private readonly SqlConnection _connection;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SqlServerIdGeneratorFactory"/> class.
+        /// Initializes a new instance of the <see cref="SqlServerIntIdGeneratorFactory"/> class.
         /// </summary>
         /// <param name="connection">Database connection. ID generators create IDs for tables in this database.</param>
-        public SqlServerIdGeneratorFactory(SqlConnection connection)
+        public SqlServerIntIdGeneratorFactory(SqlConnection connection)
         {
             _connection = Check.NotNull(connection, nameof(connection));
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SqlServerIdGeneratorFactory"/> class.
+        /// Initializes a new instance of the <see cref="SqlServerIntIdGeneratorFactory"/> class.
         /// </summary>
         /// <param name="connectionString">Database connection string.
         /// ID generators create IDs for tables in this database.</param>
-        public SqlServerIdGeneratorFactory(string connectionString)
+        public SqlServerIntIdGeneratorFactory(string connectionString)
         {
             _connectionString = Check.NotNullOrWhiteSpace(connectionString, nameof(connectionString));
         }
@@ -53,7 +53,7 @@ namespace Kros.Data.SqlServer
             IdGeneratorFactories.Register<SqlConnection>(
                 typeof(int),
                 SqlServerDataHelper.ClientId,
-                (conn) => new SqlServerIdGeneratorFactory(conn as SqlConnection),
-                (connString) => new SqlServerIdGeneratorFactory(connString));
+                (conn) => new SqlServerIntIdGeneratorFactory(conn as SqlConnection),
+                (connString) => new SqlServerIntIdGeneratorFactory(connString));
     }
 }

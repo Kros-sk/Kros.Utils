@@ -17,7 +17,7 @@ namespace Kros.Data
     /// with connection instance and one with connection string.
     /// </summary>
     /// <remarks>
-    /// <see cref="SqlServer.SqlServerIdGeneratorFactory"/> is automatically registered.
+    /// <see cref="SqlServer.SqlServerIntIdGeneratorFactory"/> is automatically registered.
     /// </remarks>
     /// <seealso cref="IIdGeneratorFactory"/>
     /// <seealso cref="IIdGenerator"/>
@@ -74,7 +74,7 @@ namespace Kros.Data
 
         static IdGeneratorFactories()
         {
-            SqlServer.SqlServerIdGeneratorFactory.Register();
+            SqlServer.SqlServerIntIdGeneratorFactory.Register();
         }
 
         private static readonly Dictionary<string, List<FactoryInfo>> _byConnection
@@ -91,7 +91,7 @@ namespace Kros.Data
         /// <param name="dataType">Data type of generator.</param>
         /// <param name="clientName">
         /// Name of the database client. It identifies specific database. For example client name for
-        /// <see cref="SqlServer.SqlServerIdGeneratorFactory"/> is "Microsoft.Data.SqlClient"
+        /// <see cref="SqlServer.SqlServerIntIdGeneratorFactory"/> is "Microsoft.Data.SqlClient"
         /// (<see cref="SqlServer.SqlServerDataHelper.ClientId"/>).
         /// </param>
         /// <param name="factoryByConnection">
