@@ -13,7 +13,7 @@ namespace Kros.Data.SqlServer
     /// <example>
     /// <code language="cs" source="..\..\..\Documentation\Examples\Kros.Utils\IdGeneratorExamples.cs" region="IdGeneratorFactory"/>
     /// </example>
-    public class SqlServerIntIdGenerator : DbIntIdGeneratorBase<int>
+    public class SqlServerLongIdGenerator : DbIntIdGeneratorBase<long>
     {
         /// <summary>
         /// Creates a generator for table <paramref name="tableName"/> in database <paramref name="connectionString"/>
@@ -30,7 +30,7 @@ namespace Kros.Data.SqlServer
         /// whitespace characters.</item>
         /// <item>Value of <paramref name="batchSize"/> is less or equal than 0.</item>
         /// </list></exception>
-        public SqlServerIntIdGenerator(string connectionString, string tableName, int batchSize)
+        public SqlServerLongIdGenerator(string connectionString, string tableName, int batchSize)
             : base(connectionString, tableName, batchSize)
         {
         }
@@ -46,24 +46,24 @@ namespace Kros.Data.SqlServer
         /// Value of <paramref name="connection"/> or <paramref name="tableName"/> is <see langword="null"/>.
         /// </exception>
         /// <exception cref="ArgumentException">Value of <paramref name="batchSize"/> is less or equal than 0.</exception>
-        public SqlServerIntIdGenerator(SqlConnection connection, string tableName, int batchSize)
+        public SqlServerLongIdGenerator(SqlConnection connection, string tableName, int batchSize)
             : base(connection, tableName, batchSize)
         {
         }
 
         /// <inheritdoc/>
-        public override string BackendDataType => "int";
+        public override string BackendDataType => "bigint";
 
         /// <inheritdoc/>
-        public override string BackendTableName => "IdStore";
+        public override string BackendTableName => "IdStoreInt64";
 
         /// <inheritdoc/>
-        public override string BackendStoredProcedureName => "spGetNewId";
+        public override string BackendStoredProcedureName => "spGetNewIdInt64";
 
         /// <inheritdoc/>
         protected override DbConnection CreateConnection(string connectionString) => new SqlConnection(connectionString);
 
         /// <inheritdoc/>
-        protected override int AddValue(int baseValue, int increment) => baseValue + increment;
+        protected override long AddValue(long baseValue, int increment) => baseValue + increment;
     }
 }

@@ -13,11 +13,17 @@ namespace Kros.Utils.UnitTests.Data.IdGenerator
     {
         #region DatabaseTestBase Overrides
 
-        protected override IEnumerable<string> DatabaseInitScripts =>
-            new List<string>() {
-                SqlServerIntIdGenerator.GetIdStoreTableCreationScript(),
-                SqlServerIntIdGenerator.GetStoredProcedureCreationScript()
-            };
+        protected override IEnumerable<string> DatabaseInitScripts
+        {
+            get {
+                var scripts = new List<string>();
+                var generator = new SqlServerIntIdGenerator(new SqlConnection(), "_NonExistingtable", 1);
+                scripts.Add(generator.BackendTableScript);
+                scripts.Add(generator.BackendStoredProcedureScript);
+                generator.Dispose();
+                return scripts;
+            }
+        }
 
         #endregion
 

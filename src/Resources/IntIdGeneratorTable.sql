@@ -1,8 +1,8 @@
-﻿CREATE TABLE [IdStore] (
+﻿CREATE TABLE [{{TableName}}] (
 	[TableName] nvarchar(100) NOT NULL,
-	[LastId] int NOT NULL,
+	[LastId] {{DataType}} NOT NULL,
 
-	CONSTRAINT [PK_IdStore] PRIMARY KEY CLUSTERED ([TableName] ASC)	WITH (
+	CONSTRAINT [PK_{{TableName}}] PRIMARY KEY CLUSTERED ([TableName] ASC) WITH (
 		PAD_INDEX = OFF,
 		STATISTICS_NORECOMPUTE = OFF,
 		IGNORE_DUP_KEY = OFF,

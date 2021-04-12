@@ -1,5 +1,7 @@
 ﻿using Kros.Utils;
+using Microsoft.Data.SqlClient;
 using System;
+using System.Data;
 using System.Data.Common;
 
 namespace Kros.Data
@@ -119,10 +121,69 @@ namespace Kros.Data
         /// Returns new ID from database. In this method is ensured, that the <see cref="Connection"/> is opened.
         /// </summary>
         /// <returns>Next ID.</returns>
-        protected abstract T GetNewIdFromDbCore();
+        protected virtual T GetNewIdFromDbCore()
+        {
+            using (var cmd = Connection.CreateCommand() as SqlCommand)
+            {
+                cmd.CommandText = BackendStoredProcedureName;
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add(new SqlParameter("@TableName", SqlDbType.NVarChar) { Value = TableName });
+                cmd.Parameters.Add(new SqlParameter("@NumberOfItems", SqlDbType.Int) { Value = BatchSize });
+
+                return (T)cmd.ExecuteScalar();
+            }
+        }
+
+        /// <summary>
+        /// Databse type for generator value.
+        /// </summary>
+        public abstract string BackendDataType { get; }
+
+        /// <summary>
+        /// Database table name for generator values.
+        /// </summary>
+        public abstract string BackendTableName { get; }
+
+        /// <summary>
+        /// Database stored procedure name for getting generator value.
+        /// </summary>
+        public abstract string BackendStoredProcedureName { get; }
+
+        /// <summary>
+        /// Script to create database table for generator.
+        /// </summary>
+        public virtual string BackendTableScript => GetScript("Kros.Resources.IntIdGeneratorTable.sql");
+
+        /// <summary>
+        /// Script to create database stored procedure for generator.
+        /// </summary>
+        public virtual string BackendStoredProcedureScript => GetScript("Kros.Resources.IntIdGeneratorStoredProcedure.sql");
+
+        private string GetScript(string scriptName)
+            => ResourceHelper.GetResourceContent(scriptName)
+                .Replace("{{DataType}}", BackendDataType)
+                .Replace("{{TableName}}", BackendTableName)
+                .Replace("{{StoredProcedureName}}", BackendStoredProcedureName);
 
         /// <inheritdoc/>
-        public abstract void InitDatabaseForIdGenerator();
+        public virtual void InitDatabaseForIdGenerator()
+        {
+            using (ConnectionHelper.OpenConnection(Connection))
+            using (DbCommand cmd = Connection.CreateCommand())
+            {
+                cmd.CommandText =
+                    $"IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = '{BackendTableName}' AND type = 'U')"
+                    + Environment.NewLine
+                    + BackendTableScript;
+                cmd.ExecuteNonQuery();
+
+                cmd.CommandText =
+                    $"IF NOT EXISTS (SELECT * FROM sys.procedures WHERE name = '{BackendStoredProcedureName}' AND type = 'P')"
+                    + Environment.NewLine
+                    + $"EXEC('{BackendStoredProcedureScript.Replace("'", "''")}');";
+                cmd.ExecuteNonQuery();
+            }
+        }
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 
