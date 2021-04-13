@@ -21,7 +21,8 @@ namespace Kros.Data
     /// Interface for generating IDs for records in database. In general, IDs are just sequential numbers.
     /// </summary>
     /// <remarks>Usually one generator generates IDs for just one table.</remarks>
-    /// <seealso cref="SqlServer.SqlServerIdGenerator"/>
+    /// <seealso cref="SqlServer.SqlServerIntIdGenerator"/>
+    /// <seealso cref="SqlServer.SqlServerLongIdGenerator"/>
     /// <example>
     /// <code language="cs" source="..\..\Documentation\Examples\Kros.Utils\IdGeneratorExamples.cs" region="IdGeneratorFactory"/>
     /// </example>
