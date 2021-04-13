@@ -59,7 +59,7 @@ namespace Kros.Data.SqlServer
         /// </summary>
         public static void Register()
             => IdGeneratorFactories.Register<SqlConnection>(
-                typeof(int),
+                typeof(long),
                 SqlServerDataHelper.ClientId,
                 (conn) => new SqlServerLongIdGeneratorFactory(conn as SqlConnection),
                 (connString) => new SqlServerLongIdGeneratorFactory(connString));
