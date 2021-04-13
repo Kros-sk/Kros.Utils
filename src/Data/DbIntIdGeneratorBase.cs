@@ -171,10 +171,7 @@ namespace Kros.Data
             using (ConnectionHelper.OpenConnection(Connection))
             using (DbCommand cmd = Connection.CreateCommand())
             {
-                cmd.CommandText =
-                    $"IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = '{BackendTableName}' AND type = 'U')"
-                    + Environment.NewLine
-                    + BackendTableScript;
+                cmd.CommandText = BackendTableScript;
                 cmd.ExecuteNonQuery();
 
                 cmd.CommandText =
