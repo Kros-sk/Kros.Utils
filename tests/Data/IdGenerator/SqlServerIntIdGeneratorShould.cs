@@ -17,10 +17,9 @@ namespace Kros.Utils.UnitTests.Data.IdGenerator
         {
             get {
                 var scripts = new List<string>();
-                var generator = new SqlServerIntIdGenerator(new SqlConnection(), "_NonExistingtable", 1);
-                scripts.Add(generator.BackendTableScript);
-                scripts.Add(generator.BackendStoredProcedureScript);
-                generator.Dispose();
+                (string tableScript, string storedProcedureScript) = SqlServerIntIdGenerator.GetSqlScripts();
+                scripts.Add(tableScript);
+                scripts.Add(storedProcedureScript);
                 return scripts;
             }
         }
@@ -177,7 +176,7 @@ namespace Kros.Utils.UnitTests.Data.IdGenerator
             => new SqlServerIntIdGeneratorFactory(ServerHelper.Connection);
 
         [SuppressMessage("Security", "CA2100:Review SQL queries for security vulnerabilities")]
-        private bool HasTable(SqlConnection connection, string tableName)
+        private static bool HasTable(SqlConnection connection, string tableName)
         {
             using (ConnectionHelper.OpenConnection(connection))
             using (var cmd = connection.CreateCommand())
@@ -188,7 +187,7 @@ namespace Kros.Utils.UnitTests.Data.IdGenerator
         }
 
         [SuppressMessage("Security", "CA2100:Review SQL queries for security vulnerabilities")]
-        private bool HasProcedure(SqlConnection connection, string procedureName)
+        private static bool HasProcedure(SqlConnection connection, string procedureName)
         {
             using (ConnectionHelper.OpenConnection(connection))
             using (var cmd = connection.CreateCommand())

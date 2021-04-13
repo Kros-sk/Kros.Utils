@@ -7,14 +7,29 @@ namespace Kros.Data.SqlServer
     /// <summary>
     /// The integer ID generator for Microsoft SQL Server.
     /// </summary>
-    /// <seealso cref="IdGeneratorFactories" />
     /// <seealso cref="SqlServerIntIdGeneratorFactory" />
-    /// <remarks>In general, the generator should be created using <see cref="SqlServerIntIdGeneratorFactory"/>.</remarks>
+    /// <seealso cref="SqlServerLongIdGeneratorFactory" />
+    /// <seealso cref="IdGeneratorFactories" />
+    /// <seealso cref="IdGeneratorFactories" />
+    /// <remarks>In general, the generator should be created using <see cref="SqlServerLongIdGeneratorFactory"/>.</remarks>
     /// <example>
     /// <code language="cs" source="..\..\..\Documentation\Examples\Kros.Utils\IdGeneratorExamples.cs" region="IdGeneratorFactory"/>
     /// </example>
     public class SqlServerLongIdGenerator : DbIntIdGeneratorBase<long>
     {
+        /// <summary>
+        /// Returns SQL scripts for creating table and stored procedure.
+        /// </summary>
+        /// <returns>SQL scripts.</returns>
+        public static (string tableScript, string storedProcedureScript) GetSqlScripts()
+        {
+            var generator = new SqlServerLongIdGenerator(new SqlConnection(), "_NonExistingtable", 1);
+            string tableScript = generator.BackendTableScript;
+            string storedProcedureScript = generator.BackendStoredProcedureScript;
+            generator.Dispose();
+            return (tableScript, storedProcedureScript);
+        }
+
         /// <summary>
         /// Creates a generator for table <paramref name="tableName"/> in database <paramref name="connectionString"/>
         /// with batch size <paramref name="batchSize"/>.

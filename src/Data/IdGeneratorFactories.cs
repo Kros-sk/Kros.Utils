@@ -17,7 +17,8 @@ namespace Kros.Data
     /// with connection instance and one with connection string.
     /// </summary>
     /// <remarks>
-    /// <see cref="SqlServer.SqlServerIntIdGeneratorFactory"/> is automatically registered.
+    /// <see cref="SqlServer.SqlServerIntIdGeneratorFactory"/> and <see cref="SqlServer.SqlServerLongIdGeneratorFactory"/>
+    /// are automatically registered.
     /// </remarks>
     /// <seealso cref="IIdGeneratorFactory"/>
     /// <seealso cref="IIdGenerator"/>
@@ -75,6 +76,7 @@ namespace Kros.Data
         static IdGeneratorFactories()
         {
             SqlServer.SqlServerIntIdGeneratorFactory.Register();
+            SqlServer.SqlServerLongIdGeneratorFactory.Register();
         }
 
         private static readonly Dictionary<string, List<FactoryInfo>> _byConnection

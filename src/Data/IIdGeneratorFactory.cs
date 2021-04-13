@@ -4,6 +4,7 @@
     /// Interface for factory classes, which create instances of <see cref="IIdGenerator"/>.
     /// </summary>
     /// <seealso cref="SqlServer.SqlServerIntIdGeneratorFactory"/>
+    /// <seealso cref="SqlServer.SqlServerLongIdGeneratorFactory"/>
     /// <seealso cref="IdGeneratorFactories"/>
     /// <example>
     /// <code language="cs" source="..\..\Documentation\Examples\Kros.Utils\IdGeneratorExamples.cs" region="IdGeneratorFactory"/>
