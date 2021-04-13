@@ -11,7 +11,7 @@ namespace Kros.Data
     /// and uses databse as backend.
     /// </summary>
     /// <seealso cref="IIdGenerator" />
-    public abstract class DbIntIdGeneratorBase<T> : IIdGenerator where T : struct, IComparable<T>
+    public abstract class DbIntIdGeneratorBase<T> : IIdGenerator<T> where T : struct, IComparable<T>
     {
         private readonly bool _disposeOfConnection = false;
 
@@ -88,8 +88,8 @@ namespace Kros.Data
         private T _nextId;
         private T _nextAccessToDb;
 
-        /// <inheritdoc cref="IIdGenerator.GetNext"/>
-        public virtual object GetNext()
+        /// <inheritdoc/>
+        public virtual T GetNext()
         {
             if (_nextAccessToDb.CompareTo(_nextId) <= 0)
             {
@@ -100,6 +100,9 @@ namespace Kros.Data
             _nextId = AddValue(_nextId, 1);
             return result;
         }
+
+        /// <inheritdoc cref="IIdGenerator.GetNext"/>
+        object IIdGenerator.GetNext() => GetNext();
 
         /// <summary>
         /// Sums <paramref name="increment"/> and <paramref name="baseValue"/>.

@@ -12,7 +12,7 @@ namespace Kros.Data.SqlServer
     /// <code language="cs" source="..\..\..\Documentation\Examples\Kros.Utils\IdGeneratorExamples.cs" region="IdGeneratorFactory"/>
     /// </example>
     public class SqlServerIntIdGeneratorFactory
-        : IIdGeneratorFactory
+        : IIdGeneratorFactory<int>
     {
         private readonly string _connectionString;
         private readonly SqlConnection _connection;
@@ -37,20 +37,28 @@ namespace Kros.Data.SqlServer
         }
 
         /// <inheritdoc/>
-        public IIdGenerator GetGenerator(string tableName) =>
-            GetGenerator(tableName, 1);
+        public IIdGenerator<int> GetGenerator(string tableName)
+            => GetGenerator(tableName, 1);
 
         /// <inheritdoc/>
-        public IIdGenerator GetGenerator(string tableName, int batchSize) =>
-            _connection != null ?
+        public IIdGenerator<int> GetGenerator(string tableName, int batchSize)
+            => _connection != null ?
                 new SqlServerIntIdGenerator(_connection, tableName, batchSize) :
                 new SqlServerIntIdGenerator(_connectionString, tableName, batchSize);
+
+        /// <inheritdoc/>
+        IIdGenerator IIdGeneratorFactory.GetGenerator(string tableName)
+            => GetGenerator(tableName, 1);
+
+        /// <inheritdoc/>
+        IIdGenerator IIdGeneratorFactory.GetGenerator(string tableName, int batchSize)
+            => GetGenerator(tableName, batchSize);
 
         /// <summary>
         /// Registers factory methods for creating an instance of factory into <see cref="IdGeneratorFactories"/>.
         /// </summary>
-        public static void Register() =>
-            IdGeneratorFactories.Register<SqlConnection>(
+        public static void Register()
+            => IdGeneratorFactories.Register<SqlConnection>(
                 typeof(int),
                 SqlServerDataHelper.ClientId,
                 (conn) => new SqlServerIntIdGeneratorFactory(conn as SqlConnection),

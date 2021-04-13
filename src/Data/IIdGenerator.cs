@@ -3,6 +3,21 @@
 namespace Kros.Data
 {
     /// <summary>
+    /// Strongly typed interface for generating IDs for records in database.
+    /// </summary>
+    /// <typeparam name="T">Generator data type.</typeparam>
+    public interface IIdGenerator<T> : IIdGenerator
+    {
+        /// <summary>
+        /// Returns next ID.
+        /// </summary>
+        /// <returns>
+        /// Unique ID for record in data table.
+        /// </returns>
+        new T GetNext();
+    }
+
+    /// <summary>
     /// Interface for generating IDs for records in database. In general, IDs are just sequential numbers.
     /// </summary>
     /// <remarks>Usually one generator generates IDs for just one table.</remarks>

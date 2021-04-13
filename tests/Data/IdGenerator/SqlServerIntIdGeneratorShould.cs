@@ -172,7 +172,7 @@ namespace Kros.Utils.UnitTests.Data.IdGenerator
 
         #region Helpers
 
-        private SqlServerIntIdGeneratorFactory GetFactory()
+        private IIdGeneratorFactory<int> GetFactory()
             => new SqlServerIntIdGeneratorFactory(ServerHelper.Connection);
 
         [SuppressMessage("Security", "CA2100:Review SQL queries for security vulnerabilities")]
