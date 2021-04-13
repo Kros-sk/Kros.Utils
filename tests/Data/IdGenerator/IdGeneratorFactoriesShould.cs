@@ -9,23 +9,38 @@ namespace Kros.Utils.UnitTests.Data
 {
     public class IdGeneratorFactoriesShould
     {
-        [Fact]
-        public void GetFactoryByConnection()
+        [Theory]
+        [InlineData(typeof(int))]
+        [InlineData(typeof(long))]
+        public void GetFactoryByConnection(Type dataType)
         {
             using (var conn = new SqlConnection())
             {
-                var factory = IdGeneratorFactories.GetFactory(typeof(int), conn);
+                var factory = IdGeneratorFactories.GetFactory(dataType, conn);
 
                 factory.Should().NotBeNull();
             }
         }
 
-        [Fact]
-        public void GetFactoryByAdoClientName()
+        [Theory]
+        [InlineData(typeof(int))]
+        [InlineData(typeof(long))]
+        public void GetFactoryByAdoClientName(Type dataType)
         {
-            var factory = IdGeneratorFactories.GetFactory(typeof(int), "connectionstring", SqlServerDataHelper.ClientId);
+            var factory = IdGeneratorFactories.GetFactory(dataType, "connectionstring", SqlServerDataHelper.ClientId);
 
             factory.Should().NotBeNull();
+        }
+
+        [Fact]
+        public void ThrowExceptionWhenDataTypeIsNotRegistered()
+        {
+            using (var conn = new CustomConnection())
+            {
+                Action action = () => { var factory = IdGeneratorFactories.GetFactory(typeof(DateTime), conn); };
+
+                action.Should().Throw<InvalidOperationException>();
+            }
         }
 
         [Fact]
