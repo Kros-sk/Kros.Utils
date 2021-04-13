@@ -18,16 +18,17 @@ namespace Kros.Data.SqlServer
     public class SqlServerLongIdGenerator : DbIntIdGeneratorBase<long>
     {
         /// <summary>
-        /// Returns SQL scripts for creating table and stored procedure.
+        /// Returns SQL names and scripts for generator.
         /// </summary>
-        /// <returns>SQL scripts.</returns>
-        public static (string tableScript, string storedProcedureScript) GetSqlScripts()
+        /// <returns>SQL names and scripts.</returns>
+        public static (string tableName, string storedProcedureName, string tableScript, string storedProcedureScript)
+            GetSqlInfo()
         {
             var generator = new SqlServerLongIdGenerator(new SqlConnection(), "_NonExistingtable", 1);
             string tableScript = generator.BackendTableScript;
             string storedProcedureScript = generator.BackendStoredProcedureScript;
             generator.Dispose();
-            return (tableScript, storedProcedureScript);
+            return (generator.BackendTableName, generator.BackendStoredProcedureName, tableScript, storedProcedureScript);
         }
 
         /// <summary>
