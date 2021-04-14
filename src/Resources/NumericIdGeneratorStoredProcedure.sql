@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE [spGetNewId]
+﻿CREATE PROCEDURE [{{StoredProcedureName}}]
 (
 	@TableName nvarchar(100) = '',
 	@NumberOfItems int = 1
@@ -12,18 +12,18 @@ BEGIN
 
 	begin try
 
-		declare @lastId int
+		declare @lastId {{DataType}}
 
-		SELECT @lastId = LastId FROM IdStore WITH (XLOCK) WHERE (TableName = @TableName)
+		SELECT @lastId = LastId FROM [{{TableName}}] WITH (XLOCK) WHERE (TableName = @TableName)
 
 		if (@lastId is null)
 		begin
-			INSERT INTO IdStore (TableName, LastId) VALUES (@TableName, @NumberOfItems)
+			INSERT INTO [{{TableName}}] (TableName, LastId) VALUES (@TableName, @NumberOfItems)
 			set @lastId = 1
 		end
 		else
 		begin
-			UPDATE IdStore SET LastId = @lastId + @NumberOfItems WHERE (TableName = @TableName)
+			UPDATE [{{TableName}}] SET LastId = @lastId + @NumberOfItems WHERE (TableName = @TableName)
 			set @lastId = @lastId + 1
 		end
 

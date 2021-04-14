@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;netcoreapp2.1;netcoreapp3.1;net46</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;netcoreapp3.1;net46</TargetFrameworks>
     <Version>1.16.2</Version>
     <Authors>KROS a. s.</Authors>
     <Company>KROS a. s.</Company>
@@ -9,7 +9,7 @@
     <Copyright>Copyright © KROS a. s.</Copyright>
     <RootNamespace>Kros</RootNamespace>
     <IsNetCoreApp>false</IsNetCoreApp>
-    <IsNetCoreApp Condition="'$(TargetFramework)' == 'netstandard2.0' or '$(TargetFramework)' == 'netcoreapp2.1' or '$(TargetFramework)' == 'netcoreapp3.1'">true</IsNetCoreApp>
+    <IsNetCoreApp Condition="'$(TargetFramework)' == 'netstandard2.0' or '$(TargetFramework)' == 'netcoreapp3.1'">true</IsNetCoreApp>
     <DefineConstants Condition="'$(IsNetCoreApp)' == 'true'">$(DefineConstants);netcoreapp</DefineConstants>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -35,6 +35,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\NumericIdGeneratorStoredProcedure.sql" />
+    <None Remove="Resources\NumericIdGeneratorTable.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\NumericIdGeneratorStoredProcedure.sql" />
+    <EmbeddedResource Include="Resources\NumericIdGeneratorTable.sql" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.Data.SqlClient" Version="1.1.1" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
   </ItemGroup>
@@ -48,15 +57,6 @@
 
   <ItemGroup>
     <None Include="Resources\icon.png" Pack="true" PackagePath="" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Remove="Resources\SqlIdGeneratorStoredProcedureScript.sql" />
-    <None Remove="Resources\SqlIdGeneratorTableScript.sql" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\SqlIdGeneratorStoredProcedureScript.sql" />
-    <EmbeddedResource Include="Resources\SqlIdGeneratorTableScript.sql" />
   </ItemGroup>
 
   <ItemGroup>

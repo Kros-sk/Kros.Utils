@@ -1,30 +1,43 @@
 ﻿using FluentAssertions;
 using Kros.Data;
-using Kros.Data.SqlServer;
 using Kros.UnitTests;
 using Microsoft.Data.SqlClient;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
+using System.Data;
 using Xunit;
 
 namespace Kros.Utils.UnitTests.Data.IdGenerator
 {
-    public class SqlServerIdGeneratorShould : DatabaseTestBase
+    public abstract class SqlServerIntIdGeneratorTestsBase<T> : DatabaseTestBase
     {
-        #region DatabaseTestBase Overrides
+        protected string BackendTableName { get; private set; }
+        protected string BackendProcedureName { get; private set; }
 
-        protected override IEnumerable<string> DatabaseInitScripts =>
-            new List<string>() {
-                SqlServerIdGenerator.GetIdStoreTableCreationScript(),
-                SqlServerIdGenerator.GetStoredProcedureCreationScript()
-            };
+        private IEnumerable<string> _databaseInitScripts = null;
 
-        #endregion
+        protected override IEnumerable<string> DatabaseInitScripts
+        {
+            get
+            {
+                if (_databaseInitScripts is null)
+                {
+                    (string tableName, string procedureName, string tableScript, string procedureScript) = InitBackendInfo();
+                    _databaseInitScripts = new List<string>
+                    {
+                        tableScript,
+                        procedureScript
+                    };
+                    BackendTableName = tableName;
+                    BackendProcedureName = procedureName;
+                }
+                return _databaseInitScripts;
+            }
+        }
 
         [Fact]
         public void GenerateIdsForTable()
         {
-            using (var idGenerator = GetFactory().GetGenerator("People"))
+            using (IIdGenerator<T> idGenerator = CreateGeneratorFactory().GetGenerator("People"))
             {
                 for (int i = 0; i < 10; i++)
                 {
@@ -36,7 +49,7 @@ namespace Kros.Utils.UnitTests.Data.IdGenerator
         [Fact]
         public void GenerateBatchIdsForTable()
         {
-            using (var idGenerator = GetFactory().GetGenerator("People", 10))
+            using (IIdGenerator<T> idGenerator = CreateGeneratorFactory().GetGenerator("People", 10))
             {
                 for (int i = 0; i < 15; i++)
                 {
@@ -49,15 +62,15 @@ namespace Kros.Utils.UnitTests.Data.IdGenerator
         public void GenerateIdsForTableWhenDataExists()
         {
             using (ConnectionHelper.OpenConnection(ServerHelper.Connection))
-            using (var cmd = ServerHelper.Connection.CreateCommand())
+            using (SqlCommand cmd = ServerHelper.Connection.CreateCommand())
             {
-                cmd.CommandText = "INSERT INTO IdStore VALUES ('People', 10)";
-                cmd.CommandType = System.Data.CommandType.Text;
+                cmd.CommandText = $"INSERT INTO {BackendTableName} VALUES ('People', 10)";
+                cmd.CommandType = CommandType.Text;
 
                 cmd.ExecuteNonQuery();
             }
 
-            using (var idGenerator = GetFactory().GetGenerator("People"))
+            using (IIdGenerator<T> idGenerator = CreateGeneratorFactory().GetGenerator("People"))
             {
                 for (int i = 0; i < 10; i++)
                 {
@@ -70,15 +83,15 @@ namespace Kros.Utils.UnitTests.Data.IdGenerator
         public void GenerateBatchIdsForTableWhenDataExists()
         {
             using (ConnectionHelper.OpenConnection(ServerHelper.Connection))
-            using (var cmd = ServerHelper.Connection.CreateCommand())
+            using (SqlCommand cmd = ServerHelper.Connection.CreateCommand())
             {
-                cmd.CommandText = "INSERT INTO IdStore VALUES ('People', 10)";
+                cmd.CommandText = $"INSERT INTO {BackendTableName} VALUES ('People', 10)";
                 cmd.CommandType = System.Data.CommandType.Text;
 
                 cmd.ExecuteNonQuery();
             }
 
-            using (var idGenerator = GetFactory().GetGenerator("People", 10))
+            using (IIdGenerator<T> idGenerator = CreateGeneratorFactory().GetGenerator("People", 10))
             {
                 for (int i = 0; i < 15; i++)
                 {
@@ -90,20 +103,16 @@ namespace Kros.Utils.UnitTests.Data.IdGenerator
         [Fact]
         public void MultipleGenerateIdsForTable()
         {
-            using (var idGenerator = GetFactory().GetGenerator("People"))
+            using (IIdGenerator<T> idGenerator = CreateGeneratorFactory().GetGenerator("People"))
             {
                 idGenerator.GetNext().Should().Be(1);
 
-                using (var nextGenerator = GetFactory().GetGenerator("People", 3))
+                using (IIdGenerator<T> nextGenerator = CreateGeneratorFactory().GetGenerator("People", 3))
                 {
                     nextGenerator.GetNext().Should().Be(2);
-
                     idGenerator.GetNext().Should().Be(5);
-
                     nextGenerator.GetNext().Should().Be(3);
-
                     nextGenerator.GetNext().Should().Be(4);
-
                     nextGenerator.GetNext().Should().Be(6);
                 }
 
@@ -114,13 +123,13 @@ namespace Kros.Utils.UnitTests.Data.IdGenerator
         [Fact]
         public void GenerateIdsForMoreTable()
         {
-            using (var idGenerator = GetFactory().GetGenerator("People"))
+            using (IIdGenerator<T> idGenerator = CreateGeneratorFactory().GetGenerator("People"))
             {
                 for (int i = 0; i < 10; i++)
                 {
                     idGenerator.GetNext().Should().Be(i + 1);
 
-                    using (var addressIdGenerator = GetFactory().GetGenerator("Addresses", 5))
+                    using (IIdGenerator<T> addressIdGenerator = CreateGeneratorFactory().GetGenerator("Addresses", 5))
                     {
                         for (int j = 0; j < 5; j++)
                         {
@@ -134,62 +143,57 @@ namespace Kros.Utils.UnitTests.Data.IdGenerator
         [Fact]
         public void CreateTableAndStoredProcedureForIdGeneratorIfNotExits()
         {
-            const string tableName = "IdStore";
-            const string procedureName = "spGetNewId";
-
             using (var helper = new SqlServerTestHelper(BaseConnectionString, BaseDatabaseName))
             {
-                HasTable(helper.Connection, tableName).Should().BeFalse();
-                HasProcedure(helper.Connection, procedureName).Should().BeFalse();
+                HasTable(helper.Connection, BackendTableName).Should().BeFalse();
+                HasProcedure(helper.Connection, BackendProcedureName).Should().BeFalse();
 
-                var idGenerator = new SqlServerIdGenerator(helper.Connection, "TestTable", 1);
+                IIdGenerator<T> idGenerator = CreateGenerator(helper.Connection);
                 idGenerator.InitDatabaseForIdGenerator();
 
-                HasTable(helper.Connection, tableName).Should().BeTrue();
-                HasProcedure(helper.Connection, procedureName).Should().BeTrue();
+                HasTable(helper.Connection, BackendTableName).Should().BeTrue();
+                HasProcedure(helper.Connection, BackendProcedureName).Should().BeTrue();
             }
         }
 
         [Fact]
         public void NotThrowWhenCreatingTableAndStoredProcedureForIdGeneratorAndTheyExist()
         {
-            const string tableName = "IdStore";
-            const string procedureName = "spGetNewId";
-
             using (var helper = new SqlServerTestHelper(BaseConnectionString, BaseDatabaseName, DatabaseInitScripts))
             {
-                HasTable(helper.Connection, tableName).Should().BeTrue();
-                HasProcedure(helper.Connection, procedureName).Should().BeTrue();
+                HasTable(helper.Connection, BackendTableName).Should().BeTrue();
+                HasProcedure(helper.Connection, BackendProcedureName).Should().BeTrue();
 
-                var idGenerator = new SqlServerIdGenerator(helper.Connection, "TestTable", 1);
+                IIdGenerator<T> idGenerator = CreateGenerator(helper.Connection);
                 idGenerator.InitDatabaseForIdGenerator();
 
-                HasTable(helper.Connection, tableName).Should().BeTrue();
-                HasProcedure(helper.Connection, procedureName).Should().BeTrue();
+                HasTable(helper.Connection, BackendTableName).Should().BeTrue();
+                HasProcedure(helper.Connection, BackendProcedureName).Should().BeTrue();
             }
         }
 
         #region Helpers
 
-        private SqlServerIdGeneratorFactory GetFactory()
-            => new SqlServerIdGeneratorFactory(ServerHelper.Connection);
+        protected abstract (string tableName, string procedureName, string tableScript, string procedureScript) InitBackendInfo();
 
-        [SuppressMessage("Security", "CA2100:Review SQL queries for security vulnerabilities")]
-        private bool HasTable(SqlConnection connection, string tableName)
+        protected abstract IIdGeneratorFactory<T> CreateGeneratorFactory();
+
+        protected abstract IIdGenerator<T> CreateGenerator(SqlConnection connection);
+
+        protected static bool HasTable(SqlConnection connection, string tableName)
         {
             using (ConnectionHelper.OpenConnection(connection))
-            using (var cmd = connection.CreateCommand())
+            using (SqlCommand cmd = connection.CreateCommand())
             {
                 cmd.CommandText = $"SELECT TOP 1 1 FROM sys.tables WHERE name='{tableName}' AND type='U'";
                 return cmd.ExecuteScalar() != null;
             }
         }
 
-        [SuppressMessage("Security", "CA2100:Review SQL queries for security vulnerabilities")]
-        private bool HasProcedure(SqlConnection connection, string procedureName)
+        protected static bool HasProcedure(SqlConnection connection, string procedureName)
         {
             using (ConnectionHelper.OpenConnection(connection))
-            using (var cmd = connection.CreateCommand())
+            using (SqlCommand cmd = connection.CreateCommand())
             {
                 cmd.CommandText = $"SELECT TOP 1 1 FROM sys.procedures WHERE name='{procedureName}' AND type='P'";
                 return cmd.ExecuteScalar() != null;

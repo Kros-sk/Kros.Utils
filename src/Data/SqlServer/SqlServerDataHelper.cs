@@ -6,7 +6,7 @@
     public static class SqlServerDataHelper
     {
         /// <summary>
-        /// Identification of Microsoft SQL Server classes (used for example in <see cref="SqlServerIdGeneratorFactory"/>,
+        /// Identification of Microsoft SQL Server classes (used for example in <see cref="SqlServerIntIdGeneratorFactory"/>,
         /// <see cref="BulkActions.SqlServer.SqlServerBulkActionFactory"/>).
         /// </summary>
         public const string ClientId = "System.Data.SqlClient";
