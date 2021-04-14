@@ -155,12 +155,12 @@ namespace Kros.Data
         /// <summary>
         /// Script to create database table for generator.
         /// </summary>
-        public virtual string BackendTableScript => GetScript("Kros.Resources.IntIdGeneratorTable.sql");
+        public virtual string BackendTableScript => GetScript("Kros.Resources.NumericIdGeneratorTable.sql");
 
         /// <summary>
         /// Script to create database stored procedure for generator.
         /// </summary>
-        public virtual string BackendStoredProcedureScript => GetScript("Kros.Resources.IntIdGeneratorStoredProcedure.sql");
+        public virtual string BackendStoredProcedureScript => GetScript("Kros.Resources.NumericIdGeneratorStoredProcedure.sql");
 
         private string GetScript(string scriptName)
             => ResourceHelper.GetResourceContent(scriptName)

@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;netcoreapp3.1;net46</TargetFrameworks>
+    <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
     <Version>1.16.2</Version>
     <Authors>KROS a. s.</Authors>
     <Company>KROS a. s.</Company>
@@ -35,12 +35,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Resources\IntIdGeneratorStoredProcedure.sql" />
-    <None Remove="Resources\IntIdGeneratorTable.sql" />
+    <None Remove="Resources\NumericIdGeneratorStoredProcedure.sql" />
+    <None Remove="Resources\NumericIdGeneratorTable.sql" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\IntIdGeneratorStoredProcedure.sql" />
-    <EmbeddedResource Include="Resources\IntIdGeneratorTable.sql" />
+    <EmbeddedResource Include="Resources\NumericIdGeneratorStoredProcedure.sql" />
+    <EmbeddedResource Include="Resources\NumericIdGeneratorTable.sql" />
   </ItemGroup>
 
   <ItemGroup>
