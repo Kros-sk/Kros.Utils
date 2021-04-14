@@ -5,8 +5,8 @@ namespace Kros.Data
 {
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 
-    [Obsolete("Class is deprecated. Use DbIntIdGeneratorBase class instead.")]
-    public abstract class IdGeneratorBase : DbIntIdGeneratorBase<int>
+    [Obsolete("Class is deprecated. Use DbNumericIdGeneratorBase class instead.")]
+    public abstract class IdGeneratorBase : DbNumericIdGeneratorBase<int>
     {
         protected IdGeneratorBase(DbConnection connection, string tableName, int batchSize)
             : base(connection, tableName, batchSize)

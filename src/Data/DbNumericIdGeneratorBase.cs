@@ -11,7 +11,7 @@ namespace Kros.Data
     /// and uses databse as backend.
     /// </summary>
     /// <seealso cref="IIdGenerator" />
-    public abstract class DbIntIdGeneratorBase<T> : IIdGenerator<T> where T : struct, IComparable<T>
+    public abstract class DbNumericIdGeneratorBase<T> : IIdGenerator<T> where T : struct, IComparable<T>
     {
         private readonly bool _disposeOfConnection = false;
 
@@ -26,7 +26,7 @@ namespace Kros.Data
         /// Value of <paramref name="connection"/> or <paramref name="tableName"/> is <see langword="null"/>.
         /// </exception>
         /// <exception cref="ArgumentException">Value of <paramref name="batchSize"/> is less or equal than 0.</exception>
-        protected DbIntIdGeneratorBase(DbConnection connection, string tableName, int batchSize)
+        protected DbNumericIdGeneratorBase(DbConnection connection, string tableName, int batchSize)
             : this(tableName, batchSize)
         {
             Connection = Check.NotNull(connection, nameof(connection));
@@ -47,7 +47,7 @@ namespace Kros.Data
         /// whitespace characters.</item>
         /// <item>Value of <paramref name="batchSize"/> is less or equal than 0.</item>
         /// </list></exception>
-        protected DbIntIdGeneratorBase(string connectionString, string tableName, int batchSize)
+        protected DbNumericIdGeneratorBase(string connectionString, string tableName, int batchSize)
             : this(tableName, batchSize)
         {
             Check.NotNullOrWhiteSpace(connectionString, nameof(connectionString));
@@ -55,7 +55,7 @@ namespace Kros.Data
             _disposeOfConnection = true;
         }
 
-        private DbIntIdGeneratorBase(string tableName, int batchSize)
+        private DbNumericIdGeneratorBase(string tableName, int batchSize)
         {
             TableName = Check.NotNull(tableName, nameof(tableName));
             BatchSize = Check.GreaterThan(batchSize, 0, nameof(batchSize));

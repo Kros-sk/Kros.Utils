@@ -14,7 +14,7 @@ namespace Kros.Data.SqlServer
     /// <example>
     /// <code language="cs" source="..\..\..\Documentation\Examples\Kros.Utils\IdGeneratorExamples.cs" region="IdGeneratorFactory"/>
     /// </example>
-    public class SqlServerIntIdGenerator : DbIntIdGeneratorBase<int>
+    public class SqlServerIntIdGenerator : DbNumericIdGeneratorBase<int>
     {
         /// <summary>
         /// Returns SQL names and scripts for generator.
