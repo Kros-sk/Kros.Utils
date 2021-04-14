@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;netcoreapp3.1;net46</TargetFrameworks>
     <Version>1.16.2</Version>
     <Authors>KROS a. s.</Authors>
     <Company>KROS a. s.</Company>
