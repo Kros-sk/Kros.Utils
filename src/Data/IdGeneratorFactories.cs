@@ -205,6 +205,22 @@ namespace Kros.Data
                 nameof(IIdGeneratorFactory), connection.GetType().FullName));
         }
 
+        /// <summary>
+        /// Get all ID generators for specified connection type.
+        /// </summary>
+        /// <param name="connectionString">Connection string for database.</param>
+        /// <param name="clientName">Name, which specifies database type.</param>
+        /// <returns>Collection of ID generators.</returns>
+        public static IIdGeneratorsForDatabaseInit GetGeneratorsForDatabaseInit(string connectionString, string clientName)
+        {
+            if (_byClientName.TryGetValue(clientName, out List<FactoryInfo> factories))
+            {
+                return new IdGeneratorCollection(factories.Select(factory => factory.FactoryByClientName(connectionString)));
+            }
+            throw new InvalidOperationException(string.Format(Resources.FactoryNotRegisteredForClient,
+                nameof(IIdGeneratorFactory), clientName));
+        }
+
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 
         [Obsolete("Method is deprecated. Use 'Register' method with 'dataType' argument.")]
