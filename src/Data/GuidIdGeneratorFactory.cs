@@ -7,7 +7,7 @@ using System.Text;
 namespace Kros.Data
 {
     /// <summary>
-    /// Factory for creating integer ID generators.
+    /// Factory for creating GUID ID generators.
     /// </summary>
     /// <seealso cref="GuidIdGenerator"/>
     /// <seealso cref="IdGeneratorFactories"/>
