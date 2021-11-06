@@ -12,6 +12,7 @@ namespace Kros.Utils.UnitTests.Data
         [Theory]
         [InlineData(typeof(int))]
         [InlineData(typeof(long))]
+        [InlineData(typeof(Guid))]
         public void GetFactoryByConnection(Type dataType)
         {
             using (var conn = new SqlConnection())
@@ -25,6 +26,7 @@ namespace Kros.Utils.UnitTests.Data
         [Theory]
         [InlineData(typeof(int))]
         [InlineData(typeof(long))]
+        [InlineData(typeof(Guid))]
         public void GetFactoryByAdoClientName(Type dataType)
         {
             var factory = IdGeneratorFactories.GetFactory(dataType, "connectionstring", SqlServerDataHelper.ClientId);
