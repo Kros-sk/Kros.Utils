@@ -75,6 +75,7 @@ namespace Kros.Data
 
         static IdGeneratorFactories()
         {
+            GuidIdGeneratorFactory.Register();
             SqlServer.SqlServerIntIdGeneratorFactory.Register();
             SqlServer.SqlServerLongIdGeneratorFactory.Register();
         }
