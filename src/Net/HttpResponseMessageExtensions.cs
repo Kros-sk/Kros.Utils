@@ -1,4 +1,4 @@
-﻿#if netcoreapp
+﻿#if !IsOldDotNet
 using Kros.Utils;
 using Microsoft.Net.Http.Headers;
 #endif
@@ -46,7 +46,7 @@ namespace Kros.Net
             return token;
         }
 
-#if netcoreapp
+#if !IsOldDotNet
         /// <summary>
         /// Sets cookie <paramref name="cookie"/> to the HTTP response.
         /// </summary>

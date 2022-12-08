@@ -17,7 +17,7 @@ namespace Kros.Net
         /// </summary>
         public const string AntiForgeryTokenFieldName = "__RequestVerificationToken";
 
-#if netcoreapp
+#if !IsOldDotNet
         /// <summary>
         /// Makes a GET request to the URI <paramref name="requestUri"/> and acquires the anti-forgery token from the response.
         /// Than makes a POST request to the same URI with acquired anti-forgery token and the data <paramref name="data"/>.

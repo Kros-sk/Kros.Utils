@@ -1,4 +1,4 @@
-﻿#if netcoreapp
+﻿#if !IsOldDotNet
 using Kros.Utils;
 using Microsoft.Net.Http.Headers;
 #endif
@@ -13,7 +13,7 @@ namespace Kros.Net
     /// </summary>
     public static class HttpRequestMessageExtensions
     {
-#if netcoreapp
+#if !IsOldDotNet
         /// <summary>
         /// Sets cookie <paramref name="cookie"/> to the request.
         /// </summary>
