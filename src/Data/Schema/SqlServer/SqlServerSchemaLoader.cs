@@ -280,7 +280,7 @@ namespace Kros.Data.Schema.SqlServer
             return table;
         }
 
-        private void LoadTables(SqlConnection connection, DatabaseSchema database)
+        private static void LoadTables(SqlConnection connection, DatabaseSchema database)
         {
             using (DataTable schemaData = GetSchemaTables(connection))
             {
@@ -341,7 +341,7 @@ namespace Kros.Data.Schema.SqlServer
             return column;
         }
 
-        private SqlDbType GetSqlDbType(DataRow row)
+        private static SqlDbType GetSqlDbType(DataRow row)
         {
             SqlDbType sqlType;
 
@@ -419,7 +419,7 @@ namespace Kros.Data.Schema.SqlServer
             return rawDefaultValueString;
         }
 
-        private object? GetDefaultValueFromString(string defaultValueString, SqlDbType dataType)
+        private static object? GetDefaultValueFromString(string defaultValueString, SqlDbType dataType)
         {
             object? result = null;
 
@@ -440,7 +440,7 @@ namespace Kros.Data.Schema.SqlServer
             return result;
         }
 
-        private DefaultValueParsers.ParseDefaultValueFunction? GetParseFunction(SqlDbType dataType)
+        private static DefaultValueParsers.ParseDefaultValueFunction? GetParseFunction(SqlDbType dataType)
         {
             switch (dataType)
             {
@@ -552,7 +552,7 @@ ORDER BY tables.name, indexes.name, index_columns.key_ordinal
             }
         }
 
-        private void LoadIndexesForTable(TableSchema table, DataView schemaData)
+        private static void LoadIndexesForTable(TableSchema table, DataView schemaData)
         {
             string lastIndexName = string.Empty;
             IndexSchema? index = null;
@@ -569,7 +569,7 @@ ORDER BY tables.name, indexes.name, index_columns.key_ordinal
             }
         }
 
-        private IndexSchema? CreateIndexSchema(TableSchema table, DataRow row)
+        private static IndexSchema? CreateIndexSchema(TableSchema table, DataRow row)
         {
             string indexName = (string)row[IndexesQueryNames.IndexName];
             bool clustered = ((string)row[IndexesQueryNames.TypDesc]).Equals("CLUSTERED", StringComparison.OrdinalIgnoreCase);
@@ -584,7 +584,7 @@ ORDER BY tables.name, indexes.name, index_columns.key_ordinal
             }
         }
 
-        private void AddColumnToIndex(IndexSchema index, DataRow row)
+        private static void AddColumnToIndex(IndexSchema index, DataRow row)
         {
             index.Columns.Add(
                 (string)row[IndexesQueryNames.ColumnName],
@@ -667,7 +667,7 @@ ORDER BY foreign_key_columns.constraint_object_id
             }
         }
 
-        private void LoadForeignKeysSchema(DatabaseSchema database, DataTable foreignKeysData, DataTable foreignKeyColumnsData)
+        private static void LoadForeignKeysSchema(DatabaseSchema database, DataTable foreignKeysData, DataTable foreignKeyColumnsData)
         {
             DataView columnsView = foreignKeyColumnsData.DefaultView;
             List<string> primaryKeyColumns = new List<string>();
@@ -689,7 +689,7 @@ ORDER BY foreign_key_columns.constraint_object_id
             }
         }
 
-        private ForeignKeySchema CreateForeignKey(
+        private static ForeignKeySchema CreateForeignKey(
             DataRow foreignKeyData,
             List<string> primaryKeyColumns,
             List<string> foreignKeyColumns)
@@ -706,7 +706,7 @@ ORDER BY foreign_key_columns.constraint_object_id
             return foreignKey;
         }
 
-        private ForeignKeyRule GetForeignKeyRule(string ruleDesc)
+        private static ForeignKeyRule GetForeignKeyRule(string ruleDesc)
         {
             if (ruleDesc.Equals("CASCADE", StringComparison.OrdinalIgnoreCase))
             {
@@ -742,22 +742,22 @@ ORDER BY foreign_key_columns.constraint_object_id
                 cnBuilder.InitialCatalog, nameof(connection), Resources.SqlServerNoInitialCatalog);
         }
 
-        private DataTable GetSchemaTables(SqlConnection connection)
+        private static DataTable GetSchemaTables(SqlConnection connection)
         {
             return GetSchemaTables(connection, null);
         }
 
-        private DataTable GetSchemaTables(SqlConnection connection, string? tableName)
+        private static DataTable GetSchemaTables(SqlConnection connection, string? tableName)
         {
             return connection.GetSchema(SchemaNames.Tables, new string[] { null!, null!, tableName!, null! });
         }
 
-        private DataTable GetSchemaColumns(SqlConnection connection)
+        private static DataTable GetSchemaColumns(SqlConnection connection)
         {
             return GetSchemaColumns(connection, null);
         }
 
-        private DataTable GetSchemaColumns(SqlConnection connection, string? tableName)
+        private static DataTable GetSchemaColumns(SqlConnection connection, string? tableName)
         {
             DataTable schemaData = connection.GetSchema(SchemaNames.Columns, new string[] { null!, null!, tableName!, null! });
             schemaData.DefaultView.Sort =

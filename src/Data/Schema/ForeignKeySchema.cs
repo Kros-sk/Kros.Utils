@@ -150,7 +150,7 @@ namespace Kros.Data.Schema
         }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
-        private void ToStringAddTable(StringBuilder sb, string tableName, IEnumerable<string> columns)
+        private static void ToStringAddTable(StringBuilder sb, string tableName, IEnumerable<string> columns)
         {
             sb.Append(tableName);
             sb.Append(" (");
