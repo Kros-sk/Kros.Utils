@@ -111,7 +111,7 @@ namespace Kros.Data.Schema
         /// <summary>
         /// Full name of the column, together with the table name (if column belongs to table).
         /// </summary>
-        public string FullName { get { return (Table == null) ? Name : $"{Table.Name}.{Name}"; } }
+        public string FullName { get { return (Table is null) ? Name : $"{Table.Name}.{Name}"; } }
 
         /// <summary>
         /// Specifies if <b>NULL</b> value is allowed.
@@ -155,7 +155,7 @@ namespace Kros.Data.Schema
         /// <see langword="null"/>. Otherwise returns <see cref="DefaultValue"/>.</returns>
         protected object ToStringDefaultValue()
         {
-            return (DefaultValue == DBNull.Value) || (DefaultValue == null) ? "NULL" : DefaultValue;
+            return (DefaultValue == DBNull.Value) || (DefaultValue is null) ? "NULL" : DefaultValue;
         }
 
         #endregion

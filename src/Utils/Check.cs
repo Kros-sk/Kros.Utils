@@ -36,7 +36,7 @@ namespace Kros.Utils
         [DebuggerStepThrough]
         public static T NotNull<T>(T? param, string paramName)
         {
-            if (param == null)
+            if (param is null)
             {
                 throw new ArgumentNullException(paramName, Resources.Check_NotNull);
             }
@@ -58,7 +58,7 @@ namespace Kros.Utils
         [DebuggerStepThrough]
         public static T NotNull<T>(T? param, string paramName, string message)
         {
-            if (param == null)
+            if (param is null)
             {
                 throw new ArgumentNullException(paramName, message);
             }

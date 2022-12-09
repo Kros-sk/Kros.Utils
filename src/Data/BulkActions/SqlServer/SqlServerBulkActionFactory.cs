@@ -37,7 +37,7 @@ namespace Kros.Data.BulkActions.SqlServer
         /// </summary>
         /// <returns>The bulk insert.</returns>
         public IBulkInsert GetBulkInsert() =>
-            _connection != null ? new SqlServerBulkInsert(_connection) : new SqlServerBulkInsert(_connectionString);
+            _connection is not null ? new SqlServerBulkInsert(_connection) : new SqlServerBulkInsert(_connectionString);
 
         /// <summary>
         /// Gets the bulk insert.
@@ -53,7 +53,7 @@ namespace Kros.Data.BulkActions.SqlServer
         /// <param name="options">The options.</param>
         /// <returns>The bulk insert.</returns>
         public IBulkInsert GetBulkInsert(SqlBulkCopyOptions options) =>
-            _connection != null ?
+            _connection is not null ?
                 new SqlServerBulkInsert(_connection, options) :
                 new SqlServerBulkInsert(_connectionString, options);
 
@@ -73,7 +73,7 @@ namespace Kros.Data.BulkActions.SqlServer
         /// The bulk update.
         /// </returns>
         public IBulkUpdate GetBulkUpdate() =>
-            _connection != null ? new SqlServerBulkUpdate(_connection) : new SqlServerBulkUpdate(_connectionString);
+            _connection is not null ? new SqlServerBulkUpdate(_connection) : new SqlServerBulkUpdate(_connectionString);
 
         /// <summary>
         /// Gets the bulk update.

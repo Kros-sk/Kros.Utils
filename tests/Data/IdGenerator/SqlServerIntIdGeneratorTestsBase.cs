@@ -186,7 +186,7 @@ namespace Kros.Utils.UnitTests.Data.IdGenerator
             using (SqlCommand cmd = connection.CreateCommand())
             {
                 cmd.CommandText = $"SELECT TOP 1 1 FROM sys.tables WHERE name='{tableName}' AND type='U'";
-                return cmd.ExecuteScalar() != null;
+                return cmd.ExecuteScalar() is not null;
             }
         }
 
@@ -196,7 +196,7 @@ namespace Kros.Utils.UnitTests.Data.IdGenerator
             using (SqlCommand cmd = connection.CreateCommand())
             {
                 cmd.CommandText = $"SELECT TOP 1 1 FROM sys.procedures WHERE name='{procedureName}' AND type='P'";
-                return cmd.ExecuteScalar() != null;
+                return cmd.ExecuteScalar() is not null;
             }
         }
 

@@ -31,7 +31,7 @@ namespace Kros.Net
         public static async Task<string?> GetAntiForgeryTokenAsync(this HttpResponseMessage response)
         {
             string? token = null;
-            if (response.IsSuccessStatusCode && (response.Content != null))
+            if (response.IsSuccessStatusCode && (response.Content is not null))
             {
                 string content = await response.Content.ReadAsStringAsync();
                 Match match = Regex.Match(

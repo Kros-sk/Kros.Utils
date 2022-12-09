@@ -165,14 +165,14 @@ namespace Kros.Net
 
         internal virtual HttpMessageHandler CreateMessageHandler()
         {
-            if (_httpMessageHandlerFactory != null)
+            if (_httpMessageHandlerFactory is not null)
             {
                 return _httpMessageHandlerFactory();
             }
             else
             {
                 var handler = new HttpClientHandler();
-                if (ProxyAddress != null)
+                if (ProxyAddress is not null)
                 {
                     handler.Proxy = new WebProxy(ProxyAddress);
                 }

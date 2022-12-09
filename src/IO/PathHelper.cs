@@ -152,11 +152,11 @@ namespace Kros.IO
         /// </returns>
         public static string ReplaceInvalidPathChars(string? pathName, string? replacement)
         {
-            if (pathName == null)
+            if (pathName is null)
             {
                 return string.Empty;
             }
-            if (replacement == null)
+            if (replacement is null)
             {
                 replacement = string.Empty;
             }
@@ -199,7 +199,7 @@ namespace Kros.IO
             DriveInfo? drive = DriveInfo.GetDrives()
                 .Where(item => item.Name.Equals(driveName, StringComparison.OrdinalIgnoreCase))
                 .FirstOrDefault();
-            if (drive != null)
+            if (drive is not null)
             {
                 return drive.DriveType;
             }

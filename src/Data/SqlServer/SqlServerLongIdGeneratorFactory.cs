@@ -42,7 +42,7 @@ namespace Kros.Data.SqlServer
 
         /// <inheritdoc/>
         public IIdGenerator<long> GetGenerator(string tableName, int batchSize)
-            => _connection != null ?
+            => _connection is not null ?
                 new SqlServerLongIdGenerator(_connection, tableName, batchSize) :
                 new SqlServerLongIdGenerator(_connectionString!, tableName, batchSize);
 

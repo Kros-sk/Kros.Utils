@@ -64,7 +64,7 @@ namespace Kros.Extensions
         /// is <see langword="null"/>.</returns>
         public static string? RemoveNewLines(this string? value)
         {
-            return value == null ? null : _reRemoveNewLines.Replace(value, string.Empty);
+            return value is null ? null : _reRemoveNewLines.Replace(value, string.Empty);
         }
 
         /// <summary>
@@ -80,7 +80,7 @@ namespace Kros.Extensions
         {
             Check.GreaterOrEqualThan(length, 0, nameof(length));
 
-            if (value == null)
+            if (value is null)
             {
                 return string.Empty;
             }
@@ -104,7 +104,7 @@ namespace Kros.Extensions
         {
             Check.GreaterOrEqualThan(length, 0, nameof(length));
 
-            if (value == null)
+            if (value is null)
             {
                 return string.Empty;
             }

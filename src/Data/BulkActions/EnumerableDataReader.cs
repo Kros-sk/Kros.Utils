@@ -116,7 +116,7 @@ namespace Kros.Data.BulkActions
         public bool IsDBNull(int i)
         {
             object? value = GetValue(i);
-            return (value == null) || (value == DBNull.Value);
+            return (value is null) || (value == DBNull.Value);
         }
 
         /// <summary>

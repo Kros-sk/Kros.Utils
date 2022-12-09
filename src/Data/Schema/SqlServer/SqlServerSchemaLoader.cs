@@ -82,7 +82,7 @@ namespace Kros.Data.Schema.SqlServer
         /// otherwise <see langword="true"/>.</returns>
         public bool SupportsConnectionType(SqlConnection? connection)
         {
-            return (connection != null);
+            return (connection is not null);
         }
 
         /// <summary>
@@ -384,7 +384,7 @@ namespace Kros.Data.Schema.SqlServer
                 defaultValue = e.DefaultValue;
             }
 
-            if ((defaultValue == null) || (defaultValue == DBNull.Value))
+            if ((defaultValue is null) || (defaultValue == DBNull.Value))
             {
                 return column.AllowNull ? DBNull.Value : _defaultValueMapping[column.SqlDbType];
             }

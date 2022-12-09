@@ -108,7 +108,7 @@ namespace Kros.Data.Schema
 
         protected override void InsertItem(int index, ForeignKeySchema item)
         {
-            if (item.Table == null)
+            if (item.Table is null)
             {
                 item.Table = Table;
             }

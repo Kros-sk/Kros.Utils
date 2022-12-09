@@ -77,7 +77,7 @@ namespace Kros.Data.Schema
             }
             set
             {
-                if (Table != null)
+                if (Table is not null)
                 {
                     throw new InvalidOperationException(string.Format(
                         Resources.CannotChangeIndexNameWhenIndexBelongsToTable, _name, Table.Name));

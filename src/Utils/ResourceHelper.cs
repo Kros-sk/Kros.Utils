@@ -32,7 +32,7 @@ namespace Kros.Utils
             var assembly = Assembly.GetExecutingAssembly();
             using (var stream = assembly.GetManifestResourceStream(resourceName))
             {
-                if (stream == null)
+                if (stream is null)
                 {
                     return string.Empty;
                 }

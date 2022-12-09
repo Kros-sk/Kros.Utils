@@ -148,7 +148,7 @@ namespace Kros.Data.Schema
         private LoaderInfo GetLoaderInfo(object connection)
         {
             LoaderInfo? linfo = _loaders.FirstOrDefault((tmpLoader) => tmpLoader.Loader.SupportsConnectionType(connection));
-            if (linfo == null)
+            if (linfo is null)
             {
                 throw new InvalidOperationException(
                     string.Format(Resources.UnsupportedConnectionType, connection.GetType().FullName));

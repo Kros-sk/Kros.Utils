@@ -136,7 +136,7 @@ namespace Kros.Data
         private static void AddFactory(FactoryInfo info, List<FactoryInfo> factories)
         {
             FactoryInfo? current = factories.FirstOrDefault(item => item.DataType == info.DataType);
-            if (current != null)
+            if (current is not null)
             {
                 factories.Remove(current);
             }
@@ -157,7 +157,7 @@ namespace Kros.Data
             if (_byConnection.TryGetValue(connection.GetType().FullName!, out List<FactoryInfo>? factories))
             {
                 FactoryInfo? factory = factories.FirstOrDefault(item => item.DataType == dataType);
-                if (factory != null)
+                if (factory is not null)
                 {
                     return factory.FactoryByConnection!(connection);
                 }
@@ -182,7 +182,7 @@ namespace Kros.Data
             if (_byClientName.TryGetValue(clientName, out List<FactoryInfo>? factories))
             {
                 FactoryInfo? factory = factories.FirstOrDefault(item => item.DataType == dataType);
-                if (factory != null)
+                if (factory is not null)
                 {
                     return factory.FactoryByClientName!(connectionString);
                 }

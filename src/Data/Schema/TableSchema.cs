@@ -108,7 +108,7 @@ namespace Kros.Data.Schema
             sb.Append("Table ");
             sb.Append(Name);
             sb.Append(": Primary Key = ");
-            if ((PrimaryKey == null) || (PrimaryKey.Columns.Count == 0))
+            if ((PrimaryKey is null) || (PrimaryKey.Columns.Count == 0))
             {
                 sb.Append("*not set*");
             }

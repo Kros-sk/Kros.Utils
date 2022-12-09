@@ -78,7 +78,7 @@ namespace Kros.Data.Schema
 
         protected override void InsertItem(int index, IndexColumnSchema item)
         {
-            if (item.Index == null)
+            if (item.Index is null)
             {
                 item.Index = Index;
             }

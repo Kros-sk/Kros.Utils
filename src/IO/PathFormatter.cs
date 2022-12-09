@@ -355,7 +355,7 @@ namespace Kros.IO
             }
             set
             {
-                _infoOpeningString = value == null ? string.Empty : PathHelper.ReplaceInvalidPathChars(value);
+                _infoOpeningString = value is null ? string.Empty : PathHelper.ReplaceInvalidPathChars(value);
             }
         }
 
@@ -376,7 +376,7 @@ namespace Kros.IO
             }
             set
             {
-                _infoClosingString = value == null ? string.Empty : PathHelper.ReplaceInvalidPathChars(value);
+                _infoClosingString = value is null ? string.Empty : PathHelper.ReplaceInvalidPathChars(value);
             }
         }
 
@@ -397,7 +397,7 @@ namespace Kros.IO
             }
             set
             {
-                _counterOpeningString = value == null ? string.Empty : PathHelper.ReplaceInvalidPathChars(value);
+                _counterOpeningString = value is null ? string.Empty : PathHelper.ReplaceInvalidPathChars(value);
             }
         }
 
@@ -418,7 +418,7 @@ namespace Kros.IO
             }
             set
             {
-                _counterClosingString = value == null ? string.Empty : PathHelper.ReplaceInvalidPathChars(value);
+                _counterClosingString = value is null ? string.Empty : PathHelper.ReplaceInvalidPathChars(value);
             }
         }
 

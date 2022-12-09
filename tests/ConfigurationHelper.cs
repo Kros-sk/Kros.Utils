@@ -8,7 +8,7 @@ namespace Kros.Utils.UnitTests
 
         public static IConfigurationRoot GetConfiguration()
         {
-            if (_config == null)
+            if (_config is null)
             {
                 _config = new ConfigurationBuilder()
                     .AddJsonFile($"appsettings.json")

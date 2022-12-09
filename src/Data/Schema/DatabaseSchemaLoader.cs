@@ -93,7 +93,7 @@ namespace Kros.Data.Schema
             Check.NotNull(connection, nameof(connection));
 
             IDatabaseSchemaLoader? loader = GetLoader(connection);
-            if (loader == null)
+            if (loader is null)
             {
                 throw new ArgumentException(
                     string.Format(Resources.UnsupportedConnectionType, connection.GetType().FullName), nameof(connection));
@@ -114,7 +114,7 @@ namespace Kros.Data.Schema
         public bool SupportsConnectionType(object connection)
         {
             Check.NotNull(connection, nameof(connection));
-            return GetLoader(connection) != null;
+            return GetLoader(connection) is not null;
         }
 
         /// <inheritdoc cref="IDatabaseSchemaLoader{T}.LoadSchema(T)"/>

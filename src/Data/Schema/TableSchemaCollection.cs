@@ -58,7 +58,7 @@ namespace Kros.Data.Schema
 
         protected override void InsertItem(int index, TableSchema item)
         {
-            if (item.Database == null)
+            if (item.Database is null)
             {
                 item.Database = Database;
             }

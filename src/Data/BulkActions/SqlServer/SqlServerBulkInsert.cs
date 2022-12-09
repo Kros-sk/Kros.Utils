@@ -57,7 +57,7 @@ namespace Kros.Data.BulkActions.SqlServer
         /// <param name="externalTransaction">External transaction, in which bulk insert is executed.</param>
         public SqlServerBulkInsert(SqlConnection connection, SqlTransaction? externalTransaction)
             : this(connection, externalTransaction,
-                  externalTransaction == null ? DefaultBulkCopyOptions : DefaultBulkCopyOptionsExternalTransaction)
+                  externalTransaction is null ? DefaultBulkCopyOptions : DefaultBulkCopyOptionsExternalTransaction)
         {
         }
 
@@ -225,7 +225,7 @@ namespace Kros.Data.BulkActions.SqlServer
                 string sourceColumn = reader.GetName(i);
                 string destinationColumn = sourceColumn;
 
-                if (tableSchema != null)
+                if (tableSchema is not null)
                 {
                     if (tableSchema.Columns.Contains(sourceColumn))
                     {
@@ -248,7 +248,7 @@ namespace Kros.Data.BulkActions.SqlServer
             for (int columnNumber = 0; columnNumber < ColumnMappings.Count; columnNumber++)
             {
                 SqlBulkCopyColumnMapping mapping = ConvertColumnMapping(ColumnMappings[columnNumber]);
-                if (tableSchema != null)
+                if (tableSchema is not null)
                 {
                     if (!string.IsNullOrWhiteSpace(mapping.DestinationColumn))
                     {
@@ -305,7 +305,7 @@ namespace Kros.Data.BulkActions.SqlServer
                 exceptionDetail = string.Format(Resources.InvalidIndexInDestinationColumnMapping,
                     DestinationTableName, mappingOrdinal.Value);
             }
-            else if (mappingName != null)
+            else if (mappingName is not null)
             {
                 exceptionDetail = string.Format(Resources.InvalidNameInDestinationColumnMapping,
                     DestinationTableName, mappingName);
