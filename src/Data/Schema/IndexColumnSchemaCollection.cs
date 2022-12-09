@@ -71,10 +71,7 @@ namespace Kros.Data.Schema
         #region KeyedCollection
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-        protected override string GetKeyForItem(IndexColumnSchema item)
-        {
-            return item.Name;
-        }
+        protected override string GetKeyForItem(IndexColumnSchema item) => item.Name;
 
         protected override void InsertItem(int index, IndexColumnSchema item)
         {

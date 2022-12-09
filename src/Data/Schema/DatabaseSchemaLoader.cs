@@ -68,25 +68,17 @@ namespace Kros.Data.Schema
         /// Removes <paramref name="loader"/> from the list of loaders.
         /// </summary>
         /// <param name="loader">Specific database schema loader to be removed from the list.</param>
-        public void RemoveSchemaLoader(IDatabaseSchemaLoader loader)
-        {
-            _loaders.Remove(loader);
-        }
+        public void RemoveSchemaLoader(IDatabaseSchemaLoader loader) => _loaders.Remove(loader);
 
         /// <summary>Removes all loaders in the list.</summary>
-        public void ClearSchemaLoaders()
-        {
-            _loaders.Clear();
-        }
+        public void ClearSchemaLoaders() => _loaders.Clear();
 
         #endregion
 
         #region IDatabaseSchemaLoader
 
-        private IDatabaseSchemaLoader? GetLoader(object connection)
-        {
-            return _loaders.FirstOrDefault((loader) => loader.SupportsConnectionType(connection));
-        }
+        private IDatabaseSchemaLoader? GetLoader(object connection) 
+            => _loaders.FirstOrDefault((loader) => loader.SupportsConnectionType(connection));
 
         private IDatabaseSchemaLoader CheckConnectionAndGetLoader(object connection)
         {

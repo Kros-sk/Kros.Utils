@@ -97,10 +97,7 @@ namespace Kros.UnitTests
             }
         }
 
-        public void Dispose()
-        {
-            Dispose(true);
-        }
+        public void Dispose() => Dispose(true);
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
         #endregion

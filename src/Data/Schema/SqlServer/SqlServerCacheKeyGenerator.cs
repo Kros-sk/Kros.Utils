@@ -26,8 +26,6 @@ namespace Kros.Data.Schema.SqlServer
 
         /// <inheritdoc cref="GenerateKey(SqlConnection)"/>
         string ISchemaCacheKeyGenerator.GenerateKey(object connection)
-        {
-            return GenerateKey((connection as SqlConnection)!);
-        }
+            => GenerateKey((connection as SqlConnection)!);
     }
 }

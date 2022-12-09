@@ -85,10 +85,7 @@ namespace Kros.Data.Schema
         }
 
         /// <inheritdoc cref="IDatabaseSchemaCache.ClearAllSchemas"/>
-        public void ClearAllSchemas()
-        {
-            _cache.Clear();
-        }
+        public void ClearAllSchemas() => _cache.Clear();
 
         /// <inheritdoc cref="IDatabaseSchemaCache.RefreshSchema(object)"/>
         /// <exception cref="InvalidOperationException">The cache does not contain a loader for database type
@@ -136,10 +133,7 @@ namespace Kros.Data.Schema
         /// <summary>
         /// Removes all database schema loaders.
         /// </summary>
-        public void ClearSchemaLoaders()
-        {
-            _loaders.Clear();
-        }
+        public void ClearSchemaLoaders() => _loaders.Clear();
 
         #endregion
 

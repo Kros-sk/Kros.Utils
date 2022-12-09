@@ -18,9 +18,7 @@ namespace Kros.Extensions
         /// <returns><see langword="true"/>, if <paramref name="value"/> is <see langword="null"/> or <c>string.Empty</c>,
         /// <see langword="false"/> otherwise.</returns>
         public static bool IsNullOrEmpty(this string value)
-        {
-            return string.IsNullOrEmpty(value);
-        }
+            => string.IsNullOrEmpty(value);
 
         /// <summary>
         /// Checks, if string <paramref name="value"/> is <see langword="null"/>, empty string (<c>string.Empty</c>),
@@ -30,9 +28,7 @@ namespace Kros.Extensions
         /// <returns><see langword="true"/>, if <paramref name="value"/> is <see langword="null"/>, empty string, or string
         /// containing only white characters, <see langword="false"/> otherwise.</returns>
         public static bool IsNullOrWhiteSpace(this string value)
-        {
-            return string.IsNullOrWhiteSpace(value);
-        }
+            => string.IsNullOrWhiteSpace(value);
 
         /// <summary>
         /// Returns the same string without diacritic marks (for example <c>čšá</c> becomes <c>csa</c>).
@@ -63,9 +59,7 @@ namespace Kros.Extensions
         /// <returns>String without new line characters, or <see langword="null"/> if <paramref name="value"/>
         /// is <see langword="null"/>.</returns>
         public static string? RemoveNewLines(this string? value)
-        {
-            return value is null ? null : _reRemoveNewLines.Replace(value, string.Empty);
-        }
+            => value is null ? null : _reRemoveNewLines.Replace(value, string.Empty);
 
         /// <summary>
         /// Returns first <paramref name="length"/> of characters form input string <paramref name="value"/>.

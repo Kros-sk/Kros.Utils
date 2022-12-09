@@ -66,9 +66,7 @@ namespace Kros.Data.Schema.SqlServer
         /// </summary>
         /// <param name="e">Arguments for the event.</param>
         protected virtual void OnParseDefaultValue(SqlServerParseDefaultValueEventArgs e)
-        {
-            ParseDefaultValue?.Invoke(this, e);
-        }
+            => ParseDefaultValue?.Invoke(this, e);
 
         #endregion
 
@@ -81,9 +79,7 @@ namespace Kros.Data.Schema.SqlServer
         /// <returns><see langword="false"/> if value of <paramref name="connection"/> is <see langword="null"/>,
         /// otherwise <see langword="true"/>.</returns>
         public bool SupportsConnectionType(SqlConnection? connection)
-        {
-            return (connection is not null);
-        }
+            => (connection is not null);
 
         /// <summary>
         /// Checks if it is poosible to load database schema for <paramref name="connection"/>.
@@ -92,9 +88,7 @@ namespace Kros.Data.Schema.SqlServer
         /// <returns><see langword="false"/> if value of <paramref name="connection"/> is not of <see cref="SqlConnection"/>
         /// type or is <see langword="null"/>, otherwise <see langword="true"/>.</returns>
         bool IDatabaseSchemaLoader.SupportsConnectionType(object connection)
-        {
-            return SupportsConnectionType(connection as SqlConnection);
-        }
+            => SupportsConnectionType(connection as SqlConnection);
 
         /// <summary>
         /// Loads database schema for <paramref name="connection"/>.
@@ -119,9 +113,7 @@ namespace Kros.Data.Schema.SqlServer
         /// </list>
         /// </exception>
         DatabaseSchema IDatabaseSchemaLoader.LoadSchema(object connection)
-        {
-            return LoadSchema((SqlConnection)connection);
-        }
+            => LoadSchema((SqlConnection)connection);
 
         /// <summary>
         /// Loads table schema for table <paramref name="tableName"/> in database <paramref name="connection"/>.
@@ -150,9 +142,7 @@ namespace Kros.Data.Schema.SqlServer
         /// </list>
         /// </exception>
         TableSchema? IDatabaseSchemaLoader.LoadTableSchema(object connection, string tableName)
-        {
-            return LoadTableSchema((SqlConnection)connection, tableName);
-        }
+            => LoadTableSchema((SqlConnection)connection, tableName);
 
         /// <summary>
         /// Loads database schema for <paramref name="connection"/>.
@@ -585,11 +575,9 @@ ORDER BY tables.name, indexes.name, index_columns.key_ordinal
         }
 
         private static void AddColumnToIndex(IndexSchema index, DataRow row)
-        {
-            index.Columns.Add(
+            => index.Columns.Add(
                 (string)row[IndexesQueryNames.ColumnName],
                 (bool)row[IndexesQueryNames.IsDesc] ? SortOrder.Descending : SortOrder.Ascending);
-        }
 
         #endregion
 
@@ -742,20 +730,13 @@ ORDER BY foreign_key_columns.constraint_object_id
                 cnBuilder.InitialCatalog, nameof(connection), Resources.SqlServerNoInitialCatalog);
         }
 
-        private static DataTable GetSchemaTables(SqlConnection connection)
-        {
-            return GetSchemaTables(connection, null);
-        }
+        private static DataTable GetSchemaTables(SqlConnection connection) => GetSchemaTables(connection, null);
 
         private static DataTable GetSchemaTables(SqlConnection connection, string? tableName)
-        {
-            return connection.GetSchema(SchemaNames.Tables, new string[] { null!, null!, tableName!, null! });
-        }
+            => connection.GetSchema(SchemaNames.Tables, new string[] { null!, null!, tableName!, null! });
 
         private static DataTable GetSchemaColumns(SqlConnection connection)
-        {
-            return GetSchemaColumns(connection, null);
-        }
+            => GetSchemaColumns(connection, null);
 
         private static DataTable GetSchemaColumns(SqlConnection connection, string? tableName)
         {

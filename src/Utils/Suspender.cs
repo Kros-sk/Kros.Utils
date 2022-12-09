@@ -31,10 +31,7 @@ namespace Kros.Utils
 
             bool _disposed = false;
 
-            public void Dispose()
-            {
-                Dispose(true);
-            }
+            public void Dispose() => Dispose(true);
 
             protected virtual void Dispose(bool disposing)
             {

@@ -34,10 +34,7 @@ namespace Kros.Data.Schema
         public TableSchemaCollection Tables { get; }
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-        public override string ToString()
-        {
-            return $"Database {Name}";
-        }
+        public override string ToString() => $"Database {Name}";
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
         #endregion

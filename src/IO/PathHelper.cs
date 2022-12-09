@@ -131,10 +131,7 @@ namespace Kros.IO
         /// <param name="pathName">Input path.</param>
         /// <remarks><inheritdoc cref="ReplaceInvalidPathChars(string, string)"/></remarks>
         /// <returns><inheritdoc cref="ReplaceInvalidPathChars(string, string)"/></returns>
-        public static string ReplaceInvalidPathChars(string? pathName)
-        {
-            return ReplaceInvalidPathChars(pathName, "-");
-        }
+        public static string ReplaceInvalidPathChars(string? pathName) => ReplaceInvalidPathChars(pathName, "-");
 
         /// <summary>
         /// Replaces invalid characters in <paramref name="pathName"/> with <paramref name="replacement"/>. If there are
@@ -167,9 +164,7 @@ namespace Kros.IO
         /// Returns path to system temporary folder (<see cref="Path.GetTempPath"/>) <b>without</b> trailing directory separator.
         /// </summary>
         public static string GetTempPath()
-        {
-            return Path.GetTempPath().TrimEnd(new char[] { Path.DirectorySeparatorChar });
-        }
+            => Path.GetTempPath().TrimEnd(new char[] { Path.DirectorySeparatorChar });
 
         /// <summary>
         /// Checks, if specified <paramref name="path"/> is network share path. The path is considered network share path,
@@ -179,10 +174,7 @@ namespace Kros.IO
         /// <returns>
         /// <see langword="true"/> if <paramref name="path"/> is network share path, <see langword="false"/> otherwise.
         /// </returns>
-        public static bool IsNetworkPath(string path)
-        {
-            return (GetDriveTypeFromPath(path) == DriveType.Network);
-        }
+        public static bool IsNetworkPath(string path) => (GetDriveTypeFromPath(path) == DriveType.Network);
 
         private static DriveType GetDriveTypeFromPath(string path)
         {
