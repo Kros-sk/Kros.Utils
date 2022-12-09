@@ -95,7 +95,7 @@ namespace Kros.Data.Schema
         /// </summary>
         public ForeignKeySchemaCollection ForeignKeys { get; }
 
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+        /// <inheritdoc/>
         public override string ToString()
         {
             StringBuilder sb = new(50);
@@ -125,7 +125,6 @@ namespace Kros.Data.Schema
 
             return sb.ToString();
         }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
         #endregion
     }

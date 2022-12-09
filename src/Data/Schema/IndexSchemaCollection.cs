@@ -88,9 +88,10 @@ namespace Kros.Data.Schema
 
         #region KeyedCollection
 
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+        /// <inheritdoc/>
         protected override string GetKeyForItem(IndexSchema item) => item.Name;
 
+        /// <inheritdoc/>
         protected override void InsertItem(int index, IndexSchema item)
         {
             if (item.Table is null)
@@ -105,6 +106,7 @@ namespace Kros.Data.Schema
             base.InsertItem(index, item);
         }
 
+        /// <inheritdoc/>
         protected override void RemoveItem(int index)
         {
             if (index < Count)
@@ -113,7 +115,6 @@ namespace Kros.Data.Schema
             }
             base.RemoveItem(index);
         }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
         #endregion
     }

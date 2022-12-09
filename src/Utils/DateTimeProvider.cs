@@ -76,12 +76,13 @@ namespace Kros.Utils
             return new DateTimeProvider();
         }
 
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+        /// <summary>
+        /// Clear injected datetime.
+        /// </summary>
         public void Dispose()
         {
             _injectedDateTime = null;
             _injectedDateTimeOffset = null;
         }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
 }
