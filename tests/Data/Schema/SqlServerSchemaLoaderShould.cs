@@ -234,7 +234,6 @@ ALTER TABLE [dbo].[ChildTableCascade] CHECK CONSTRAINT [FK_ChildTableCascade_Par
         {
             SqlServerSchemaLoader loader = new SqlServerSchemaLoader();
             DatabaseSchema schema = loader.LoadSchema(ServerHelper.Connection);
-            TableSchema parentTable = schema.Tables["ParentTable"];
             TableSchema childTableNoAction = schema.Tables["ChildTableNoAction"];
             TableSchema childTableSetNull = schema.Tables["ChildTableSetNull"];
             TableSchema childTableSetDefault = schema.Tables["ChildTableSetDefault"];
