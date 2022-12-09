@@ -146,7 +146,7 @@ namespace Kros.Data.BulkActions.SqlServer
                 cmd.CommandText = $"UPDATE [{DestinationTableName}]\r\n" +
                     $"SET {GetUpdateColumnNames(reader, tempTableName)}\r\n" +
                     $"FROM [{DestinationTableName}]\r\n" +
-                    $"INNER JOIN [{tempTableName}] ON ({innerJoin.ToString()})";
+                    $"INNER JOIN [{tempTableName}] ON ({innerJoin})";
 
                 await ExecuteNonQueryAsync(useAsync, cmd);
             }
