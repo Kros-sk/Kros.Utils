@@ -23,7 +23,7 @@ namespace Kros.IO
             invalidChars.UnionWith(Path.GetInvalidPathChars());
 
             System.Text.StringBuilder result = new(invalidChars.Count + 3);
-            result.Append("[");
+            result.Append('[');
             foreach (char c in invalidChars)
             {
                 result.Append(Regex.Escape(Convert.ToString(c)));
