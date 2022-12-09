@@ -219,25 +219,5 @@ namespace Kros.Data
             throw new InvalidOperationException(string.Format(Resources.FactoryNotRegisteredForClient,
                 nameof(IIdGeneratorFactory), clientName));
         }
-
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-
-        [Obsolete("Method is deprecated. Use 'Register' method with 'dataType' argument.")]
-        public static void Register<TConnection>(
-            string adoClientName,
-            Func<IDbConnection, IIdGeneratorFactory> factoryByConnection,
-            Func<string, IIdGeneratorFactory> factoryByConnectionString)
-            where TConnection : IDbConnection
-            => Register<TConnection>(typeof(int), adoClientName, factoryByConnection, factoryByConnectionString);
-
-        [Obsolete("Method is deprecated. Use 'GetFactory' method with 'dataType' argument.")]
-        public static IIdGeneratorFactory GetFactory(DbConnection connection)
-            => GetFactory(typeof(int), connection);
-
-        [Obsolete("Method is deprecated. Use 'GetFactory' method with 'dataType' argument.")]
-        public static IIdGeneratorFactory GetFactory(string connectionString, string adoClientName)
-            => GetFactory(typeof(int), connectionString, adoClientName);
-
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
 }
