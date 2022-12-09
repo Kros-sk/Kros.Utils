@@ -32,7 +32,6 @@ namespace Kros.Utils.UnitTests.Utils
                 if (obj is DummyClass dummy)
                 {
                     return dummy.Id == Id;
-
                 }
                 return base.Equals(obj);
             }
