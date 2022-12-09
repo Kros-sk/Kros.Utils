@@ -14,8 +14,8 @@ namespace Kros.Data.SqlServer
     public class SqlServerIntIdGeneratorFactory
         : IIdGeneratorFactory<int>
     {
-        private readonly string _connectionString;
-        private readonly SqlConnection _connection;
+        private readonly string? _connectionString;
+        private readonly SqlConnection? _connection;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SqlServerIntIdGeneratorFactory"/> class.
@@ -44,7 +44,7 @@ namespace Kros.Data.SqlServer
         public IIdGenerator<int> GetGenerator(string tableName, int batchSize)
             => _connection != null ?
                 new SqlServerIntIdGenerator(_connection, tableName, batchSize) :
-                new SqlServerIntIdGenerator(_connectionString, tableName, batchSize);
+                new SqlServerIntIdGenerator(_connectionString!, tableName, batchSize);
 
         /// <inheritdoc/>
         IIdGenerator IIdGeneratorFactory.GetGenerator(string tableName)
@@ -61,7 +61,7 @@ namespace Kros.Data.SqlServer
             => IdGeneratorFactories.Register<SqlConnection>(
                 typeof(int),
                 SqlServerDataHelper.ClientId,
-                (conn) => new SqlServerIntIdGeneratorFactory(conn as SqlConnection),
+                (conn) => new SqlServerIntIdGeneratorFactory((conn as SqlConnection)!),
                 (connString) => new SqlServerIntIdGeneratorFactory(connString));
     }
 }

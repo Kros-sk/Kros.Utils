@@ -18,7 +18,7 @@ namespace Kros.Utils.UnitTests.Data.BulkActions
         public class DataItem
         {
             public int Id { get; set; }
-            public string ColNote { get; set; }
+            public string? ColNote { get; set; }
             public byte? ColByte { get; set; }
             public int? ColInt32 { get; set; }
             public long? ColInt64 { get; set; }
@@ -29,15 +29,15 @@ namespace Kros.Utils.UnitTests.Data.BulkActions
             public DateTime? ColDate { get; set; }
             public Guid? ColGuid { get; set; }
             public bool? ColBool { get; set; }
-            public string ColShortText { get; set; }
-            public string ColLongText { get; set; }
-            public string ColNVarcharMax { get; set; }
+            public string? ColShortText { get; set; }
+            public string? ColLongText { get; set; }
+            public string? ColNVarcharMax { get; set; }
         }
 
         public class NonExistingColumnDataItem
         {
             public int Id { get; set; }
-            public string ColNote { get; set; }
+            public string? ColNote { get; set; }
             public int NonExistingColumn { get; set; }
         }
 
@@ -127,14 +127,13 @@ $@"CREATE TABLE[dbo].[{TableName}] (
         private void BulkInsertDataFromDataTableCore()
         {
             DataTable expectedData = CreateDataTableDataSource();
-            DataTable actualData = null;
 
             using (SqlServerBulkInsert bulkInsert = new SqlServerBulkInsert(ServerHelper.Connection))
             {
                 bulkInsert.DestinationTableName = TableName;
                 bulkInsert.Insert(expectedData);
             }
-            actualData = LoadData(ServerHelper.Connection, TableName);
+            DataTable actualData = LoadData(ServerHelper.Connection, TableName);
 
             SqlServerBulkHelper.CompareTables(actualData, expectedData);
         }
@@ -143,14 +142,13 @@ $@"CREATE TABLE[dbo].[{TableName}] (
         public async Task BulkInsertDataFromDataTableAsynchronously()
         {
             DataTable expectedData = CreateDataTableDataSource();
-            DataTable actualData = null;
 
             using (SqlServerBulkInsert bulkInsert = new SqlServerBulkInsert(ServerHelper.Connection))
             {
                 bulkInsert.DestinationTableName = TableName;
                 await bulkInsert.InsertAsync(expectedData);
             }
-            actualData = LoadData(ServerHelper.Connection, TableName);
+            DataTable actualData = LoadData(ServerHelper.Connection, TableName);
 
             SqlServerBulkHelper.CompareTables(actualData, expectedData);
         }
@@ -161,7 +159,7 @@ $@"CREATE TABLE[dbo].[{TableName}] (
             AsyncContext.Run(() =>
             {
                 DataTable expectedData = CreateDataTableDataSource();
-                DataTable actualData = null;
+                DataTable actualData;
 
                 using (IDataReader reader = expectedData.CreateDataReader())
                 {
@@ -181,7 +179,7 @@ $@"CREATE TABLE[dbo].[{TableName}] (
         public async Task BulkInsertDataFromIDataReaderAsynchronously()
         {
             DataTable expectedData = CreateDataTableDataSource();
-            DataTable actualData = null;
+            DataTable actualData;
 
             using (IDataReader reader = expectedData.CreateDataReader())
             {
@@ -207,7 +205,7 @@ $@"CREATE TABLE[dbo].[{TableName}] (
         public async Task BulkInsertDataFromIBulkActionDataReaderAsynchronously()
         {
             DataTable expectedData = CreateDataTableDataSource();
-            DataTable actualData = null;
+            DataTable actualData;
 
             using (IBulkActionDataReader reader = CreateIDataReaderDataSource(true))
             {
@@ -225,7 +223,7 @@ $@"CREATE TABLE[dbo].[{TableName}] (
         private void BulkInsertDataFromIBulkActionDataReaderCore()
         {
             DataTable expectedData = CreateDataTableDataSource();
-            DataTable actualData = null;
+            DataTable actualData;
 
             using (IBulkActionDataReader reader = CreateIDataReaderDataSource(true))
             {
@@ -244,7 +242,7 @@ $@"CREATE TABLE[dbo].[{TableName}] (
         public void BulkInsertDataFromIBulkActionDataReaderIgnoreCaseInColumnNames()
         {
             DataTable expectedData = CreateDataTableDataSource(false);
-            DataTable actualData = null;
+            DataTable actualData;
 
             using (IBulkActionDataReader reader = CreateIDataReaderDataSource(false))
             {
@@ -263,7 +261,7 @@ $@"CREATE TABLE[dbo].[{TableName}] (
         public void BulkInsertDataFromIDataReaderShortText()
         {
             DataTable expectedData = CreateDataTableShortText();
-            DataTable actualData = null;
+            DataTable actualData;
 
             using (IBulkActionDataReader reader = CreateIDataReaderShortText())
             {
@@ -488,7 +486,7 @@ $@"CREATE TABLE[dbo].[{TableName}] (
                 table.Columns.Add("ColNVarcharMax", typeof(string));
             }
 
-            table.PrimaryKey = new DataColumn[] { table.Columns["Id"] };
+            table.PrimaryKey = new DataColumn[] { table.Columns["Id"]! };
 
             return table;
         }
@@ -531,7 +529,7 @@ $@"CREATE TABLE[dbo].[{TableName}] (
             id.AutoIncrementSeed = 1;
             id.AutoIncrementStep = 1;
             table.Columns.Add("ColValue", typeof(string));
-            table.PrimaryKey = new DataColumn[] { table.Columns["Id"] };
+            table.PrimaryKey = new DataColumn[] { table.Columns["Id"]! };
             return table;
         }
 
@@ -594,7 +592,7 @@ $@"CREATE TABLE[dbo].[{TableName}] (
                     Id = id,
                     ColNote = value.Key,
                 };
-                typeof(DataItem).GetProperty(columnName).SetValue(item, value.Value);
+                typeof(DataItem).GetProperty(columnName)?.SetValue(item, value.Value);
                 data.Add(item);
                 id++;
             }

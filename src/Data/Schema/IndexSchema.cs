@@ -61,7 +61,7 @@ namespace Kros.Data.Schema
 
         #region Common
 
-        private string _name;
+        private string _name = string.Empty;
 
         /// <summary>
         /// Name of the index. It is not possible to set the name, if the index already belongs to some table
@@ -104,7 +104,7 @@ namespace Kros.Data.Schema
         /// <summary>
         /// Table, to which index belongs.
         /// </summary>
-        public TableSchema Table { get; internal set; }
+        public TableSchema? Table { get; internal set; }
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public override string ToString()

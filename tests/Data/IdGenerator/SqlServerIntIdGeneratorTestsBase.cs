@@ -10,10 +10,10 @@ namespace Kros.Utils.UnitTests.Data.IdGenerator
 {
     public abstract class SqlServerIntIdGeneratorTestsBase<T> : DatabaseTestBase
     {
-        protected string BackendTableName { get; private set; }
-        protected string BackendProcedureName { get; private set; }
+        protected string BackendTableName { get; private set; } = string.Empty;
+        protected string BackendProcedureName { get; private set; } = string.Empty;
 
-        private IEnumerable<string> _databaseInitScripts = null;
+        private IEnumerable<string>? _databaseInitScripts = null;
 
         protected override IEnumerable<string> DatabaseInitScripts
         {

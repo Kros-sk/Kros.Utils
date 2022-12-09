@@ -2,6 +2,7 @@
 using Kros.Utils;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
 
@@ -19,9 +20,12 @@ namespace Kros.Data.BulkActions
     {
         #region Fields
 
-        private IEnumerator<T> _dataEnumerator;
+        private static readonly ReadOnlyDictionary<string, PropertyInfo> EmptyPropertyCache
+            = new(new Dictionary<string, PropertyInfo>());
+
+        private readonly IEnumerator<T> _dataEnumerator;
         private readonly List<string> _columnNames;
-        private readonly Dictionary<string, PropertyInfo> _propertyCache;
+        private readonly IDictionary<string, PropertyInfo> _propertyCache;
         private readonly bool _isPrimitiveType = false;
 
         #endregion
@@ -54,6 +58,7 @@ namespace Kros.Data.BulkActions
             if (_isPrimitiveType)
             {
                 Check.Equal(_columnNames.Count, 1, nameof(columnNames));
+                _propertyCache = EmptyPropertyCache;
             }
             else
             {
@@ -92,7 +97,7 @@ namespace Kros.Data.BulkActions
         /// </summary>
         /// <param name="i">Column index.</param>
         /// <returns>Column value.</returns>
-        public object GetValue(int i)
+        public object? GetValue(int i)
         {
             if (_isPrimitiveType)
             {
@@ -105,12 +110,12 @@ namespace Kros.Data.BulkActions
         }
 
         /// <inheritdoc cref="IBulkActionDataReader.GetString(int)"/>
-        public string GetString(int i) => (string)GetValue(i);
+        public string? GetString(int i) => (string?)GetValue(i);
 
         /// <inheritdoc cref="IBulkActionDataReader.IsDBNull(int)"/>
         public bool IsDBNull(int i)
         {
-            object value = GetValue(i);
+            object? value = GetValue(i);
             return (value == null) || (value == DBNull.Value);
         }
 
@@ -133,12 +138,13 @@ namespace Kros.Data.BulkActions
 
             foreach (string columnName in columnNames)
             {
-                properties[columnName] = typeof(T).GetProperty(columnName);
-                if (properties[columnName] == null)
+                PropertyInfo? property = typeof(T).GetProperty(columnName);
+                if (property is null)
                 {
                     throw new InvalidOperationException(
                         string.Format(Resources.MissingPropertyInType, typeof(T).FullName, columnName));
                 }
+                properties[columnName] = property;
             }
 
             return properties;
@@ -158,7 +164,6 @@ namespace Kros.Data.BulkActions
                 if (disposing)
                 {
                     _dataEnumerator.Dispose();
-                    _dataEnumerator = null;
                 }
                 disposedValue = true;
             }

@@ -21,7 +21,7 @@ namespace Kros.Data.Schema.SqlServer
             string columnName,
             SqlDbType sqlDbType,
             string defaultValueString,
-            object defaultValue)
+            object? defaultValue)
         {
             TableName = tableName;
             ColumnName = columnName;
@@ -54,7 +54,7 @@ namespace Kros.Data.Schema.SqlServer
         /// Value, which was obtained by default parser. Set this value, when using custom logic for parsing default value
         /// in event handler.
         /// </summary>
-        public object DefaultValue { get; set; } = null;
+        public object? DefaultValue { get; set; } = null;
 
         /// <summary>
         /// Flag indicating if default value was parsed using custom logic in event handler. Set this to <see langword="true"/>

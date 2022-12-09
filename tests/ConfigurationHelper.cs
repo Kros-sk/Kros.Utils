@@ -4,7 +4,7 @@ namespace Kros.Utils.UnitTests
 {
     internal class ConfigurationHelper
     {
-        private static IConfigurationRoot _config;
+        private static IConfigurationRoot? _config;
 
         public static IConfigurationRoot GetConfiguration()
         {

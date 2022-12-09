@@ -55,7 +55,7 @@ namespace Kros.Data.BulkActions.SqlServer
         /// If transaction is running on connection, transaction has to be defined in <paramref name="externalTransaction"/>.
         /// </param>
         /// <param name="externalTransaction">External transaction, in which bulk insert is executed.</param>
-        public SqlServerBulkInsert(SqlConnection connection, SqlTransaction externalTransaction)
+        public SqlServerBulkInsert(SqlConnection connection, SqlTransaction? externalTransaction)
             : this(connection, externalTransaction,
                   externalTransaction == null ? DefaultBulkCopyOptions : DefaultBulkCopyOptionsExternalTransaction)
         {
@@ -81,10 +81,9 @@ namespace Kros.Data.BulkActions.SqlServer
         /// </param>
         /// <param name="externalTransaction">External transaction, in which bulk insert is executed.</param>
         /// <param name="options">Options <see cref="SqlBulkCopyOptions"/>.</param>
-        public SqlServerBulkInsert(SqlConnection connection, SqlTransaction externalTransaction, SqlBulkCopyOptions options)
+        public SqlServerBulkInsert(SqlConnection connection, SqlTransaction? externalTransaction, SqlBulkCopyOptions options)
         {
-            Check.NotNull(connection, nameof(connection));
-            _connection = connection;
+            _connection = Check.NotNull(connection, nameof(connection));
             ExternalTransaction = externalTransaction;
             BulkCopyOptions = options;
         }
@@ -117,7 +116,7 @@ namespace Kros.Data.BulkActions.SqlServer
         /// <summary>
         /// External transaction, in which bulk insert is executed.
         /// </summary>
-        public SqlTransaction ExternalTransaction { get; }
+        public SqlTransaction? ExternalTransaction { get; }
 
         /// <summary>
         /// Options <see cref="BulkCopyOptions"/> for internal instance of <see cref="SqlBulkCopy"/>.
@@ -155,7 +154,7 @@ namespace Kros.Data.BulkActions.SqlServer
         /// <summary>
         /// Destination table name in database.
         /// </summary>
-        public string DestinationTableName { get; set; }
+        public string DestinationTableName { get; set; } = string.Empty;
 
         /// <inheritdoc cref="IBulkInsert.ColumnMappings"/>
         public BulkInsertColumnMappingCollection ColumnMappings { get; } = new BulkInsertColumnMappingCollection();
@@ -298,7 +297,7 @@ namespace Kros.Data.BulkActions.SqlServer
         private void ThrowExceptionInvalidDestinationColumnMapping(
             int columnMappingIndex,
             int? mappingOrdinal = null,
-            string mappingName = null)
+            string? mappingName = null)
         {
             string exceptionDetail;
             if (mappingOrdinal.HasValue)
@@ -353,8 +352,7 @@ namespace Kros.Data.BulkActions.SqlServer
                 {
                     if (_disposeOfConnection)
                     {
-                        _connection.Dispose();
-                        _connection = null;
+                        _connection?.Dispose();
                     }
                 }
                 disposedValue = true;

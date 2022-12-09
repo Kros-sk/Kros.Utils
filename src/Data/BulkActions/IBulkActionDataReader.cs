@@ -35,14 +35,14 @@ namespace Kros.Data.BulkActions
         /// <returns>Object - value of column.</returns>
         /// <exception cref="IndexOutOfRangeException">Defined index is not between 0 and <see cref="FieldCount"/>.
         /// </exception>
-        object GetValue(int i);
+        object? GetValue(int i);
 
         /// <summary>
         /// Gets the value of the specified column as an instance of <see cref="System.String"/>.
         /// </summary>
         /// <param name="i">The zero-based column ordinal.</param>
         /// <returns>The value of the specified column.</returns>
-        string GetString(int i);
+        string? GetString(int i);
 
         /// <summary>
         /// Gets a value that indicates whether the column contains non-existent or missing values.

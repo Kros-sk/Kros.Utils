@@ -36,10 +36,9 @@ namespace Kros.Data.BulkActions.SqlServer
         /// If transaction is running on connection, transaction has to be defined in <paramref name="externalTransaction"/>.
         /// </param>
         /// <param name="externalTransaction">External transaction, in which bulk update is executed.</param>
-        public SqlServerBulkUpdate(SqlConnection connection, SqlTransaction externalTransaction)
+        public SqlServerBulkUpdate(SqlConnection connection, SqlTransaction? externalTransaction)
+            : base(connection, false)
         {
-            _connection = Check.NotNull(connection, nameof(connection));
-
             ExternalTransaction = externalTransaction;
         }
 
@@ -48,9 +47,8 @@ namespace Kros.Data.BulkActions.SqlServer
         /// </summary>
         /// <param name="connectionString">Connection string for database connection.</param>
         public SqlServerBulkUpdate(string connectionString)
-            : this(new SqlConnection(connectionString), null)
+            : base(new SqlConnection(connectionString), true)
         {
-            _disposeOfConnection = true;
         }
 
         #endregion
@@ -60,7 +58,7 @@ namespace Kros.Data.BulkActions.SqlServer
         /// <inheritdoc/>
         protected override IBulkInsert CreateBulkInsert()
         {
-            return new SqlServerBulkInsert((SqlConnection)_connection, (SqlTransaction)ExternalTransaction);
+            return new SqlServerBulkInsert((SqlConnection)_connection, (SqlTransaction?)ExternalTransaction);
         }
 
         /// <inheritdoc/>
@@ -75,17 +73,17 @@ namespace Kros.Data.BulkActions.SqlServer
         /// <inheritdoc/>
         protected override void CreateTempTableCore(IDataReader reader, string tempTableName)
         {
-            string identityColumnName = null;
+            string identityColumnName = "";
             using (var cmd = _connection.CreateCommand())
             {
                 cmd.Transaction = ExternalTransaction;
 
                 cmd.CommandText = "SELECT name FROM sys.identity_columns " +
                     $"WHERE OBJECT_NAME(object_id) = '{DestinationTableName}'";
-                identityColumnName = (string)cmd.ExecuteScalar();
+                identityColumnName = (string)cmd.ExecuteScalar()!;
                 if (!Enumerable.Contains(PrimaryKeyColumns, identityColumnName, StringComparer.OrdinalIgnoreCase))
                 {
-                    identityColumnName = null;
+                    identityColumnName = string.Empty;
                 }
 
                 cmd.CommandText = $"SELECT {GetColumnNamesForTempTable(reader, identityColumnName)} INTO [{tempTableName}] " +
@@ -105,11 +103,11 @@ namespace Kros.Data.BulkActions.SqlServer
         {
             using (var cmd = CreateCommandForPrimaryKey())
             {
-                if (columnName != null)
+                if (columnName != string.Empty)
                 {
                     cmd.CommandText = "SELECT data_type FROM information_schema.columns " +
                         $"WHERE table_name = '{DestinationTableName}' AND column_name = '{columnName}'";
-                    string dataType = (string)cmd.ExecuteScalar();
+                    string dataType = (string)cmd.ExecuteScalar()!;
 
                     cmd.CommandText = $"ALTER TABLE [{tempTableName}] ADD [{columnName}] [{dataType}] NOT NULL";
                     cmd.ExecuteNonQuery();
@@ -157,7 +155,7 @@ namespace Kros.Data.BulkActions.SqlServer
         /// <inheritdoc/>
         protected async override Task DoneTempTableAsync(string tempTableName, bool useAsync)
         {
-            using (var cmd = _connection.CreateCommand())
+            using (IDbCommand cmd = _connection.CreateCommand())
             {
                 cmd.Transaction = ExternalTransaction;
                 cmd.CommandText = $"DROP TABLE [{tempTableName}]";
@@ -170,7 +168,7 @@ namespace Kros.Data.BulkActions.SqlServer
         {
             if (useAsync)
             {
-                await (cmd as DbCommand).ExecuteNonQueryAsync();
+                await ((DbCommand)cmd).ExecuteNonQueryAsync();
             }
             else
             {

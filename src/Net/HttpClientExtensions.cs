@@ -17,7 +17,7 @@ namespace Kros.Net
         /// </summary>
         public const string AntiForgeryTokenFieldName = "__RequestVerificationToken";
 
-#if netcoreapp
+#if !IsOldDotNet
         /// <summary>
         /// Makes a GET request to the URI <paramref name="requestUri"/> and acquires the anti-forgery token from the response.
         /// Than makes a POST request to the same URI with acquired anti-forgery token and the data <paramref name="data"/>.
@@ -39,7 +39,7 @@ namespace Kros.Net
             T data)
         {
             HttpResponseMessage getResponse = await client.GetAsync(requestUri);
-            string antiForgeryToken = await getResponse.GetAntiForgeryTokenAsync();
+            string? antiForgeryToken = await getResponse.GetAntiForgeryTokenAsync();
 
             var postRequest = new HttpRequestMessage(HttpMethod.Post, requestUri)
             {
@@ -61,7 +61,7 @@ namespace Kros.Net
         /// <para>Resulting list is created from all the public non-indexed properties of object <paramref name="data"/>.</para>
         /// <para>This method is available only in .NET Core version of the library.</para>
         /// </remarks>
-        public static List<KeyValuePair<string, string>> CreateFormPostData<T>(T data) => CreateFormPostData(data, null);
+        public static List<KeyValuePair<string, string?>> CreateFormPostData<T>(T data) => CreateFormPostData(data, null);
 
         /// <summary>
         /// From data object <paramref name="data"/> creates a list of data values for web form (<see cref="FormUrlEncodedContent"/>).
@@ -75,35 +75,35 @@ namespace Kros.Net
         /// <see cref="AntiForgeryTokenFieldName"/>.</para>
         /// <para>This method is available only in .NET Core version of the library.</para>
         /// </remarks>
-        public static List<KeyValuePair<string, string>> CreateFormPostData<T>(T data, string antiForgeryToken)
+        public static List<KeyValuePair<string, string?>> CreateFormPostData<T>(T? data, string? antiForgeryToken)
         {
-            var result = new List<KeyValuePair<string, string>>();
+            var result = new List<KeyValuePair<string, string?>>();
 
             if (data != null)
             {
                 foreach (PropertyInfo prop in typeof(T).GetProperties().Where(p => p.CanRead && (p.GetIndexParameters().Length == 0)))
                 {
-                    object propValue = prop.GetValue(data);
+                    object? propValue = prop.GetValue(data);
                     if ((propValue is IEnumerable propValues) && !(propValue is string))
                     {
-                        foreach (object value in propValues)
+                        foreach (object? value in propValues)
                         {
                             if (value != null)
                             {
-                                result.Add(new KeyValuePair<string, string>(prop.Name, value.ToString()));
+                                result.Add(new KeyValuePair<string, string?>(prop.Name, value.ToString()));
                             }
                         }
                     }
                     else if (propValue != null)
                     {
-                        result.Add(new KeyValuePair<string, string>(prop.Name, propValue.ToString()));
+                        result.Add(new KeyValuePair<string, string?>(prop.Name, propValue.ToString()));
                     }
                 }
             }
 
             if (!string.IsNullOrEmpty(antiForgeryToken))
             {
-                result.Add(new KeyValuePair<string, string>(AntiForgeryTokenFieldName, antiForgeryToken));
+                result.Add(new KeyValuePair<string, string?>(AntiForgeryTokenFieldName, antiForgeryToken));
             }
 
             return result;

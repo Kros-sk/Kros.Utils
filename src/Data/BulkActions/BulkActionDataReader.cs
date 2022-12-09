@@ -54,6 +54,7 @@ namespace Kros.Data.BulkActions
         /// <returns>Index of column.</returns>
         public override int GetOrdinal(string name) => _reader.GetOrdinal(name);
 
+#pragma warning disable CS8764 // Nullability of return type doesn't match overridden member (possibly because of nullability attributes).
         /// <summary>
         /// Returns value of column.
         /// </summary>
@@ -61,10 +62,11 @@ namespace Kros.Data.BulkActions
         /// <returns>Object value of column.</returns>
         /// <exception cref="IndexOutOfRangeException">Defined index is not between 0 and <see cref="FieldCount"/>.
         /// </exception>
-        public override object GetValue(int i) => _reader.GetValue(i);
+        public override object? GetValue(int i) => _reader.GetValue(i);
 
         /// <inheritdoc cref="IBulkActionDataReader.GetString(int)"/>
-        public override string GetString(int i) => _reader.GetString(i);
+        public override string? GetString(int i) => _reader.GetString(i);
+#pragma warning restore CS8764 // Nullability of return type doesn't match overridden member (possibly because of nullability attributes).
 
         /// <inheritdoc cref="IBulkActionDataReader.IsDBNull(int)"/>
         public override bool IsDBNull(int i) => _reader.IsDBNull(i);
@@ -109,9 +111,9 @@ namespace Kros.Data.BulkActions
         public override int GetInt32(int i) => throw new NotImplementedException();
         public override int GetValues(object[] values) => throw new NotImplementedException();
         public override int RecordsAffected => throw new NotSupportedException();
-        public override long GetBytes(int i, long fieldOffset, byte[] buffer, int bufferoffset, int length) =>
+        public override long GetBytes(int i, long fieldOffset, byte[]? buffer, int bufferoffset, int length) =>
             throw new NotImplementedException();
-        public override long GetChars(int i, long fieldoffset, char[] buffer, int bufferoffset, int length) =>
+        public override long GetChars(int i, long fieldoffset, char[]? buffer, int bufferoffset, int length) =>
             throw new NotImplementedException();
         public override long GetInt64(int i) => throw new NotImplementedException();
         public override object this[int i] => throw new NotSupportedException();

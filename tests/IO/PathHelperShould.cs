@@ -12,14 +12,14 @@ namespace Kros.Utils.UnitTest.IO
         [Fact]
         public void ThrowArgumentNullExceptionWhenInputIsNull()
         {
-            Action action = () => PathHelper.BuildPath(null);
+            Action action = () => PathHelper.BuildPath(null!);
             action.Should().Throw<ArgumentException>();
         }
 
         [Fact]
         public void ThrowArgumentNullExceptionWhenAnyPartIsNull()
         {
-            Action action = () => PathHelper.BuildPath("lorem", null, "ipsum");
+            Action action = () => PathHelper.BuildPath("lorem", null!, "ipsum");
             action.Should().Throw<ArgumentException>();
         }
 
@@ -68,13 +68,13 @@ namespace Kros.Utils.UnitTest.IO
         [Fact]
         public void ReturnEmptyStringWhenPathNameIsNull()
         {
-            PathHelper.ReplaceInvalidPathChars(null).Should().Be(string.Empty);
+            PathHelper.ReplaceInvalidPathChars(null!).Should().Be(string.Empty);
         }
 
         [Fact]
         public void ReplaceWithEmptyStringInPathNameWhenReplacementIsNull()
         {
-            PathHelper.ReplaceInvalidPathChars("a*z", null).Should().Be("az");
+            PathHelper.ReplaceInvalidPathChars("a*z", null!).Should().Be("az");
         }
 
         [Fact]

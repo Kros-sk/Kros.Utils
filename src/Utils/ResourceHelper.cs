@@ -34,7 +34,7 @@ namespace Kros.Utils
             {
                 if (stream == null)
                 {
-                    return null;
+                    return string.Empty;
                 }
                 using (var reader = new StreamReader(stream))
                 {

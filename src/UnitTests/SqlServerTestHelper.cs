@@ -30,8 +30,8 @@ namespace Kros.UnitTests
 
         #region Fields
 
-        private SqlConnection _connection = null;
-        private readonly IEnumerable<string> _initDatabaseScripts = null;
+        private SqlConnection? _connection = null;
+        private readonly IEnumerable<string>? _initDatabaseScripts = null;
 
         #endregion
 
@@ -72,11 +72,11 @@ namespace Kros.UnitTests
         /// <param name="baseDatabaseName">Base database name. GUID will be appended to it. The value is not required.</param>
         /// <param name="initDatabaseScripts">List of scripts, which are executed when database is created. For example,
         /// they can be scripts to create necessary tables and data.</param>
-        public SqlServerTestHelper(string baseConnectionString, string baseDatabaseName, IEnumerable<string> initDatabaseScripts)
+        public SqlServerTestHelper(string baseConnectionString, string baseDatabaseName, IEnumerable<string>? initDatabaseScripts)
         {
             BaseConnectionString = Check.NotNullOrWhiteSpace(baseConnectionString, nameof(baseConnectionString));
 
-            BaseDatabaseName = baseDatabaseName?.Trim();
+            BaseDatabaseName = baseDatabaseName.Trim();
             _initDatabaseScripts = initDatabaseScripts;
         }
 
@@ -107,7 +107,7 @@ namespace Kros.UnitTests
                 {
                     CreateDatabase();
                 }
-                return _connection;
+                return _connection!;
             }
         }
 

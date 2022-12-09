@@ -1,4 +1,4 @@
-﻿#if netcoreapp
+﻿#if !IsOldDotNet
 using Kros.Utils;
 using Microsoft.Net.Http.Headers;
 #endif
@@ -13,7 +13,7 @@ namespace Kros.Net
     /// </summary>
     public static class HttpRequestMessageExtensions
     {
-#if netcoreapp
+#if !IsOldDotNet
         /// <summary>
         /// Sets cookie <paramref name="cookie"/> to the request.
         /// </summary>
@@ -84,7 +84,7 @@ namespace Kros.Net
         /// <remarks><para>This method is available only in .NET Core version of the library.</para></remarks>
         public static IList<CookieHeaderValue> GetCookies(this HttpRequestMessage request)
         {
-            if (request.Headers.TryGetValues(HeaderNames.Cookie, out IEnumerable<string> values))
+            if (request.Headers.TryGetValues(HeaderNames.Cookie, out IEnumerable<string>? values))
             {
                 return CookieHeaderValue.ParseList(values.ToList());
             }

@@ -1,4 +1,4 @@
-﻿#if netcoreapp
+﻿#if !IsOldDotNet
 using Kros.Utils;
 using Microsoft.Net.Http.Headers;
 #endif
@@ -28,9 +28,9 @@ namespace Kros.Net
         /// The response's content is searched for form's field with the name
         /// <see cref="HttpClientExtensions.AntiForgeryTokenFieldName"/>. If that field is found, it's value is returned.
         /// </remarks>
-        public static async Task<string> GetAntiForgeryTokenAsync(this HttpResponseMessage response)
+        public static async Task<string?> GetAntiForgeryTokenAsync(this HttpResponseMessage response)
         {
-            string token = null;
+            string? token = null;
             if (response.IsSuccessStatusCode && (response.Content != null))
             {
                 string content = await response.Content.ReadAsStringAsync();
@@ -46,7 +46,7 @@ namespace Kros.Net
             return token;
         }
 
-#if netcoreapp
+#if !IsOldDotNet
         /// <summary>
         /// Sets cookie <paramref name="cookie"/> to the HTTP response.
         /// </summary>
@@ -117,7 +117,7 @@ namespace Kros.Net
         /// <remarks><para>This method is available only in .NET Core version of the library.</para></remarks>
         public static IList<SetCookieHeaderValue> GetCookies(this HttpResponseMessage response)
         {
-            if (response.Headers.TryGetValues(HeaderNames.SetCookie, out IEnumerable<string> values))
+            if (response.Headers.TryGetValues(HeaderNames.SetCookie, out IEnumerable<string>? values))
             {
                 return SetCookieHeaderValue.ParseList(values.ToList());
             }

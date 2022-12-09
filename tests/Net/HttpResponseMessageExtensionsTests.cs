@@ -34,7 +34,7 @@ namespace Kros.Utils.UnitTests.Net
             {
                 Content = new StringContent(HtmlContent)
             };
-            string token = await message.GetAntiForgeryTokenAsync();
+            string? token = await message.GetAntiForgeryTokenAsync();
             token.Should().BeNull();
         }
 
@@ -45,7 +45,7 @@ namespace Kros.Utils.UnitTests.Net
             {
                 Content = new StringContent(HtmlContent)
             };
-            string token = await message.GetAntiForgeryTokenAsync();
+            string? token = await message.GetAntiForgeryTokenAsync();
             token.Should().Be("anti-forgery-token");
         }
 

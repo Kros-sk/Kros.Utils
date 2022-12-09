@@ -11,7 +11,7 @@ namespace Kros.Data.Schema
     {
         #region Fields
 
-        private IndexSchema _primaryKey;
+        private IndexSchema? _primaryKey;
 
         #endregion
 
@@ -38,7 +38,7 @@ namespace Kros.Data.Schema
         /// <exception cref="ArgumentNullException">Value of <paramref name="name"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException">Value of <paramref name="name"/> is empty string, or string containing only
         /// whitespace characters.</exception>
-        public TableSchema(DatabaseSchema database, string name)
+        public TableSchema(DatabaseSchema? database, string name)
         {
             Name = Check.NotNullOrWhiteSpace(name, nameof(name));
 
@@ -60,7 +60,7 @@ namespace Kros.Data.Schema
         /// <summary>
         /// Database to which table belongs.
         /// </summary>
-        public DatabaseSchema Database { get; internal set; }
+        public DatabaseSchema? Database { get; internal set; }
 
         /// <summary>
         /// Columns of the table.
@@ -73,7 +73,7 @@ namespace Kros.Data.Schema
         /// <remarks>
         /// If table does not have a primary key, value is <see langword="null"/>.
         /// </remarks>
-        public IndexSchema PrimaryKey => _primaryKey;
+        public IndexSchema? PrimaryKey => _primaryKey;
 
         /// <summary>
         /// Sets primary key with name <paramref name="primaryKeyName"/> and flag <paramref name="clustered"/>.
@@ -83,7 +83,7 @@ namespace Kros.Data.Schema
         /// <returns>Created primary key or <see langword="null"/> value, if primary key name was not specified.</returns>
         /// <remarks>If <paramref name="primaryKeyName"/> is <see langword="null"/> or empty string or white space string,
         /// primary key is removed (value of <see cref="PrimaryKey"/> will be <see langword="null"/>).</remarks>
-        public IndexSchema SetPrimaryKey(string primaryKeyName, bool clustered)
+        public IndexSchema? SetPrimaryKey(string primaryKeyName, bool clustered)
         {
             _primaryKey = string.IsNullOrWhiteSpace(primaryKeyName)
                 ? null

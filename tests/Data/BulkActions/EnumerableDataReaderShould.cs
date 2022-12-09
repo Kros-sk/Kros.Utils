@@ -13,7 +13,7 @@ namespace Kros.Utils.UnitTests.Data.BulkActions
         private class DataItem
         {
             public int Id { get; set; }
-            public string Name { get; set; }
+            public string Name { get; set; } = string.Empty;
             public double Value { get; set; }
         }
 
@@ -26,7 +26,7 @@ namespace Kros.Utils.UnitTests.Data.BulkActions
         {
             Action createInstance = () =>
             {
-                var instance = new EnumerableDataReader<DataItem>(null, new string[] { "Id" });
+                var instance = new EnumerableDataReader<DataItem>(null!, new string[] { "Id" });
             };
             createInstance.Should().Throw<ArgumentNullException>()
                 .And.ParamName.Should().Be("data");
@@ -37,7 +37,7 @@ namespace Kros.Utils.UnitTests.Data.BulkActions
         {
             Action createInstance = () =>
             {
-                var instance = new EnumerableDataReader<DataItem>(new List<DataItem>(), null);
+                var instance = new EnumerableDataReader<DataItem>(new List<DataItem>(), null!);
             };
             createInstance.Should().Throw<ArgumentNullException>()
                 .And.ParamName.Should().Be("columnNames");

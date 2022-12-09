@@ -145,7 +145,7 @@ namespace Kros.Utils.UnitTest.IO
             };
             var actual = formatter.FormatPaths(folder, fileName, fileInfos);
 
-            var comparer = new GenericDictionaryAssertions<int, string>(actual);
+            var comparer = new GenericDictionaryAssertions<Dictionary<int, string>, int, string>(actual);
             comparer.Equal(expected);
         }
 
@@ -179,7 +179,7 @@ namespace Kros.Utils.UnitTest.IO
             };
             var actual = formatter.FormatPaths(folder, fileName, fileInfos);
 
-            var comparer = new GenericDictionaryAssertions<int, string>(actual);
+            var comparer = new GenericDictionaryAssertions<Dictionary<int, string>, int, string>(actual);
             comparer.Equal(expected);
         }
 
@@ -206,7 +206,7 @@ namespace Kros.Utils.UnitTest.IO
             };
             var actual = formatter.FormatPathsInSubfolder(folder, fileName, fileInfos);
 
-            var comparer = new GenericDictionaryAssertions<int, string>(actual);
+            var comparer = new GenericDictionaryAssertions<Dictionary<int, string>, int, string>(actual);
             comparer.Equal(expected);
         }
 
@@ -234,7 +234,7 @@ namespace Kros.Utils.UnitTest.IO
             };
             var actual = formatter.FormatPathsInSubfolder(folder, fileName, subfolderInfo, fileInfos);
 
-            var comparer = new GenericDictionaryAssertions<int, string>(actual);
+            var comparer = new GenericDictionaryAssertions<Dictionary<int, string>, int, string>(actual);
             comparer.Equal(expected);
         }
 
@@ -268,7 +268,7 @@ namespace Kros.Utils.UnitTest.IO
             };
             var actual = formatter.FormatPathsInSubfolder(folder, fileName, fileInfos);
 
-            var comparer = new GenericDictionaryAssertions<int, string>(actual);
+            var comparer = new GenericDictionaryAssertions<Dictionary<int, string>, int, string>(actual);
             comparer.Equal(expected);
         }
 
@@ -307,7 +307,7 @@ namespace Kros.Utils.UnitTest.IO
             };
             var actual = formatter.FormatPathsInSubfolder(folder, fileName, fileInfos);
 
-            var comparer = new GenericDictionaryAssertions<int, string>(actual);
+            var comparer = new GenericDictionaryAssertions<Dictionary<int, string>, int, string>(actual);
             comparer.Equal(expected);
         }
 
@@ -342,7 +342,7 @@ namespace Kros.Utils.UnitTest.IO
             };
             var actual = formatter.FormatPathsInSubfolder(folder, fileName, SubfolderInfo, fileInfos);
 
-            var comparer = new GenericDictionaryAssertions<int, string>(actual);
+            var comparer = new GenericDictionaryAssertions<Dictionary<int, string>, int, string>(actual);
             comparer.Equal(expected);
         }
 
@@ -371,7 +371,7 @@ namespace Kros.Utils.UnitTest.IO
             };
             var actual = formatter.FormatPaths(folder, fileName, fileInfos);
 
-            var comparer = new GenericDictionaryAssertions<int, string>(actual);
+            var comparer = new GenericDictionaryAssertions<Dictionary<int, string>, int, string>(actual);
             comparer.Equal(expected);
         }
 
@@ -400,7 +400,7 @@ namespace Kros.Utils.UnitTest.IO
             };
             var actual = formatter.FormatPathsInSubfolder(folder, fileName, fileInfos);
 
-            var comparer = new GenericDictionaryAssertions<int, string>(actual);
+            var comparer = new GenericDictionaryAssertions<Dictionary<int, string>, int, string>(actual);
             comparer.Equal(expected);
         }
 
@@ -465,7 +465,7 @@ namespace Kros.Utils.UnitTest.IO
             };
             var actual = formatter.FormatPathsInSubfolder(folder, fileName, fileInfos);
 
-            var comparer = new GenericDictionaryAssertions<int, string>(actual);
+            var comparer = new GenericDictionaryAssertions<Dictionary<int, string>, int, string>(actual);
             comparer.Equal(expected);
         }
 
@@ -502,7 +502,7 @@ namespace Kros.Utils.UnitTest.IO
             };
             var actual = formatter.FormatPathsInSubfolder(folder, fileName, subfolderInfo, fileInfos);
 
-            var comparer = new GenericDictionaryAssertions<int, string>(actual);
+            var comparer = new GenericDictionaryAssertions<Dictionary<int, string>, int, string>(actual);
             comparer.Equal(expected);
         }
     }

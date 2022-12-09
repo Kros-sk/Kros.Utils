@@ -133,7 +133,7 @@ namespace Kros.Data.Schema
         /// <summary>
         /// Table to which this foreign key belongs.
         /// </summary>
-        public TableSchema Table { get; internal set; }
+        public TableSchema? Table { get; internal set; }
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public override string ToString()

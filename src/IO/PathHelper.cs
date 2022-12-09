@@ -131,7 +131,7 @@ namespace Kros.IO
         /// <param name="pathName">Input path.</param>
         /// <remarks><inheritdoc cref="ReplaceInvalidPathChars(string, string)"/></remarks>
         /// <returns><inheritdoc cref="ReplaceInvalidPathChars(string, string)"/></returns>
-        public static string ReplaceInvalidPathChars(string pathName)
+        public static string ReplaceInvalidPathChars(string? pathName)
         {
             return ReplaceInvalidPathChars(pathName, "-");
         }
@@ -150,7 +150,7 @@ namespace Kros.IO
         /// String with invalid path characters replaced. If input <paramref name="pathName"/> is <see langword="null"/>,
         /// empty string is returned.
         /// </returns>
-        public static string ReplaceInvalidPathChars(string pathName, string replacement)
+        public static string ReplaceInvalidPathChars(string? pathName, string? replacement)
         {
             if (pathName == null)
             {
@@ -196,7 +196,7 @@ namespace Kros.IO
             }
 
             string driveName = path.Length > 3 ? path.Substring(0, 3) : path;
-            DriveInfo drive = DriveInfo.GetDrives()
+            DriveInfo? drive = DriveInfo.GetDrives()
                 .Where(item => item.Name.Equals(driveName, StringComparison.OrdinalIgnoreCase))
                 .FirstOrDefault();
             if (drive != null)

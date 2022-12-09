@@ -11,12 +11,12 @@ namespace Kros.Caching
     /// <typeparam name="TKey">The type of the key.</typeparam>
     /// <typeparam name="TValue">The type of the value.</typeparam>
     /// <seealso cref="Kros.Caching.ICache{TKey,TValue}" />
-    public class Cache<TKey, TValue> : ICache<TKey, TValue>
+    public class Cache<TKey, TValue> : ICache<TKey, TValue> where TKey : notnull
     {
         #region Private fields
 
-        private Dictionary<TKey, TValue> _cache;
-        private ReaderWriterLockSlim _cacheLock = new ReaderWriterLockSlim();
+        private readonly Dictionary<TKey, TValue> _cache;
+        private readonly ReaderWriterLockSlim _cacheLock = new ReaderWriterLockSlim();
 
         #endregion
 
@@ -62,8 +62,7 @@ namespace Kros.Caching
 
             try
             {
-                TValue ret;
-                if (_cache.TryGetValue(key, out ret))
+                if (_cache.TryGetValue(key, out TValue? ret))
                 {
                     return ret;
                 }

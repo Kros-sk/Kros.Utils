@@ -22,10 +22,10 @@ namespace Kros.Data.SqlServer
         /// </summary>
         /// <returns>SQL names and scripts.</returns>
         public static
-#if netcoreapp
-            (string tableName, string storedProcedureName, string tableScript, string storedProcedureScript)
-#else
+#if IsOldDotNet
             Tuple<string, string, string, string>
+#else
+            (string tableName, string storedProcedureName, string tableScript, string storedProcedureScript)
 #endif
             GetSqlInfo()
         {
@@ -33,10 +33,10 @@ namespace Kros.Data.SqlServer
             string tableScript = generator.BackendTableScript;
             string storedProcedureScript = generator.BackendStoredProcedureScript;
             generator.Dispose();
-#if netcoreapp
-            return (generator.BackendTableName, generator.BackendStoredProcedureName, tableScript, storedProcedureScript);
-#else
+#if IsOldDotNet
             return Tuple.Create(generator.BackendTableName, generator.BackendStoredProcedureName, tableScript, storedProcedureScript);
+#else
+            return (generator.BackendTableName, generator.BackendStoredProcedureName, tableScript, storedProcedureScript);
 #endif
         }
 
