@@ -388,18 +388,12 @@ namespace Kros.IO
 
         #region Helpers
 
-        // 260 characters is maximum path length on disk, taken from .NET framework.
-        // 12 characters is a reserve for numbers in case the file already exists.
-        private int _maxPathLength = 260 - 12;
-
         /// <summary>
         /// Maximum path length. Intended for internal use.
         /// </summary>
-        protected internal int MaxPathLength
-        {
-            get => _maxPathLength;
-            set => _maxPathLength = value;
-        }
+        protected internal int MaxPathLength { get; set; } = 260 - 12;
+        // 260 characters is maximum path length on disk, taken from .NET framework.
+        // 12 characters is a reserve for numbers in case the file already exists.
 
         /// <summary>
         /// Checks if file <paramref name="filePath"/> exists. Method is intended for internal use.
