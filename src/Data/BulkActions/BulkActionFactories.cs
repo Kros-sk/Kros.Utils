@@ -11,9 +11,9 @@ namespace Kros.Data.BulkActions
     /// </summary>
     public static class BulkActionFactories
     {
-        private static Dictionary<string, Func<string, IBulkActionFactory>> _factoryByAdoClientName =
+        private static readonly Dictionary<string, Func<string, IBulkActionFactory>> _factoryByAdoClientName =
             new Dictionary<string, Func<string, IBulkActionFactory>>(StringComparer.InvariantCultureIgnoreCase);
-        private static Dictionary<Type, Func<DbConnection, IBulkActionFactory>> _factoryByConnection =
+        private static readonly Dictionary<Type, Func<DbConnection, IBulkActionFactory>> _factoryByConnection =
             new Dictionary<Type, Func<DbConnection, IBulkActionFactory>>();
 
         static BulkActionFactories()

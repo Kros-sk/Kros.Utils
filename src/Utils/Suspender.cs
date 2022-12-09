@@ -22,7 +22,7 @@ namespace Kros.Utils
 
         private class SuspenderInternal : IDisposable
         {
-            private Suspender _suspender;
+            private readonly Suspender _suspender;
 
             public SuspenderInternal(Suspender suspender)
             {

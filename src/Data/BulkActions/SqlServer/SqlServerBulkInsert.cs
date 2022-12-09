@@ -30,7 +30,7 @@ namespace Kros.Data.BulkActions.SqlServer
 
         #region Private fields
 
-        private SqlConnection _connection;
+        private readonly SqlConnection _connection;
         private readonly bool _disposeOfConnection = false;
 
         #endregion
