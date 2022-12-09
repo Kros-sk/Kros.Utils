@@ -14,8 +14,8 @@ namespace Kros.Data.Schema
     {
         #region Fields
 
-        private readonly List<string> _primaryKeyTableColumns = new List<string>();
-        private readonly List<string> _foreignKeyTableColumns = new List<string>();
+        private readonly List<string> _primaryKeyTableColumns = new();
+        private readonly List<string> _foreignKeyTableColumns = new();
 
         #endregion
 
@@ -138,7 +138,7 @@ namespace Kros.Data.Schema
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder(50);
+            StringBuilder sb = new(50);
 
             sb.AppendFormat("Foreign Key {0}: ", Name);
             ToStringAddTable(sb, PrimaryKeyTableName, PrimaryKeyTableColumns);

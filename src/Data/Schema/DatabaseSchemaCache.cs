@@ -58,9 +58,8 @@ namespace Kros.Data.Schema
 
         #region Private fields
 
-        private readonly List<LoaderInfo> _loaders = new List<LoaderInfo>();
-        private readonly ConcurrentDictionary<string, DatabaseSchema> _cache =
-            new ConcurrentDictionary<string, DatabaseSchema>(StringComparer.OrdinalIgnoreCase);
+        private readonly List<LoaderInfo> _loaders = new();
+        private readonly ConcurrentDictionary<string, DatabaseSchema> _cache = new(StringComparer.OrdinalIgnoreCase);
 
         #endregion
 

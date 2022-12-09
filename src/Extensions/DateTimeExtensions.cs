@@ -12,7 +12,7 @@ namespace Kros.Extensions
         /// </summary>
         /// <param name="value">Date, to which the first day of month is returned.</param>
         /// <returns>Date.</returns>
-        public static DateTime FirstDayOfMonth(this DateTime value) => new DateTime(value.Year, value.Month, 1);
+        public static DateTime FirstDayOfMonth(this DateTime value) => new(value.Year, value.Month, 1);
 
         /// <summary>
         /// Returns first day of current month.
@@ -26,7 +26,7 @@ namespace Kros.Extensions
         /// <param name="value">Date, to which the last day of month is returned.</param>
         /// <returns>Date.</returns>
         public static DateTime LastDayOfMonth(this DateTime value)
-            => new DateTime(value.Year, value.Month, DateTime.DaysInMonth(value.Year, value.Month));
+            => new(value.Year, value.Month, DateTime.DaysInMonth(value.Year, value.Month));
 
         /// <summary>
         /// Returns last day of current month.

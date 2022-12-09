@@ -63,7 +63,7 @@ namespace Kros.Data.Schema
             public const decimal Decimal = 0;
             public const string Text = "";
             public static readonly Guid Guid = Guid.Empty;
-            public static readonly DateTime DateTime = new DateTime(1900, 1, 1);
+            public static readonly DateTime DateTime = new(1900, 1, 1);
             public static readonly DateTime Date = DefaultValues.DateTime;
             public static readonly DateTime Time = DefaultValues.DateTime;
             public static readonly DBNull Null = DBNull.Value;

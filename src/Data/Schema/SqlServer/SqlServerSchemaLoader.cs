@@ -15,7 +15,7 @@ namespace Kros.Data.Schema.SqlServer
     {
         #region Helper mappings
 
-        private static readonly Dictionary<SqlDbType, object> _defaultValueMapping = new Dictionary<SqlDbType, object>() {
+        private static readonly Dictionary<SqlDbType, object> _defaultValueMapping = new() {
             { SqlDbType.BigInt, ColumnSchema.DefaultValues.Int64 },
             { SqlDbType.Binary, ColumnSchema.DefaultValues.Null },
             { SqlDbType.Bit, ColumnSchema.DefaultValues.Boolean },
@@ -238,8 +238,8 @@ namespace Kros.Data.Schema.SqlServer
 
         private DatabaseSchema LoadSchemaCore(SqlConnection connection)
         {
-            SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder(connection.ConnectionString);
-            DatabaseSchema database = new DatabaseSchema(builder.InitialCatalog);
+            SqlConnectionStringBuilder builder = new(connection.ConnectionString);
+            DatabaseSchema database = new(builder.InitialCatalog);
             LoadTables(connection, database);
             LoadColumns(connection, database);
             LoadIndexes(connection, database);
@@ -303,7 +303,7 @@ namespace Kros.Data.Schema.SqlServer
 
         private SqlServerColumnSchema CreateColumnSchema(DataRow row, TableSchema table)
         {
-            SqlServerColumnSchema column = new SqlServerColumnSchema((string)row[ColumnsSchemaNames.ColumnName])
+            SqlServerColumnSchema column = new((string)row[ColumnsSchemaNames.ColumnName])
             {
                 AllowNull = ((string)row[ColumnsSchemaNames.IsNullable]).Equals("yes", StringComparison.OrdinalIgnoreCase),
                 SqlDbType = GetSqlDbType(row)
@@ -366,7 +366,7 @@ namespace Kros.Data.Schema.SqlServer
                 defaultValue = GetDefaultValueFromString(defaultValueString, column.SqlDbType);
             }
 
-            SqlServerParseDefaultValueEventArgs e = new SqlServerParseDefaultValueEventArgs(
+            SqlServerParseDefaultValueEventArgs e = new(
                 table.Name, column.Name, column.SqlDbType, defaultValueString, defaultValue);
             OnParseDefaultValue(e);
             if (e.Handled)
@@ -525,9 +525,9 @@ ORDER BY tables.name, indexes.name, index_columns.key_ordinal
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities")]
         private void LoadIndexes(SqlConnection connection, DatabaseSchema database)
         {
-            using (DataTable schemaData = new DataTable())
+            using (DataTable schemaData = new())
             {
-                using (SqlDataAdapter adapter = new SqlDataAdapter(LoadIndexesQuery, connection))
+                using (SqlDataAdapter adapter = new(LoadIndexesQuery, connection))
                 {
                     adapter.Fill(schemaData);
                 }
@@ -640,14 +640,14 @@ ORDER BY foreign_key_columns.constraint_object_id
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities")]
         private void LoadForeignKeys(SqlConnection connection, DatabaseSchema database)
         {
-            using (DataTable foreignKeysData = new DataTable("ForeignKeys"))
-            using (DataTable foreignKeyColumnsData = new DataTable("ForeignKeys"))
+            using (DataTable foreignKeysData = new("ForeignKeys"))
+            using (DataTable foreignKeyColumnsData = new("ForeignKeys"))
             {
-                using (SqlDataAdapter adapter = new SqlDataAdapter(LoadForeignKeysQuery, connection))
+                using (SqlDataAdapter adapter = new(LoadForeignKeysQuery, connection))
                 {
                     adapter.Fill(foreignKeysData);
                 }
-                using (SqlDataAdapter adapter = new SqlDataAdapter(LoadForeignKeyColumnsQuery, connection))
+                using (SqlDataAdapter adapter = new(LoadForeignKeyColumnsQuery, connection))
                 {
                     adapter.Fill(foreignKeyColumnsData);
                 }
@@ -658,8 +658,8 @@ ORDER BY foreign_key_columns.constraint_object_id
         private static void LoadForeignKeysSchema(DatabaseSchema database, DataTable foreignKeysData, DataTable foreignKeyColumnsData)
         {
             DataView columnsView = foreignKeyColumnsData.DefaultView;
-            List<string> primaryKeyColumns = new List<string>();
-            List<string> foreignKeyColumns = new List<string>();
+            List<string> primaryKeyColumns = new();
+            List<string> foreignKeyColumns = new();
             foreach (DataRow fkRow in foreignKeysData.Rows)
             {
                 int foreignKeyId = (int)fkRow[ForeignKeyQueryNames.ForeignKeyId];
@@ -682,7 +682,7 @@ ORDER BY foreign_key_columns.constraint_object_id
             List<string> primaryKeyColumns,
             List<string> foreignKeyColumns)
         {
-            ForeignKeySchema foreignKey = new ForeignKeySchema(
+            ForeignKeySchema foreignKey = new(
                 (string)foreignKeyData[ForeignKeyQueryNames.ForeignKeyName],
                 (string)foreignKeyData[ForeignKeyQueryNames.ReferencedTableName],
                 primaryKeyColumns,
@@ -725,7 +725,7 @@ ORDER BY foreign_key_columns.constraint_object_id
             {
                 throw new ArgumentException(Resources.SqlServerUnsupportedConnectionType, nameof(connection));
             }
-            SqlConnectionStringBuilder cnBuilder = new SqlConnectionStringBuilder(((SqlConnection)connection).ConnectionString);
+            SqlConnectionStringBuilder cnBuilder = new(((SqlConnection)connection).ConnectionString);
             Check.NotNullOrWhiteSpace(
                 cnBuilder.InitialCatalog, nameof(connection), Resources.SqlServerNoInitialCatalog);
         }

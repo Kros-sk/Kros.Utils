@@ -15,14 +15,14 @@ namespace Kros.IO
     {
         #region Helpers
 
-        private static readonly Regex _reReplacePathChars = new Regex(CreatePathReplacePattern(), RegexOptions.Compiled);
+        private static readonly Regex _reReplacePathChars = new(CreatePathReplacePattern(), RegexOptions.Compiled);
 
         private static string CreatePathReplacePattern()
         {
-            HashSet<char> invalidChars = new HashSet<char>(Path.GetInvalidFileNameChars());
+            HashSet<char> invalidChars = new(Path.GetInvalidFileNameChars());
             invalidChars.UnionWith(Path.GetInvalidPathChars());
 
-            System.Text.StringBuilder result = new System.Text.StringBuilder(invalidChars.Count + 3);
+            System.Text.StringBuilder result = new(invalidChars.Count + 3);
             result.Append("[");
             foreach (char c in invalidChars)
             {
@@ -75,7 +75,7 @@ namespace Kros.IO
             Check.NotNull(parts, nameof(parts));
 
             int capacity = CheckBuildPathParts(parts);
-            System.Text.StringBuilder sb = new System.Text.StringBuilder(capacity);
+            System.Text.StringBuilder sb = new(capacity);
             foreach (string part in parts)
             {
                 if (part.Length > 0)

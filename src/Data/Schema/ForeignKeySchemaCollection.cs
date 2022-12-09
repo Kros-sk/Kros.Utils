@@ -56,7 +56,7 @@ namespace Kros.Data.Schema
             string foreignKeyTableName,
             string foreignKeyTableColumn)
         {
-            ForeignKeySchema foreignKey = new ForeignKeySchema(
+            ForeignKeySchema foreignKey = new(
                 name,
                 primaryKeyTableName, primaryKeyTableColumn,
                 foreignKeyTableName, foreignKeyTableColumn);
@@ -88,7 +88,7 @@ namespace Kros.Data.Schema
             string foreignKeyTableName,
             IEnumerable<string> foreignKeyTableColumns)
         {
-            ForeignKeySchema foreignKey = new ForeignKeySchema(
+            ForeignKeySchema foreignKey = new(
                 name,
                 primaryKeyTableName, primaryKeyTableColumns,
                 foreignKeyTableName, foreignKeyTableColumns);

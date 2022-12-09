@@ -16,7 +16,7 @@ namespace Kros.Caching
         #region Private fields
 
         private readonly Dictionary<TKey, TValue> _cache;
-        private readonly ReaderWriterLockSlim _cacheLock = new ReaderWriterLockSlim();
+        private readonly ReaderWriterLockSlim _cacheLock = new();
 
         #endregion
 

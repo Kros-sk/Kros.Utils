@@ -174,7 +174,7 @@ namespace Kros.UnitTests
 
         private SqlConnection GetConnectionCore(string databaseName)
         {
-            SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder(BaseConnectionString)
+            SqlConnectionStringBuilder builder = new(BaseConnectionString)
             {
                 InitialCatalog = databaseName,
                 Pooling = false,
@@ -190,7 +190,7 @@ namespace Kros.UnitTests
         {
             if (_connection is not null)
             {
-                SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder(_connection.ConnectionString);
+                SqlConnectionStringBuilder builder = new(_connection.ConnectionString);
                 _connection.Dispose();
                 _connection = null;
                 using (SqlConnection connection = GetConnectionCore(MasterDatabaseName))

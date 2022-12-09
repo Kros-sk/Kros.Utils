@@ -186,7 +186,7 @@ namespace Kros.Data.BulkActions.SqlServer
         private async Task InsertCoreAsync(IDataReader reader, bool useAsync)
         {
             using (ConnectionHelper.OpenConnection(_connection))
-            using (SqlBulkCopy bulkCopy = new SqlBulkCopy(_connection, BulkCopyOptions, ExternalTransaction))
+            using (SqlBulkCopy bulkCopy = new(_connection, BulkCopyOptions, ExternalTransaction))
             {
                 bulkCopy.DestinationTableName = DestinationTableName;
                 bulkCopy.BulkCopyTimeout = BulkInsertTimeout;

@@ -128,7 +128,7 @@ $@"CREATE TABLE[dbo].[{TableName}] (
         {
             DataTable expectedData = CreateDataTableDataSource();
 
-            using (SqlServerBulkInsert bulkInsert = new SqlServerBulkInsert(ServerHelper.Connection))
+            using (SqlServerBulkInsert bulkInsert = new(ServerHelper.Connection))
             {
                 bulkInsert.DestinationTableName = TableName;
                 bulkInsert.Insert(expectedData);
@@ -143,7 +143,7 @@ $@"CREATE TABLE[dbo].[{TableName}] (
         {
             DataTable expectedData = CreateDataTableDataSource();
 
-            using (SqlServerBulkInsert bulkInsert = new SqlServerBulkInsert(ServerHelper.Connection))
+            using (SqlServerBulkInsert bulkInsert = new(ServerHelper.Connection))
             {
                 bulkInsert.DestinationTableName = TableName;
                 await bulkInsert.InsertAsync(expectedData);
@@ -163,7 +163,7 @@ $@"CREATE TABLE[dbo].[{TableName}] (
 
                 using (IDataReader reader = expectedData.CreateDataReader())
                 {
-                    using (SqlServerBulkInsert bulkInsert = new SqlServerBulkInsert(ServerHelper.Connection))
+                    using (SqlServerBulkInsert bulkInsert = new(ServerHelper.Connection))
                     {
                         bulkInsert.DestinationTableName = TableName;
                         bulkInsert.Insert(reader);
@@ -209,7 +209,7 @@ $@"CREATE TABLE[dbo].[{TableName}] (
 
             using (IBulkActionDataReader reader = CreateIDataReaderDataSource(true))
             {
-                using (SqlServerBulkInsert bulkInsert = new SqlServerBulkInsert(ServerHelper.Connection))
+                using (SqlServerBulkInsert bulkInsert = new(ServerHelper.Connection))
                 {
                     bulkInsert.DestinationTableName = TableName;
                     await bulkInsert.InsertAsync(reader);
@@ -423,7 +423,7 @@ $@"CREATE TABLE[dbo].[{TableName}] (
             },
         };
 
-        private static readonly List<string> _rawDataShortText = new List<string>
+        private static readonly List<string> _rawDataShortText = new()
         {
             "Lorem",
             "consectetur",
@@ -439,7 +439,7 @@ $@"CREATE TABLE[dbo].[{TableName}] (
         {
             DataTable data = new DataTable(TableName);
 
-            using (SqlCommand cmd = new SqlCommand($"SELECT * FROM {tableName}", cn))
+            using (SqlCommand cmd = new($"SELECT * FROM {tableName}", cn))
             using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
             {
                 adapter.FillSchema(data, SchemaType.Source);
@@ -546,7 +546,7 @@ $@"CREATE TABLE[dbo].[{TableName}] (
         private static IBulkActionDataReader CreateIDataReaderDataSource(bool addDataColumns)
         {
             List<DataItem> data = new List<DataItem>();
-            List<string> columnNames = new List<string>(new string[] { "Id", "ColNote" });
+            List<string> columnNames = new(new string[] { "Id", "ColNote" });
             int id = 1;
 
             foreach (KeyValuePair<string, Dictionary<string, object>> rawItem in _rawData)

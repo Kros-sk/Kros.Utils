@@ -80,10 +80,8 @@ namespace Kros.Data
             SqlServer.SqlServerLongIdGeneratorFactory.Register();
         }
 
-        private static readonly Dictionary<string, List<FactoryInfo>> _byConnection
-            = new Dictionary<string, List<FactoryInfo>>();
-        private static readonly Dictionary<string, List<FactoryInfo>> _byClientName
-            = new Dictionary<string, List<FactoryInfo>>();
+        private static readonly Dictionary<string, List<FactoryInfo>> _byConnection= new();
+        private static readonly Dictionary<string, List<FactoryInfo>> _byClientName = new();
 
         /// <summary>
         /// Registers ID generator factory methods <paramref name="factoryByConnection"/> and

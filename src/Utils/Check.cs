@@ -1,4 +1,4 @@
-using Kros.Properties;
+﻿using Kros.Properties;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -629,7 +629,7 @@ namespace Kros.Utils
         {
             const int maxItemsInString = 10;
             bool hasMoreValues = false;
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
 
             int i = 0;
             foreach (T item in list)

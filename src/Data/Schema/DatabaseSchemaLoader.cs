@@ -37,7 +37,7 @@ namespace Kros.Data.Schema
 
         private static DatabaseSchemaLoader InitDefault()
         {
-            DatabaseSchemaLoader loader = new DatabaseSchemaLoader();
+            DatabaseSchemaLoader loader = new();
             loader.AddSchemaLoader(new SqlServer.SqlServerSchemaLoader());
 
             return loader;
@@ -47,7 +47,7 @@ namespace Kros.Data.Schema
 
         #region Fields
 
-        private readonly List<IDatabaseSchemaLoader> _loaders = new List<IDatabaseSchemaLoader>();
+        private readonly List<IDatabaseSchemaLoader> _loaders = new();
 
         #endregion
 

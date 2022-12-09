@@ -44,7 +44,7 @@ namespace Kros.Data.Schema
         /// whitespace characters.</exception>
         public IndexColumnSchema Add(string columnName)
         {
-            IndexColumnSchema indexColumn = new IndexColumnSchema(columnName);
+            IndexColumnSchema indexColumn = new(columnName);
             Add(indexColumn);
             return indexColumn;
         }
@@ -61,7 +61,7 @@ namespace Kros.Data.Schema
         /// whitespace characters.</exception>
         public IndexColumnSchema Add(string columnName, SortOrder order)
         {
-            IndexColumnSchema indexColumn = new IndexColumnSchema(columnName, order);
+            IndexColumnSchema indexColumn = new(columnName, order);
             Add(indexColumn);
             return indexColumn;
         }

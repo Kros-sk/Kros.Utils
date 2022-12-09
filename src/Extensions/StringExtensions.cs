@@ -36,7 +36,7 @@ namespace Kros.Extensions
         public static string RemoveDiacritics(this string value)
         {
             string normalizedString = value.Normalize(NormalizationForm.FormD);
-            StringBuilder sb = new StringBuilder(normalizedString.Length);
+            StringBuilder sb = new(normalizedString.Length);
 
             foreach (char c in normalizedString)
             {
@@ -49,7 +49,7 @@ namespace Kros.Extensions
             return sb.ToString().Normalize(NormalizationForm.FormC);
         }
 
-        private static readonly Regex _reRemoveNewLines = new Regex(@"[\n\r]");
+        private static readonly Regex _reRemoveNewLines = new(@"[\n\r]");
 
         /// <summary>
         /// Removes new line characters from string. Removed characters are <c>line feed</c> (<c>\n</c>) and

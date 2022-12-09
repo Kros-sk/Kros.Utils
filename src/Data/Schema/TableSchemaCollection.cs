@@ -41,7 +41,7 @@ namespace Kros.Data.Schema
         /// <returns>Created table schema.</returns>
         public TableSchema Add(string name)
         {
-            TableSchema schema = new TableSchema(Database, name);
+            TableSchema schema = new(Database, name);
             Add(schema);
             return schema;
         }

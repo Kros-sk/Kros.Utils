@@ -44,7 +44,7 @@ namespace Kros.Data.Schema
         /// whitespace characters.</exception>
         public IndexSchema Add(string indexName)
         {
-            IndexSchema index = new IndexSchema(indexName);
+            IndexSchema index = new(indexName);
             Add(index);
             return index;
         }
@@ -61,7 +61,7 @@ namespace Kros.Data.Schema
         /// whitespace characters.</exception>
         public IndexSchema Add(string indexName, IndexType indexType)
         {
-            IndexSchema index = new IndexSchema(indexName, indexType);
+            IndexSchema index = new(indexName, indexType);
             Add(index);
             return index;
         }
@@ -79,7 +79,7 @@ namespace Kros.Data.Schema
         /// whitespace characters.</exception>
         public IndexSchema Add(string indexName, IndexType indexType, bool clustered)
         {
-            IndexSchema index = new IndexSchema(indexName, indexType, clustered);
+            IndexSchema index = new(indexName, indexType, clustered);
             Add(index);
             return index;
         }

@@ -106,7 +106,7 @@ namespace Kros.Data.Schema
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder(50);
+            StringBuilder sb = new(50);
 
             sb.AppendFormat("Index {0}", Name);
             if ((IndexType != IndexType.Index) || Clustered)
