@@ -431,49 +431,21 @@ namespace Kros.Data.Schema.SqlServer
         }
 
         private static DefaultValueParsers.ParseDefaultValueFunction? GetParseFunction(SqlDbType dataType)
-        {
-            switch (dataType)
+            => dataType switch
             {
-                case SqlDbType.BigInt:
-                    return DefaultValueParsers.ParseInt64;
-
-                case SqlDbType.Int:
-                    return DefaultValueParsers.ParseInt32;
-
-                case SqlDbType.SmallInt:
-                    return DefaultValueParsers.ParseInt16;
-
-                case SqlDbType.TinyInt:
-                    return DefaultValueParsers.ParseByte;
-
-                case SqlDbType.Bit:
-                    return DefaultValueParsers.ParseBool;
-
-                case SqlDbType.Decimal:
-                case SqlDbType.Money:
-                    return DefaultValueParsers.ParseDecimal;
-
-                case SqlDbType.Float:
-                    return DefaultValueParsers.ParseDouble;
-
-                case SqlDbType.Real:
-                    return DefaultValueParsers.ParseSingle;
-
-                case SqlDbType.Date:
-                case SqlDbType.DateTime:
-                case SqlDbType.DateTime2:
-                case SqlDbType.SmallDateTime:
-                    return DefaultValueParsers.ParseDateSql;
-
-                case SqlDbType.DateTimeOffset:
-                    return DefaultValueParsers.ParseDateTimeOffsetSql;
-
-                case SqlDbType.UniqueIdentifier:
-                    return DefaultValueParsers.ParseGuid;
-            }
-
-            return null;
-        }
+                SqlDbType.BigInt => DefaultValueParsers.ParseInt64,
+                SqlDbType.Int => DefaultValueParsers.ParseInt32,
+                SqlDbType.SmallInt => DefaultValueParsers.ParseInt16,
+                SqlDbType.TinyInt => DefaultValueParsers.ParseByte,
+                SqlDbType.Bit => DefaultValueParsers.ParseBool,
+                SqlDbType.Decimal or SqlDbType.Money => DefaultValueParsers.ParseDecimal,
+                SqlDbType.Float => DefaultValueParsers.ParseDouble,
+                SqlDbType.Real => DefaultValueParsers.ParseSingle,
+                SqlDbType.Date or SqlDbType.DateTime or SqlDbType.DateTime2 or SqlDbType.SmallDateTime => DefaultValueParsers.ParseDateSql,
+                SqlDbType.DateTimeOffset => DefaultValueParsers.ParseDateTimeOffsetSql,
+                SqlDbType.UniqueIdentifier => DefaultValueParsers.ParseGuid,
+                _ => null,
+            };
 
         #endregion
 
