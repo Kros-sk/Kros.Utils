@@ -360,7 +360,11 @@ namespace Kros.Data.BulkActions.SqlServer
         }
 
         // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
-        public void Dispose() => Dispose(true);
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
         #endregion

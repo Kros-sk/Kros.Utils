@@ -16,7 +16,7 @@ namespace Kros.Utils
     /// </para>
     /// </remarks>
     /// <seealso cref="System.IDisposable" />
-    public class DateTimeProvider : IDisposable
+    public sealed class DateTimeProvider : IDisposable
     {
         [ThreadStatic]
         private static DateTime? _injectedDateTime;
