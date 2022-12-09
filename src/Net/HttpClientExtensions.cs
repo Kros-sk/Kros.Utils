@@ -84,7 +84,7 @@ namespace Kros.Net
                 foreach (PropertyInfo prop in typeof(T).GetProperties().Where(p => p.CanRead && (p.GetIndexParameters().Length == 0)))
                 {
                     object? propValue = prop.GetValue(data);
-                    if ((propValue is IEnumerable propValues) && !(propValue is string))
+                    if ((propValue is IEnumerable propValues) && (propValue is not string))
                     {
                         foreach (object? value in propValues)
                         {
