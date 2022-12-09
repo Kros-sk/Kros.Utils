@@ -54,7 +54,7 @@ namespace Kros.Data.Schema
         /// <summary>
         /// Index, to which column belongs.
         /// </summary>
-        public IndexSchema Index { get; internal set; }
+        public IndexSchema? Index { get; internal set; }
 
         #endregion
     }

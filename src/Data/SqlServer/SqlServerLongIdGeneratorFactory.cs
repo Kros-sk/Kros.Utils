@@ -14,8 +14,8 @@ namespace Kros.Data.SqlServer
     public class SqlServerLongIdGeneratorFactory
         : IIdGeneratorFactory<long>
     {
-        private readonly string _connectionString;
-        private readonly SqlConnection _connection;
+        private readonly string? _connectionString;
+        private readonly SqlConnection? _connection;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SqlServerLongIdGeneratorFactory"/> class.
@@ -44,7 +44,7 @@ namespace Kros.Data.SqlServer
         public IIdGenerator<long> GetGenerator(string tableName, int batchSize)
             => _connection != null ?
                 new SqlServerLongIdGenerator(_connection, tableName, batchSize) :
-                new SqlServerLongIdGenerator(_connectionString, tableName, batchSize);
+                new SqlServerLongIdGenerator(_connectionString!, tableName, batchSize);
 
         /// <inheritdoc/>
         IIdGenerator IIdGeneratorFactory.GetGenerator(string tableName)
@@ -61,7 +61,7 @@ namespace Kros.Data.SqlServer
             => IdGeneratorFactories.Register<SqlConnection>(
                 typeof(long),
                 SqlServerDataHelper.ClientId,
-                (conn) => new SqlServerLongIdGeneratorFactory(conn as SqlConnection),
+                (conn) => new SqlServerLongIdGeneratorFactory((conn as SqlConnection)!),
                 (connString) => new SqlServerLongIdGeneratorFactory(connString));
     }
 }

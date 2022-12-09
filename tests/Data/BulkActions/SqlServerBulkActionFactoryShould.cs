@@ -13,7 +13,7 @@ namespace Kros.Utils.UnitTests.Data.BulkActions
             using (var conn = new SqlConnection())
             {
                 var factory = new SqlServerBulkActionFactory(conn);
-                var bulkInsert = factory.GetBulkInsert(SqlBulkCopyOptions.UseInternalTransaction) as SqlServerBulkInsert;
+                var bulkInsert = (SqlServerBulkInsert)factory.GetBulkInsert(SqlBulkCopyOptions.UseInternalTransaction);
 
                 bulkInsert.BulkCopyOptions.Should().Be(SqlBulkCopyOptions.UseInternalTransaction);
             }

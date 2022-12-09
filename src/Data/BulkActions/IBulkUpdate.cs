@@ -31,7 +31,7 @@ namespace Kros.Data.BulkActions
         /// </item>
         /// </list>
         /// </remarks>
-        Action<IDbConnection, IDbTransaction, string> TempTableAction { get; set; }
+        Action<IDbConnection, IDbTransaction?, string>? TempTableAction { get; set; }
 
         /// <summary>
         /// Primary key.

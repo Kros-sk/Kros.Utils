@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Globalization;
-using System.Text.RegularExpressions;
 
 namespace Kros.Data.Schema
 {
@@ -16,10 +15,10 @@ namespace Kros.Data.Schema
         /// </summary>
         /// <param name="defaultValue">Column's default value as string.</param>
         /// <returns>Returns value converted to desired data type, or <see langword="null"/> if conversion failed.</returns>
-        public delegate object ParseDefaultValueFunction(string defaultValue);
+        public delegate object? ParseDefaultValueFunction(string defaultValue);
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-        public static object ParseInt64(string defaultValue)
+        public static object? ParseInt64(string defaultValue)
         {
             if (long.TryParse(defaultValue, out long value))
             {
@@ -28,7 +27,7 @@ namespace Kros.Data.Schema
             return null;
         }
 
-        public static object ParseInt32(string defaultValue)
+        public static object? ParseInt32(string defaultValue)
         {
             if (int.TryParse(defaultValue, out int value))
             {
@@ -37,7 +36,7 @@ namespace Kros.Data.Schema
             return null;
         }
 
-        public static object ParseInt16(string defaultValue)
+        public static object? ParseInt16(string defaultValue)
         {
             if (short.TryParse(defaultValue, out short value))
             {
@@ -46,7 +45,7 @@ namespace Kros.Data.Schema
             return null;
         }
 
-        public static object ParseByte(string defaultValue)
+        public static object? ParseByte(string defaultValue)
         {
             if (byte.TryParse(defaultValue, out byte value))
             {
@@ -55,7 +54,7 @@ namespace Kros.Data.Schema
             return null;
         }
 
-        public static object ParseUInt64(string defaultValue)
+        public static object? ParseUInt64(string defaultValue)
         {
             if (ulong.TryParse(defaultValue, out ulong value))
             {
@@ -64,7 +63,7 @@ namespace Kros.Data.Schema
             return null;
         }
 
-        public static object ParseUInt32(string defaultValue)
+        public static object? ParseUInt32(string defaultValue)
         {
             if (uint.TryParse(defaultValue, out uint value))
             {
@@ -73,7 +72,7 @@ namespace Kros.Data.Schema
             return null;
         }
 
-        public static object ParseUInt16(string defaultValue)
+        public static object? ParseUInt16(string defaultValue)
         {
             if (ushort.TryParse(defaultValue, out ushort value))
             {
@@ -82,7 +81,7 @@ namespace Kros.Data.Schema
             return null;
         }
 
-        public static object ParseSByte(string defaultValue)
+        public static object? ParseSByte(string defaultValue)
         {
             if (sbyte.TryParse(defaultValue, out sbyte value))
             {
@@ -91,7 +90,7 @@ namespace Kros.Data.Schema
             return null;
         }
 
-        public static object ParseDecimal(string defaultValue)
+        public static object? ParseDecimal(string defaultValue)
         {
             if (decimal.TryParse(defaultValue, NumberStyles.Any, CultureInfo.InvariantCulture.NumberFormat, out decimal value))
             {
@@ -100,7 +99,7 @@ namespace Kros.Data.Schema
             return null;
         }
 
-        public static object ParseDouble(string defaultValue)
+        public static object? ParseDouble(string defaultValue)
         {
             if (double.TryParse(defaultValue, NumberStyles.Any, CultureInfo.InvariantCulture.NumberFormat, out double value))
             {
@@ -109,7 +108,7 @@ namespace Kros.Data.Schema
             return null;
         }
 
-        public static object ParseSingle(string defaultValue)
+        public static object? ParseSingle(string defaultValue)
         {
             if (float.TryParse(defaultValue, NumberStyles.Any, CultureInfo.InvariantCulture.NumberFormat, out float value))
             {
@@ -118,7 +117,7 @@ namespace Kros.Data.Schema
             return null;
         }
 
-        public static object ParseBool(string defaultValue)
+        public static object? ParseBool(string defaultValue)
         {
             if (int.TryParse(defaultValue, out int parsedInt))
             {
@@ -136,7 +135,7 @@ namespace Kros.Data.Schema
             return null;
         }
 
-        public static object ParseGuid(string defaultValue)
+        public static object? ParseGuid(string defaultValue)
         {
             if (Guid.TryParse(defaultValue, out Guid value))
             {
@@ -145,7 +144,7 @@ namespace Kros.Data.Schema
             return null;
         }
 
-        public static object ParseDate(string defaultValue)
+        public static object? ParseDate(string defaultValue)
         {
             if (defaultValue.StartsWith("#") && defaultValue.EndsWith("#"))
             {
@@ -158,7 +157,7 @@ namespace Kros.Data.Schema
             return null;
         }
 
-        public static object ParseDateSql(string defaultValue)
+        public static object? ParseDateSql(string defaultValue)
         {
             if (DateTime.TryParse(defaultValue, out DateTime value))
             {
@@ -167,7 +166,7 @@ namespace Kros.Data.Schema
             return null;
         }
 
-        public static object ParseDateTimeOffsetSql(string defaultValue)
+        public static object? ParseDateTimeOffsetSql(string defaultValue)
         {
             if (DateTimeOffset.TryParse(defaultValue, out DateTimeOffset value))
             {

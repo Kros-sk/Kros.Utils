@@ -6,7 +6,9 @@ namespace Kros.Utils.UnitTests.Data
 {
     public class CustomConnection : DbConnection
     {
+#pragma warning disable CS8765 // Nullability of type of parameter doesn't match overridden member (possibly because of nullability attributes).
         public override string ConnectionString { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+#pragma warning restore CS8765 // Nullability of type of parameter doesn't match overridden member (possibly because of nullability attributes).
 
         public override string Database => throw new NotImplementedException();
 

@@ -62,7 +62,7 @@ namespace Kros.Extensions
         /// <param name="value">Input string.</param>
         /// <returns>String without new line characters, or <see langword="null"/> if <paramref name="value"/>
         /// is <see langword="null"/>.</returns>
-        public static string RemoveNewLines(this string value)
+        public static string? RemoveNewLines(this string? value)
         {
             return value == null ? null : _reRemoveNewLines.Replace(value, string.Empty);
         }

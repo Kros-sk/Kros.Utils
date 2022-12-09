@@ -25,7 +25,7 @@ namespace Kros.Data.BulkActions
 
         #region Private fields
 
-        private string[] _primaryKeyColumns;
+        private string[] _primaryKeyColumns = Array.Empty<string>();
 
         /// <summary>
         /// Connection.
@@ -35,7 +35,22 @@ namespace Kros.Data.BulkActions
         /// <summary>
         /// <see langword="true"/> if dispose of the connection is necessary, otherwise <see langword="false"/>.
         /// </summary>
-        protected bool _disposeOfConnection = false;
+        private readonly bool _disposeOfConnection = false;
+
+        #endregion
+
+        #region Constructors
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="connection">Database connection.</param>
+        /// <param name="disposeOfConnection">Flag if connection must be disposed of automatically.</param>
+        protected BulkUpdateBase(IDbConnection connection, bool disposeOfConnection)
+        {
+            _connection = connection;
+            _disposeOfConnection = disposeOfConnection;
+        }
 
         #endregion
 
@@ -44,7 +59,7 @@ namespace Kros.Data.BulkActions
         /// <summary>
         /// External transaction in which the operation is executed.
         /// </summary>
-        public IDbTransaction ExternalTransaction { get; protected set; }
+        public IDbTransaction? ExternalTransaction { get; protected set; } = null;
 
         #endregion
 
@@ -53,10 +68,10 @@ namespace Kros.Data.BulkActions
         /// <summary>
         /// Destination table name in database.
         /// </summary>
-        public string DestinationTableName { get; set; }
+        public string DestinationTableName { get; set; } = string.Empty;
 
         /// <inheritdoc/>
-        public Action<IDbConnection, IDbTransaction, string> TempTableAction { get; set; }
+        public Action<IDbConnection, IDbTransaction?, string>? TempTableAction { get; set; }
 
         /// <summary>
         /// Primary key. The value can contain composite primary key (multiple columns). The columns of composite primary key
@@ -66,7 +81,7 @@ namespace Kros.Data.BulkActions
         {
             get => _primaryKeyColumns is null ? string.Empty : string.Join(", ", _primaryKeyColumns);
             set => _primaryKeyColumns = string.IsNullOrWhiteSpace(value)
-                ? null
+                ? Array.Empty<string>()
                 : value.Split(new[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
         }
 
@@ -277,7 +292,6 @@ namespace Kros.Data.BulkActions
                 {
                     _connection.Close();
                     _connection.Dispose();
-                    _connection = null;
                 }
                 _disposedValue = true;
             }

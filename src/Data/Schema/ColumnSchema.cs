@@ -101,7 +101,7 @@ namespace Kros.Data.Schema
         /// The table to which the column belongs. The table is set automatically when the column is added to table's
         /// <see cref="TableSchema.Columns"/> collection.
         /// </summary>
-        public TableSchema Table { get; internal set; }
+        public TableSchema? Table { get; internal set; }
 
         /// <summary>
         /// Column name.

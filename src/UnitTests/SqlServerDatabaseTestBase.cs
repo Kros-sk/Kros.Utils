@@ -36,7 +36,7 @@ namespace Kros.UnitTests
         /// </summary>
         /// <seealso cref="SqlServerTestHelper.BaseDatabaseName"/>
         /// <seealso cref="SqlServerTestHelper"/>
-        protected virtual string BaseDatabaseName => GetType().FullName.Replace("+", "__") + "_";
+        protected virtual string BaseDatabaseName => GetType().FullName!.Replace("+", "__") + "_";
 
         /// <summary>
         /// Base connection string to SQL Server, where database will be created. It does not need to have database name,
@@ -53,7 +53,7 @@ namespace Kros.UnitTests
         /// The class creates a database for tests using <see cref="SqlServerTestHelper"/>. If it is necessary to have
         /// this database initialized (tables, data...), this is the list of scripts for it.
         /// </remarks>
-        protected virtual IEnumerable<string> DatabaseInitScripts => null;
+        protected virtual IEnumerable<string>? DatabaseInitScripts => null;
 
         /// <summary>
         /// Helper for accessing database using its <see cref="SqlServerTestHelper.Connection"/> property.

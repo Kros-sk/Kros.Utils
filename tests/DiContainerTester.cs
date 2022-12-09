@@ -372,7 +372,7 @@ namespace Kros.Utils.UnitTests
             instance.Should()
                 .NotBeNull()
                 .And.BeOfType<Bar>();
-            (instance as Bar).Foo.Should()
+            ((Bar)instance).Foo.Should()
                 .NotBeNull()
                 .And.BeOfType<Foo>();
         }
@@ -403,7 +403,7 @@ namespace Kros.Utils.UnitTests
             parentInstance.Should()
                 .NotBeNull()
                 .And.BeOfType<Bar>();
-            (parentInstance as Bar).Foo.Should()
+            ((Bar)parentInstance).Foo.Should()
                 .NotBeNull()
                 .And.BeOfType<FooChild>();
         }

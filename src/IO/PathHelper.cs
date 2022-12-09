@@ -196,7 +196,7 @@ namespace Kros.IO
             }
 
             string driveName = path.Length > 3 ? path.Substring(0, 3) : path;
-            DriveInfo drive = DriveInfo.GetDrives()
+            DriveInfo? drive = DriveInfo.GetDrives()
                 .Where(item => item.Name.Equals(driveName, StringComparison.OrdinalIgnoreCase))
                 .FirstOrDefault();
             if (drive != null)

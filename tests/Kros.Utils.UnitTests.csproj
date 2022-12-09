@@ -7,6 +7,7 @@
         <Company>KROS a. s.</Company>
         <Copyright>Copyright © KROS a. s.</Copyright>
         <SignAssembly>false</SignAssembly>
+        <Nullable>enable</Nullable>
     </PropertyGroup>
     <ItemGroup>
         <FrameworkReference Include="Microsoft.AspNetCore.App" />

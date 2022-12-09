@@ -55,6 +55,7 @@ namespace Kros.Data
             _disposeOfConnection = true;
         }
 
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         private DbNumericIdGeneratorBase(string tableName, int batchSize)
         {
             TableName = Check.NotNull(tableName, nameof(tableName));
@@ -62,6 +63,7 @@ namespace Kros.Data
             _nextId = default;
             _nextAccessToDb = AddValue(_nextId, -1);
         }
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
         /// <summary>
         /// Creates a database connection instance.
@@ -126,7 +128,7 @@ namespace Kros.Data
         /// <returns>Next ID.</returns>
         protected virtual T GetNewIdFromDbCore()
         {
-            using (var cmd = Connection.CreateCommand() as SqlCommand)
+            using (SqlCommand cmd = (SqlCommand)Connection.CreateCommand())
             {
                 cmd.CommandText = BackendStoredProcedureName;
                 cmd.CommandType = CommandType.StoredProcedure;

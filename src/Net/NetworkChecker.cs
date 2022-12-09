@@ -22,7 +22,7 @@ namespace Kros.Net
         private static readonly TimeSpan DefaultRequestTimeout = TimeSpan.FromSeconds(1);
         private static readonly TimeSpan DefaultResponseCacheExpiration = TimeSpan.FromMinutes(3);
         private DateTime _lastSuccessResponseTime;
-        private readonly Func<HttpMessageHandler> _httpMessageHandlerFactory;
+        private readonly Func<HttpMessageHandler>? _httpMessageHandlerFactory;
 
         #endregion
 
@@ -30,7 +30,7 @@ namespace Kros.Net
 
         /// <inheritdoc cref="NetworkChecker(Uri, Uri, TimeSpan, TimeSpan)"/>
         public NetworkChecker(Uri serviceAddress)
-            : this(serviceAddress, (Uri) null, DefaultRequestTimeout, DefaultResponseCacheExpiration)
+            : this(serviceAddress, null as Uri, DefaultRequestTimeout, DefaultResponseCacheExpiration)
         {
         }
 
@@ -69,14 +69,14 @@ namespace Kros.Net
             Func<HttpMessageHandler> httpMessageHandlerFactory,
             TimeSpan requestTimeout,
             TimeSpan responseCacheExpiration)
-            : this(serviceAddress, (Uri) null, requestTimeout, responseCacheExpiration)
+            : this(serviceAddress, null as Uri, requestTimeout, responseCacheExpiration)
         {
             _httpMessageHandlerFactory = Check.NotNull(httpMessageHandlerFactory, nameof(httpMessageHandlerFactory));
         }
 
         /// <inheritdoc cref="NetworkChecker(Uri, Uri, TimeSpan, TimeSpan)"/>
         public NetworkChecker(Uri serviceAddress, TimeSpan requestTimeout, TimeSpan responseCacheExpiration)
-            : this(serviceAddress, (Uri) null, requestTimeout, responseCacheExpiration)
+            : this(serviceAddress, null as Uri, requestTimeout, responseCacheExpiration)
         {
         }
 
@@ -94,7 +94,7 @@ namespace Kros.Net
         /// </param>
         public NetworkChecker(
             Uri serviceAddress,
-            Uri proxyAddress,
+            Uri? proxyAddress,
             TimeSpan requestTimeout,
             TimeSpan responseCacheExpiration)
         {
@@ -117,7 +117,7 @@ namespace Kros.Net
         /// <summary>
         /// Address of a proxy server.
         /// </summary>
-        public Uri ProxyAddress { get; }
+        public Uri? ProxyAddress { get; }
 
         /// <summary>
         /// Maximum time for waiting for the response from server. If the response will not

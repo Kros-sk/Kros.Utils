@@ -20,18 +20,19 @@ namespace Kros.Utils.UnitTests.Utils
         private class DummyClass : IComparable<DummyClass>
         {
             public int Id { get; set; }
-            public string Text { get; set; }
+            public string Text { get; set; } = string.Empty;
 
-            public int CompareTo(DummyClass other)
+            public int CompareTo(DummyClass? other)
             {
-                return Id.CompareTo(other.Id);
+                return Id.CompareTo(other?.Id);
             }
 
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
-                if (obj.GetType() == typeof(DummyClass))
+                if (obj is DummyClass dummy)
                 {
-                    return (obj as DummyClass).Id == this.Id;
+                    return dummy.Id == Id;
+
                 }
                 return base.Equals(obj);
             }
@@ -45,7 +46,7 @@ namespace Kros.Utils.UnitTests.Utils
         private class DummyClass2
         {
             public int Id { get; set; }
-            public string Text { get; set; }
+            public string Text { get; set; } = string.Empty;
         }
 
         #endregion
@@ -95,7 +96,7 @@ namespace Kros.Utils.UnitTests.Utils
         [Fact]
         public void ThrowArgumentNullExceptionForReferenceType()
         {
-            string value = null;
+            string? value = null;
             Action action = () => Check.NotNull(value, nameof(value));
             action.Should().Throw<ArgumentNullException>();
         }
@@ -104,7 +105,8 @@ namespace Kros.Utils.UnitTests.Utils
         public void ThrowArgumentNullExceptionWithParamName()
         {
             const string paramName = "arg";
-            Action action = () => Check.NotNull((object)null, paramName);
+            object? value = null;
+            Action action = () => Check.NotNull(value, paramName);
             action.Should().Throw<ArgumentNullException>()
                 .And.ParamName.Should().Be(paramName);
         }
@@ -114,7 +116,8 @@ namespace Kros.Utils.UnitTests.Utils
         {
             const string paramName = "arg";
             const string message = "Exception message.*";
-            Action action = () => Check.NotNull((object)null, paramName, message);
+            object? value = null;
+            Action action = () => Check.NotNull(value, paramName, message);
             action.Should().Throw<ArgumentNullException>()
                 .WithMessage(message)
                 .And.ParamName.Should().Be(paramName);
@@ -152,8 +155,8 @@ namespace Kros.Utils.UnitTests.Utils
         {
             const string paramName = "arg";
             DummyClass param = new DummyClass();
-            string expectedTypeName = typeof(DummyClass2).FullName;
-            string argTypeName = param.GetType().FullName;
+            string expectedTypeName = typeof(DummyClass2).FullName!;
+            string argTypeName = param.GetType().FullName!;
             Action action = () => Check.IsOfType(param, typeof(DummyClass2), paramName);
             action.Should().Throw<ArgumentException>()
                 .WithMessage("*" + typeof(DummyClass2).FullName + "*" + param.GetType().FullName + "*")

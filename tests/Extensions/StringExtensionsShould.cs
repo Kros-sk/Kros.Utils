@@ -20,8 +20,8 @@ namespace Kros.Utils.UnitTests.Extensions
         [Fact]
         public void ReturnTrueWhenStringIsNullOrEmpty()
         {
-            string value = null;
-            bool actual = value.IsNullOrEmpty();
+            string? value = null;
+            bool actual = value!.IsNullOrEmpty();
             actual.Should().Be(true, "value = null");
 
             value = "";
@@ -36,8 +36,8 @@ namespace Kros.Utils.UnitTests.Extensions
         [Fact]
         public void ReturnTrueWhenStringIsNullOrWhitespace()
         {
-            string value = null;
-            bool actual = value.IsNullOrWhiteSpace();
+            string? value = null;
+            bool actual = value!.IsNullOrWhiteSpace();
             actual.Should().Be(true, "value = null");
 
             value = "";
@@ -115,7 +115,7 @@ namespace Kros.Utils.UnitTests.Extensions
         [Fact]
         public void ReturnNullWhenInputIsNull()
         {
-            string actual = null;
+            string? actual = null;
 
             actual.RemoveNewLines().Should().BeNull();
         }

@@ -1,4 +1,4 @@
-using Kros.Data.SqlServer;
+﻿using Kros.Data.SqlServer;
 using Kros.Utils;
 using System.Data.Common;
 using Microsoft.Data.SqlClient;
@@ -11,8 +11,8 @@ namespace Kros.Data.BulkActions.SqlServer
     /// <seealso cref="Kros.Data.BulkActions.IBulkActionFactory" />
     public class SqlServerBulkActionFactory : IBulkActionFactory
     {
-        private readonly SqlConnection _connection;
-        private readonly string _connectionString;
+        private readonly SqlConnection? _connection;
+        private readonly string _connectionString = string.Empty;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SqlServerBulkActionFactory"/> class.
@@ -45,7 +45,7 @@ namespace Kros.Data.BulkActions.SqlServer
         /// <param name="externalTransaction">The external transaction.</param>
         /// <returns>The bulk insert.</returns>
         public IBulkInsert GetBulkInsert(DbTransaction externalTransaction) =>
-            new SqlServerBulkInsert(_connection, externalTransaction as SqlTransaction);
+            new SqlServerBulkInsert(_connection!, externalTransaction as SqlTransaction);
 
         /// <summary>
         /// Gets the bulk insert.
@@ -64,7 +64,7 @@ namespace Kros.Data.BulkActions.SqlServer
         /// <param name="options">The options.</param>
         /// <returns>The bulk insert.</returns>
         public IBulkInsert GetBulkInsert(DbTransaction externalTransaction, SqlBulkCopyOptions options) =>
-            new SqlServerBulkInsert(_connection, externalTransaction as SqlTransaction, options);
+            new SqlServerBulkInsert(_connection!, externalTransaction as SqlTransaction, options);
 
         /// <summary>
         /// Gets the bulk update.
@@ -81,14 +81,14 @@ namespace Kros.Data.BulkActions.SqlServer
         /// <param name="externalTransaction">The external transaction.</param>
         /// <returns>The bulk update.</returns>
         public IBulkUpdate GetBulkUpdate(DbTransaction externalTransaction) =>
-            new SqlServerBulkUpdate(_connection, externalTransaction as SqlTransaction);
+            new SqlServerBulkUpdate(_connection!, externalTransaction as SqlTransaction);
 
         /// <summary>
         /// Registers factory methods for creation instances to <see cref="BulkActionFactories"/>.
         /// </summary>
         public static void Register() =>
             BulkActionFactories.Register<SqlConnection>(SqlServerDataHelper.ClientId,
-                (conn) => new SqlServerBulkActionFactory(conn as SqlConnection),
+                (conn) => new SqlServerBulkActionFactory((SqlConnection)conn),
                 (connString) => new SqlServerBulkActionFactory(connString));
     }
 }

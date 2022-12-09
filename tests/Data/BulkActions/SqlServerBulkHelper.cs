@@ -97,7 +97,7 @@ namespace Kros.Utils.UnitTests.Data.BulkActions
             {
                 primaryKey[i] = expectedRow[expectedTable.PrimaryKey[i]];
             }
-            CompareRowData(actualTable.Rows.Find(primaryKey), expectedRow, columnName);
+            CompareRowData(actualTable.Rows.Find(primaryKey)!, expectedRow, columnName);
         }
 
         private static void CompareRowData(DataRow actualRow, DataRow expectedRow, string columnName)

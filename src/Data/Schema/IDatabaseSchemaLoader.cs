@@ -25,7 +25,7 @@
         /// <param name="connection">Database connection.</param>
         /// <param name="tableName">Name of the table to load schema.</param>
         /// <returns>Table schema or <see langword="null"/>, if specified table does not exist.</returns>
-        TableSchema LoadTableSchema(object connection, string tableName);
+        TableSchema? LoadTableSchema(object connection, string tableName);
     }
 
     /// <inheritdoc cref="IDatabaseSchemaLoader"/>
@@ -40,6 +40,6 @@
         DatabaseSchema LoadSchema(T connection);
 
         /// <inheritdoc cref="IDatabaseSchemaLoader.LoadTableSchema(object, string)"/>
-        TableSchema LoadTableSchema(T connection, string tableName);
+        TableSchema? LoadTableSchema(T connection, string tableName);
     }
 }

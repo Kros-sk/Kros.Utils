@@ -83,7 +83,7 @@ namespace Kros.Data.Schema
 
         #region IDatabaseSchemaLoader
 
-        private IDatabaseSchemaLoader GetLoader(object connection)
+        private IDatabaseSchemaLoader? GetLoader(object connection)
         {
             return _loaders.FirstOrDefault((loader) => loader.SupportsConnectionType(connection));
         }
@@ -92,7 +92,7 @@ namespace Kros.Data.Schema
         {
             Check.NotNull(connection, nameof(connection));
 
-            IDatabaseSchemaLoader loader = GetLoader(connection);
+            IDatabaseSchemaLoader? loader = GetLoader(connection);
             if (loader == null)
             {
                 throw new ArgumentException(
@@ -136,7 +136,7 @@ namespace Kros.Data.Schema
         /// <item>Value of <paramref name="tableName"/> is empty string, or string containing only whitespace characters.</item>
         /// </list>
         /// </exception>
-        public TableSchema LoadTableSchema(object connection, string tableName)
+        public TableSchema? LoadTableSchema(object connection, string tableName)
         {
             Check.NotNullOrWhiteSpace(tableName, nameof(tableName));
 

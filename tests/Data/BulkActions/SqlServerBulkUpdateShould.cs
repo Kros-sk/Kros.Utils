@@ -26,7 +26,7 @@ namespace Kros.Utils.UnitTests.Data.BulkActions
             public DateTime? ColDate { get; set; }
             public Guid? ColGuid { get; set; }
             public bool? ColBool { get; set; }
-            public string ColShortText { get; set; }
+            public string ColShortText { get; set; } = string.Empty;
 
             public BulkUpdateItem Clone() => (BulkUpdateItem)MemberwiseClone();
         }
@@ -34,8 +34,8 @@ namespace Kros.Utils.UnitTests.Data.BulkActions
         private class BulkUpdateItemIdentity
         {
             public int Id { get; set; }
-            public string Value { get; set; }
-            public override bool Equals(object obj)
+            public string Value { get; set; } = string.Empty;
+            public override bool Equals(object? obj)
             {
                 if (obj is BulkUpdateItemIdentity item)
                 {
@@ -50,8 +50,8 @@ namespace Kros.Utils.UnitTests.Data.BulkActions
         {
             public int Id1 { get; set; }
             public int Id2 { get; set; }
-            public string Value { get; set; }
-            public override bool Equals(object obj)
+            public string Value { get; set; } = string.Empty;
+            public override bool Equals(object? obj)
             {
                 if (obj is BulkUpdateItemComposite item)
                 {
@@ -164,7 +164,7 @@ INSERT INTO [{CompositeWithIdentity_TableName}] ([Id1], [Value]) VALUES (3, '3 -
                 {
                     bulkUpdate.DestinationTableName = TableName;
                     bulkUpdate.PrimaryKeyColumn = PrimaryKeyColumn;
-                    bulkUpdate.Update((IDataReader)null);
+                    bulkUpdate.Update((IDataReader)null!);
                 }
             };
 
@@ -193,7 +193,6 @@ INSERT INTO [{CompositeWithIdentity_TableName}] ([Id1], [Value]) VALUES (3, '3 -
             AsyncContext.Run(() =>
             {
                 DataTable expectedData = CreateExpectedData();
-                DataTable actualData = null;
 
                 using (IDataReader reader = expectedData.CreateDataReader())
                 using (var bulkUpdate = new SqlServerBulkUpdate(ServerHelper.Connection))
@@ -203,7 +202,7 @@ INSERT INTO [{CompositeWithIdentity_TableName}] ([Id1], [Value]) VALUES (3, '3 -
                     bulkUpdate.Update(reader);
                 }
 
-                actualData = LoadData(ServerHelper.Connection);
+                DataTable actualData = LoadData(ServerHelper.Connection);
 
                 SqlServerBulkHelper.CompareTables(actualData, expectedData);
             });
@@ -267,7 +266,6 @@ INSERT INTO [{CompositeWithIdentity_TableName}] ([Id1], [Value]) VALUES (3, '3 -
         public void BulkUpdateDataFromIDataReaderWithAction()
         {
             DataTable expectedData = CreateExpectedDataWithAction();
-            DataTable actualData = null;
 
             using (IBulkActionDataReader reader = CreateDataReaderForUpdate())
             using (var bulkUpdate = new SqlServerBulkUpdate(ServerHelper.Connection))
@@ -278,7 +276,7 @@ INSERT INTO [{CompositeWithIdentity_TableName}] ([Id1], [Value]) VALUES (3, '3 -
                 bulkUpdate.Update(reader);
             }
 
-            actualData = LoadData(ServerHelper.Connection);
+            DataTable actualData = LoadData(ServerHelper.Connection);
 
             SqlServerBulkHelper.CompareTables(actualData, expectedData);
         }
@@ -320,7 +318,7 @@ INSERT INTO [{CompositeWithIdentity_TableName}] ([Id1], [Value]) VALUES (3, '3 -
         [Fact]
         public async Task BulkUpdateDataInTableWithIdentityPrimaryKey()
         {
-            List<BulkUpdateItemIdentity> actualData = null;
+            List<BulkUpdateItemIdentity> actualData;
 
             using (var helper = CreateHelper(new[] { Identity_CreateTable, Identity_InsertData }))
             using (var bulkUpdate = new SqlServerBulkUpdate(helper.Connection))
@@ -348,7 +346,7 @@ INSERT INTO [{CompositeWithIdentity_TableName}] ([Id1], [Value]) VALUES (3, '3 -
         [Fact]
         public async Task BulkUpdateDataInTableWithCompositePrimaryKey()
         {
-            List<BulkUpdateItemComposite> actualData = null;
+            List<BulkUpdateItemComposite> actualData;
 
             using (var helper = CreateHelper(new[] { Composite_CreateTable, Composite_InsertData }))
             using (var bulkUpdate = new SqlServerBulkUpdate(helper.Connection))
@@ -383,7 +381,7 @@ INSERT INTO [{CompositeWithIdentity_TableName}] ([Id1], [Value]) VALUES (3, '3 -
         [Fact]
         public async Task BulkUpdateDataInTableWithCompositeAndIdentityPrimaryKey()
         {
-            List<BulkUpdateItemComposite> actualData = null;
+            List<BulkUpdateItemComposite> actualData;
 
             using (var helper = CreateHelper(new[] { CompositeWithIdentity_CreateTable, CompositeWithIdentity_InsertData }))
             using (var bulkUpdate = new SqlServerBulkUpdate(helper.Connection))
@@ -419,7 +417,7 @@ INSERT INTO [{CompositeWithIdentity_TableName}] ([Id1], [Value]) VALUES (3, '3 -
 
         #region Helpers
 
-        private SqlServerTestHelper CreateHelper(IEnumerable<string> initDatabaseScripts)
+        private SqlServerTestHelper CreateHelper(IEnumerable<string>? initDatabaseScripts)
             => new SqlServerTestHelper(BaseConnectionString, DatabaseName, initDatabaseScripts);
 
         private static readonly List<BulkUpdateItem> _rawData = new List<BulkUpdateItem>
@@ -456,7 +454,7 @@ INSERT INTO [{CompositeWithIdentity_TableName}] ([Id1], [Value]) VALUES (3, '3 -
             }
         };
 
-        private void UpdateTempItems(IDbConnection connection, IDbTransaction transaction, string tempTableName)
+        private void UpdateTempItems(IDbConnection connection, IDbTransaction? transaction, string tempTableName)
         {
             using (var cmd = connection.CreateCommand())
             {
@@ -555,7 +553,7 @@ INSERT INTO [{CompositeWithIdentity_TableName}] ([Id1], [Value]) VALUES (3, '3 -
             table.Columns.Add("ColBool", typeof(bool));
             table.Columns.Add("ColShortText", typeof(string));
 
-            table.PrimaryKey = new DataColumn[] { table.Columns[PrimaryKeyColumn] };
+            table.PrimaryKey = new DataColumn[] { table.Columns[PrimaryKeyColumn]! };
 
             return table;
         }

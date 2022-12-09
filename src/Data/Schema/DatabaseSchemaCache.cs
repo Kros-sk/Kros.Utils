@@ -81,7 +81,7 @@ namespace Kros.Data.Schema
         public void ClearSchema(object connection)
         {
             LoaderInfo linfo = GetLoaderInfo(connection);
-            _cache.TryRemove(linfo.KeyGenerator.GenerateKey(connection), out DatabaseSchema schema);
+            _cache.TryRemove(linfo.KeyGenerator.GenerateKey(connection), out DatabaseSchema? _);
         }
 
         /// <inheritdoc cref="IDatabaseSchemaCache.ClearAllSchemas"/>
@@ -126,7 +126,11 @@ namespace Kros.Data.Schema
         /// <param name="loader">Database schema loader to be removed.</param>
         public void RemoveSchemaLoader(IDatabaseSchemaLoader loader)
         {
-            _loaders.Remove(_loaders.FirstOrDefault((linfo) => linfo.Loader == loader));
+            LoaderInfo? item = _loaders.FirstOrDefault((linfo) => linfo.Loader == loader);
+            if (item is not null)
+            {
+                _loaders.Remove(item);
+            }
         }
 
         /// <summary>
@@ -143,7 +147,7 @@ namespace Kros.Data.Schema
 
         private LoaderInfo GetLoaderInfo(object connection)
         {
-            LoaderInfo linfo = _loaders.FirstOrDefault((tmpLoader) => tmpLoader.Loader.SupportsConnectionType(connection));
+            LoaderInfo? linfo = _loaders.FirstOrDefault((tmpLoader) => tmpLoader.Loader.SupportsConnectionType(connection));
             if (linfo == null)
             {
                 throw new InvalidOperationException(

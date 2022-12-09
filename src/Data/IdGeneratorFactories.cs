@@ -43,10 +43,10 @@ namespace Kros.Data
             }
 
             public Type DataType { get; }
-            public Type ConnectionType { get; }
-            public Func<IDbConnection, IIdGeneratorFactory> FactoryByConnection { get; }
-            public string ClientName { get; }
-            public Func<string, IIdGeneratorFactory> FactoryByClientName { get; }
+            public Type? ConnectionType { get; }
+            public Func<IDbConnection, IIdGeneratorFactory>? FactoryByConnection { get; }
+            public string? ClientName { get; }
+            public Func<string, IIdGeneratorFactory>? FactoryByClientName { get; }
         }
 
         private sealed class IdGeneratorCollection : IIdGeneratorsForDatabaseInit
@@ -118,10 +118,10 @@ namespace Kros.Data
             Check.NotNull(factoryByConnection, nameof(factoryByConnection));
             Check.NotNull(factoryByConnectionString, nameof(factoryByConnectionString));
 
-            if (!_byConnection.TryGetValue(typeof(TConnection).FullName, out List<FactoryInfo> factories))
+            if (!_byConnection.TryGetValue(typeof(TConnection).FullName!, out List<FactoryInfo>? factories))
             {
                 factories = new List<FactoryInfo>();
-                _byConnection.Add(typeof(TConnection).FullName, factories);
+                _byConnection.Add(typeof(TConnection).FullName!, factories);
             }
             AddFactory(new FactoryInfo(dataType, typeof(TConnection), factoryByConnection), factories);
 
@@ -135,7 +135,7 @@ namespace Kros.Data
 
         private static void AddFactory(FactoryInfo info, List<FactoryInfo> factories)
         {
-            FactoryInfo current = factories.FirstOrDefault(item => item.DataType == info.DataType);
+            FactoryInfo? current = factories.FirstOrDefault(item => item.DataType == info.DataType);
             if (current != null)
             {
                 factories.Remove(current);
@@ -154,12 +154,12 @@ namespace Kros.Data
         /// </exception>
         public static IIdGeneratorFactory GetFactory(Type dataType, IDbConnection connection)
         {
-            if (_byConnection.TryGetValue(connection.GetType().FullName, out List<FactoryInfo> factories))
+            if (_byConnection.TryGetValue(connection.GetType().FullName!, out List<FactoryInfo>? factories))
             {
-                FactoryInfo factory = factories.FirstOrDefault(item => item.DataType == dataType);
+                FactoryInfo? factory = factories.FirstOrDefault(item => item.DataType == dataType);
                 if (factory != null)
                 {
-                    return factory.FactoryByConnection(connection);
+                    return factory.FactoryByConnection!(connection);
                 }
             }
             throw new InvalidOperationException(string.Format(Resources.FactoryNotRegisteredForConnection,
@@ -179,12 +179,12 @@ namespace Kros.Data
         /// </exception>
         public static IIdGeneratorFactory GetFactory(Type dataType, string connectionString, string clientName)
         {
-            if (_byClientName.TryGetValue(clientName, out List<FactoryInfo> factories))
+            if (_byClientName.TryGetValue(clientName, out List<FactoryInfo>? factories))
             {
-                FactoryInfo factory = factories.FirstOrDefault(item => item.DataType == dataType);
+                FactoryInfo? factory = factories.FirstOrDefault(item => item.DataType == dataType);
                 if (factory != null)
                 {
-                    return factory.FactoryByClientName(connectionString);
+                    return factory.FactoryByClientName!(connectionString);
                 }
             }
             throw new InvalidOperationException(string.Format(Resources.FactoryNotRegisteredForClient,
@@ -198,9 +198,9 @@ namespace Kros.Data
         /// <returns>Collection of ID generators.</returns>
         public static IIdGeneratorsForDatabaseInit GetGeneratorsForDatabaseInit(IDbConnection connection)
         {
-            if (_byConnection.TryGetValue(connection.GetType().FullName, out List<FactoryInfo> factories))
+            if (_byConnection.TryGetValue(connection.GetType().FullName!, out List<FactoryInfo>? factories))
             {
-                return new IdGeneratorCollection(factories.Select(factory => factory.FactoryByConnection(connection)));
+                return new IdGeneratorCollection(factories.Select(factory => factory.FactoryByConnection!(connection)));
             }
             throw new InvalidOperationException(string.Format(Resources.FactoryNotRegisteredForConnection,
                 nameof(IIdGeneratorFactory), connection.GetType().FullName));
@@ -214,9 +214,9 @@ namespace Kros.Data
         /// <returns>Collection of ID generators.</returns>
         public static IIdGeneratorsForDatabaseInit GetGeneratorsForDatabaseInit(string connectionString, string clientName)
         {
-            if (_byClientName.TryGetValue(clientName, out List<FactoryInfo> factories))
+            if (_byClientName.TryGetValue(clientName, out List<FactoryInfo>? factories))
             {
-                return new IdGeneratorCollection(factories.Select(factory => factory.FactoryByClientName(connectionString)));
+                return new IdGeneratorCollection(factories.Select(factory => factory.FactoryByClientName!(connectionString)));
             }
             throw new InvalidOperationException(string.Format(Resources.FactoryNotRegisteredForClient,
                 nameof(IIdGeneratorFactory), clientName));

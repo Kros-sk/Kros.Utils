@@ -193,14 +193,14 @@ ALTER TABLE [dbo].[ChildTableCascade] CHECK CONSTRAINT [FK_ChildTableCascade_Par
         {
             SqlServerSchemaLoader loader = new SqlServerSchemaLoader();
 
-            CheckTableSchema(loader.LoadTableSchema(ServerHelper.Connection, TestSchemaTableName));
+            CheckTableSchema(loader.LoadTableSchema(ServerHelper.Connection, TestSchemaTableName)!);
         }
 
         [Fact]
         public void ReturnNullIfTableDoesNotExist()
         {
             SqlServerSchemaLoader loader = new SqlServerSchemaLoader();
-            TableSchema actual = loader.LoadTableSchema(ServerHelper.Connection, "NonExistingTable");
+            TableSchema? actual = loader.LoadTableSchema(ServerHelper.Connection, "NonExistingTable");
 
             actual.Should().BeNull();
         }
@@ -213,7 +213,7 @@ ALTER TABLE [dbo].[ChildTableCascade] CHECK CONSTRAINT [FK_ChildTableCascade_Par
             TableSchema table = schema.Tables["IndexesTest"];
 
             table.PrimaryKey.Should().NotBeNull();
-            table.PrimaryKey.Name.Should().Be("PK_IndexesTest_PK", "Primary key does not have correct name.");
+            table.PrimaryKey!.Name.Should().Be("PK_IndexesTest_PK", "Primary key does not have correct name.");
             CheckIndex(table.PrimaryKey, IndexType.PrimaryKey,
                 new Tuple<string, SortOrder>[] { Tuple.Create("Id", SortOrder.Ascending) });
             CheckIndex(table.Indexes["I_Index"], IndexType.Index, new Tuple<string, SortOrder>[]
@@ -315,13 +315,13 @@ ALTER TABLE [dbo].[ChildTableCascade] CHECK CONSTRAINT [FK_ChildTableCascade_Par
             CheckColumnSchema(table.Columns["ColGuid"], SqlDbType.UniqueIdentifier, new Guid("01234567-89ab-cdef-0123-456789abcdef"), true);
         }
 
-        private static void CheckColumnSchema(ColumnSchema column, SqlDbType sqlDbType, object defaultValue, bool allowNull)
+        private static void CheckColumnSchema(ColumnSchema column, SqlDbType sqlDbType, object? defaultValue, bool allowNull)
             => CheckColumnSchema(column, sqlDbType, defaultValue, allowNull, null, null, null);
 
         private static void CheckColumnSchema(
             ColumnSchema column,
             SqlDbType sqlDbType,
-            object defaultValue,
+            object? defaultValue,
             bool allowNull,
             int? size,
             byte? precision,

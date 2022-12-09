@@ -92,7 +92,7 @@ namespace Kros.IO
         /// <remarks>If resulting path is too long, the file name is shortened to make the path correct.</remarks>
         public string FormatPath(string folder, string fileName)
         {
-            return FormatPathCore(folder, fileName, null, false);
+            return FormatPathCore(folder, fileName, string.Empty, false);
         }
 
         /// <summary>
@@ -106,7 +106,7 @@ namespace Kros.IO
         /// Shortened is original <paramref name="fileName"/> - if counter was added, it is preserved.</remarks>
         public string FormatNewPath(string folder, string fileName)
         {
-            return FormatPathCore(folder, fileName, null, true);
+            return FormatPathCore(folder, fileName, string.Empty, true);
         }
 
         /// <summary>
@@ -204,8 +204,9 @@ namespace Kros.IO
             string baseFolder,
             string baseFileName,
             Dictionary<TKey, string> fileInfos)
+            where TKey : notnull
         {
-            return FormatPathsCore(baseFolder, baseFileName, false, null, fileInfos);
+            return FormatPathsCore(baseFolder, baseFileName, false, string.Empty, fileInfos);
         }
 
         /// <summary>
@@ -259,8 +260,9 @@ namespace Kros.IO
             string baseFolder,
             string baseFileName,
             Dictionary<TKey, string> fileInfos)
+            where TKey : notnull
         {
-            return FormatPathsCore(baseFolder, baseFileName, true, null, fileInfos);
+            return FormatPathsCore(baseFolder, baseFileName, true, string.Empty, fileInfos);
         }
 
         /// <summary>
@@ -327,6 +329,7 @@ namespace Kros.IO
             string baseFileName,
             string subfolderInfo,
             Dictionary<TKey, string> fileInfos)
+            where TKey : notnull
         {
             return FormatPathsCore(baseFolder, baseFileName, true, subfolderInfo, fileInfos);
         }
@@ -508,6 +511,7 @@ namespace Kros.IO
             bool useSubfolder,
             string subfolderInfo,
             Dictionary<TKey, string> fileInfos)
+            where TKey : notnull
         {
             string ext = Path.GetExtension(baseFileName);
             string baseName = Path.GetFileNameWithoutExtension(baseFileName);

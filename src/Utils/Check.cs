@@ -1,4 +1,4 @@
-﻿using Kros.Properties;
+using Kros.Properties;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -34,7 +34,7 @@ namespace Kros.Utils
         /// The value of <paramref name="param"/> is <see langword="null"/>.
         /// </exception>
         [DebuggerStepThrough]
-        public static T NotNull<T>(T param, string paramName)
+        public static T NotNull<T>(T? param, string paramName)
         {
             if (param == null)
             {
@@ -56,7 +56,7 @@ namespace Kros.Utils
         /// The value of <paramref name="param"/> is <see langword="null"/>.
         /// </exception>
         [DebuggerStepThrough]
-        public static T NotNull<T>(T param, string paramName, string message)
+        public static T NotNull<T>(T? param, string paramName, string message)
         {
             if (param == null)
             {
@@ -208,14 +208,14 @@ namespace Kros.Utils
         /// <exception cref="ArgumentNullException">The value of <paramref name="param"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException">The value of <paramref name="param"/> is empty string.</exception>
         [DebuggerStepThrough]
-        public static string NotNullOrEmpty(string param, string paramName)
+        public static string NotNullOrEmpty(string? param, string paramName)
         {
             NotNull(param, paramName);
             if (string.IsNullOrEmpty(param))
             {
                 throw new ArgumentException(Resources.Check_StringNotNullOrEmpty, paramName);
             }
-            return param;
+            return param!;
         }
 
         /// <summary>
@@ -229,14 +229,14 @@ namespace Kros.Utils
         /// <exception cref="ArgumentNullException">The value of <paramref name="param"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException">The value of <paramref name="param"/> is empty string.</exception>
         [DebuggerStepThrough]
-        public static string NotNullOrEmpty(string param, string paramName, string message)
+        public static string NotNullOrEmpty(string? param, string paramName, string message)
         {
             NotNull(param, paramName, message);
             if (string.IsNullOrEmpty(param))
             {
                 throw new ArgumentException(message, paramName);
             }
-            return param;
+            return param!;
         }
 
         /// <summary>
@@ -250,14 +250,14 @@ namespace Kros.Utils
         /// <exception cref="ArgumentException">The value of <paramref name="param"/> is empty string or string containing
         /// only whitespace characters.</exception>
         [DebuggerStepThrough]
-        public static string NotNullOrWhiteSpace(string param, string paramName)
+        public static string NotNullOrWhiteSpace(string? param, string paramName)
         {
             NotNull(param, paramName);
             if (string.IsNullOrWhiteSpace(param))
             {
                 throw new ArgumentException(Resources.Check_StringNotNullOrWhiteSpace, paramName);
             }
-            return param;
+            return param!;
         }
 
         /// <summary>
@@ -273,14 +273,14 @@ namespace Kros.Utils
         /// <exception cref="ArgumentException">The value of <paramref name="param"/> is empty string or string containing
         /// only whitespace characters.</exception>
         [DebuggerStepThrough]
-        public static string NotNullOrWhiteSpace(string param, string paramName, string message)
+        public static string NotNullOrWhiteSpace(string? param, string paramName, string message)
         {
             NotNull(param, paramName, message);
             if (string.IsNullOrWhiteSpace(param))
             {
                 throw new ArgumentException(message, paramName);
             }
-            return param;
+            return param!;
         }
 
         #endregion
@@ -299,7 +299,7 @@ namespace Kros.Utils
         [DebuggerStepThrough]
         public static T Equal<T>(T param, T value, string paramName)
         {
-            if (!param.Equals(value))
+            if (!Equals(param, value))
             {
                 throw new ArgumentException(string.Format(Resources.Check_Equal, value, param), paramName);
             }
@@ -320,7 +320,7 @@ namespace Kros.Utils
         [DebuggerStepThrough]
         public static T Equal<T>(T param, T value, string paramName, string message)
         {
-            if (!param.Equals(value))
+            if (!Equals(param, value))
             {
                 throw new ArgumentException(message, paramName);
             }
@@ -339,7 +339,7 @@ namespace Kros.Utils
         [DebuggerStepThrough]
         public static T NotEqual<T>(T param, T value, string paramName)
         {
-            if (param.Equals(value))
+            if (Equals(param, value))
             {
                 throw new ArgumentException(string.Format(Resources.Check_NotEqual, value), paramName);
             }
@@ -360,7 +360,7 @@ namespace Kros.Utils
         [DebuggerStepThrough]
         public static T NotEqual<T>(T param, T value, string paramName, string message)
         {
-            if (param.Equals(value))
+            if (Equals(param, value))
             {
                 throw new ArgumentException(message, paramName);
             }
@@ -548,7 +548,7 @@ namespace Kros.Utils
         /// The value of <paramref name="param"/> is not in the list <paramref name="list"/>.
         /// </exception>
         [DebuggerStepThrough]
-        public static T IsInList<T>(T param, IEnumerable<T> list, string paramName)
+        public static T? IsInList<T>(T? param, IEnumerable<T> list, string paramName)
         {
             if (!list.Contains(param))
             {
@@ -571,7 +571,7 @@ namespace Kros.Utils
         /// The value of <paramref name="param"/> is not in the list <paramref name="list"/>.
         /// </exception>
         [DebuggerStepThrough]
-        public static T IsInList<T>(T param, IEnumerable<T> list, string paramName, string message)
+        public static T? IsInList<T>(T? param, IEnumerable<T> list, string paramName, string message)
         {
             if (!list.Contains(param))
             {
@@ -592,7 +592,7 @@ namespace Kros.Utils
         /// The value of <paramref name="param"/> is in the list <paramref name="list"/>.
         /// </exception>
         [DebuggerStepThrough]
-        public static T IsNotInList<T>(T param, IEnumerable<T> list, string paramName)
+        public static T? IsNotInList<T>(T? param, IEnumerable<T> list, string paramName)
         {
             if (list.Contains(param))
             {
@@ -615,7 +615,7 @@ namespace Kros.Utils
         /// The value of <paramref name="param"/> is in the list <paramref name="list"/>.
         /// </exception>
         [DebuggerStepThrough]
-        public static T IsNotInList<T>(T param, IEnumerable<T> list, string paramName, string message)
+        public static T? IsNotInList<T>(T? param, IEnumerable<T> list, string paramName, string message)
         {
             if (list.Contains(param))
             {

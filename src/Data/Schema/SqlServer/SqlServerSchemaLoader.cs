@@ -59,7 +59,7 @@ namespace Kros.Data.Schema.SqlServer
         /// <remarks>When custom logic for parsing column's default value is used, the parsed value is set in
         /// <see cref="SqlServerParseDefaultValueEventArgs.DefaultValue"/> property and
         /// <see cref="SqlServerParseDefaultValueEventArgs.Handled"/> flag must be set to <see langword="true"/>.</remarks>
-        public event EventHandler<SqlServerParseDefaultValueEventArgs> ParseDefaultValue;
+        public event EventHandler<SqlServerParseDefaultValueEventArgs>? ParseDefaultValue;
 
         /// <summary>
         /// Raises the <see cref="ParseDefaultValue"/> event with arguments <paramref name="e"/>.
@@ -80,7 +80,7 @@ namespace Kros.Data.Schema.SqlServer
         /// <param name="connection">Database connection.</param>
         /// <returns><see langword="false"/> if value of <paramref name="connection"/> is <see langword="null"/>,
         /// otherwise <see langword="true"/>.</returns>
-        public bool SupportsConnectionType(SqlConnection connection)
+        public bool SupportsConnectionType(SqlConnection? connection)
         {
             return (connection != null);
         }
@@ -120,7 +120,7 @@ namespace Kros.Data.Schema.SqlServer
         /// </exception>
         DatabaseSchema IDatabaseSchemaLoader.LoadSchema(object connection)
         {
-            return LoadSchema(connection as SqlConnection);
+            return LoadSchema((SqlConnection)connection);
         }
 
         /// <summary>
@@ -149,9 +149,9 @@ namespace Kros.Data.Schema.SqlServer
         /// whitespace characters only.</item>
         /// </list>
         /// </exception>
-        TableSchema IDatabaseSchemaLoader.LoadTableSchema(object connection, string tableName)
+        TableSchema? IDatabaseSchemaLoader.LoadTableSchema(object connection, string tableName)
         {
-            return LoadTableSchema(connection as SqlConnection, tableName);
+            return LoadTableSchema((SqlConnection)connection, tableName);
         }
 
         /// <summary>
@@ -224,7 +224,7 @@ namespace Kros.Data.Schema.SqlServer
         /// whitespace characters only.</item>
         /// </list>
         /// </exception>
-        public TableSchema LoadTableSchema(SqlConnection connection, string tableName)
+        public TableSchema? LoadTableSchema(SqlConnection connection, string tableName)
         {
             CheckConnection(connection);
             Check.NotNullOrWhiteSpace(tableName, nameof(tableName));
@@ -262,9 +262,9 @@ namespace Kros.Data.Schema.SqlServer
 
         #region Tables
 
-        private TableSchema LoadTableSchemaCore(SqlConnection connection, string tableName)
+        private TableSchema? LoadTableSchemaCore(SqlConnection connection, string tableName)
         {
-            TableSchema table = null;
+            TableSchema? table = null;
 
             using (DataTable schemaData = GetSchemaTables(connection, tableName))
             {
@@ -363,8 +363,8 @@ namespace Kros.Data.Schema.SqlServer
 
         private object GetDefaultValue(DataRow row, SqlServerColumnSchema column, TableSchema table)
         {
-            object defaultValue = null;
-            string defaultValueString = null;
+            object? defaultValue = null;
+            string defaultValueString = string.Empty;
 
             if (row.IsNull(ColumnsSchemaNames.ColumnDefault))
             {
@@ -419,9 +419,9 @@ namespace Kros.Data.Schema.SqlServer
             return rawDefaultValueString;
         }
 
-        private object GetDefaultValueFromString(string defaultValueString, SqlDbType dataType)
+        private object? GetDefaultValueFromString(string defaultValueString, SqlDbType dataType)
         {
-            object result = null;
+            object? result = null;
 
             if ((dataType == SqlDbType.NText) ||
                 (dataType == SqlDbType.NVarChar) ||
@@ -440,7 +440,7 @@ namespace Kros.Data.Schema.SqlServer
             return result;
         }
 
-        private DefaultValueParsers.ParseDefaultValueFunction GetParseFunction(SqlDbType dataType)
+        private DefaultValueParsers.ParseDefaultValueFunction? GetParseFunction(SqlDbType dataType)
         {
             switch (dataType)
             {
@@ -555,7 +555,7 @@ ORDER BY tables.name, indexes.name, index_columns.key_ordinal
         private void LoadIndexesForTable(TableSchema table, DataView schemaData)
         {
             string lastIndexName = string.Empty;
-            IndexSchema index = null;
+            IndexSchema? index = null;
 
             foreach (DataRowView rowView in schemaData)
             {
@@ -565,11 +565,11 @@ ORDER BY tables.name, indexes.name, index_columns.key_ordinal
                     lastIndexName = indexName;
                     index = CreateIndexSchema(table, rowView.Row);
                 }
-                AddColumnToIndex(index, rowView.Row);
+                AddColumnToIndex(index!, rowView.Row);
             }
         }
 
-        private IndexSchema CreateIndexSchema(TableSchema table, DataRow row)
+        private IndexSchema? CreateIndexSchema(TableSchema table, DataRow row)
         {
             string indexName = (string)row[IndexesQueryNames.IndexName];
             bool clustered = ((string)row[IndexesQueryNames.TypDesc]).Equals("CLUSTERED", StringComparison.OrdinalIgnoreCase);
@@ -737,7 +737,7 @@ ORDER BY foreign_key_columns.constraint_object_id
             {
                 throw new ArgumentException(Resources.SqlServerUnsupportedConnectionType, nameof(connection));
             }
-            SqlConnectionStringBuilder cnBuilder = new SqlConnectionStringBuilder((connection as SqlConnection).ConnectionString);
+            SqlConnectionStringBuilder cnBuilder = new SqlConnectionStringBuilder(((SqlConnection)connection).ConnectionString);
             Check.NotNullOrWhiteSpace(
                 cnBuilder.InitialCatalog, nameof(connection), Resources.SqlServerNoInitialCatalog);
         }
@@ -747,9 +747,9 @@ ORDER BY foreign_key_columns.constraint_object_id
             return GetSchemaTables(connection, null);
         }
 
-        private DataTable GetSchemaTables(SqlConnection connection, string tableName)
+        private DataTable GetSchemaTables(SqlConnection connection, string? tableName)
         {
-            return connection.GetSchema(SchemaNames.Tables, new string[] { null, null, tableName, null });
+            return connection.GetSchema(SchemaNames.Tables, new string[] { null!, null!, tableName!, null! });
         }
 
         private DataTable GetSchemaColumns(SqlConnection connection)
@@ -757,9 +757,9 @@ ORDER BY foreign_key_columns.constraint_object_id
             return GetSchemaColumns(connection, null);
         }
 
-        private DataTable GetSchemaColumns(SqlConnection connection, string tableName)
+        private DataTable GetSchemaColumns(SqlConnection connection, string? tableName)
         {
-            DataTable schemaData = connection.GetSchema(SchemaNames.Columns, new string[] { null, null, tableName, null });
+            DataTable schemaData = connection.GetSchema(SchemaNames.Columns, new string[] { null!, null!, tableName!, null! });
             schemaData.DefaultView.Sort =
                 $"{ColumnsSchemaNames.TableSchema}, {ColumnsSchemaNames.TableName}, {ColumnsSchemaNames.OrdinalPosition}";
             return schemaData;
