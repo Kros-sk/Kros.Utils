@@ -333,10 +333,8 @@ namespace Kros.Data.Schema.SqlServer
 
         private static SqlDbType GetSqlDbType(DataRow row)
         {
-            SqlDbType sqlType;
-
             string dataType = (string)row[ColumnsSchemaNames.DataType];
-            if (!Enum.TryParse(dataType, true, out sqlType))
+            if (!Enum.TryParse(dataType, true, out SqlDbType sqlType))
             {
                 if (dataType.Equals("numeric", StringComparison.OrdinalIgnoreCase))
                 {
