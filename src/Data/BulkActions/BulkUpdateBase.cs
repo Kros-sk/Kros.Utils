@@ -79,7 +79,7 @@ namespace Kros.Data.BulkActions
         /// </summary>
         public string PrimaryKeyColumn
         {
-            get => _primaryKeyColumns is null ? string.Empty : string.Join(", ", _primaryKeyColumns);
+            get => _primaryKeyColumns.Length == 0 ? string.Empty : string.Join(", ", _primaryKeyColumns);
             set => _primaryKeyColumns = string.IsNullOrWhiteSpace(value)
                 ? Array.Empty<string>()
                 : value.Split(new[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
@@ -117,7 +117,7 @@ namespace Kros.Data.BulkActions
         private async Task UpdateCoreAsync(IDataReader reader, bool useAsync)
         {
             Check.NotNull(reader, nameof(reader));
-            if ((_primaryKeyColumns is null) || (_primaryKeyColumns.Length == 0))
+            if (_primaryKeyColumns.Length == 0)
             {
                 throw new InvalidOperationException(Resources.BulkUpdatePrimaryKeyIsNotSet);
             }

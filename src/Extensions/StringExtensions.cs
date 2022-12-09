@@ -76,7 +76,7 @@ namespace Kros.Extensions
         /// If <paramref name="value"/> is <see langword="null"/>, empty string is returned. If value of <paramref name="length"/>
         /// is greater than length of <paramref name="value"/>, the <paramref name="value"/> itself is returned.</returns>
         /// <exception cref="System.ArgumentException">Value of <paramref name="length"/> is less than 0.</exception>
-        public static string Left(this string value, int length)
+        public static string Left(this string? value, int length)
         {
             Check.GreaterOrEqualThan(length, 0, nameof(length));
 
@@ -100,7 +100,7 @@ namespace Kros.Extensions
         /// If <paramref name="value"/> is <see langword="null"/>, empty string is returned. If value of <paramref name="length"/>
         /// is greater than length of <paramref name="value"/>, the <paramref name="value"/> itself is returned.</returns>
         /// <exception cref="System.ArgumentException">Value of <paramref name="length"/> is less than 0.</exception>
-        public static string Right(this string value, int length)
+        public static string Right(this string? value, int length)
         {
             Check.GreaterOrEqualThan(length, 0, nameof(length));
 

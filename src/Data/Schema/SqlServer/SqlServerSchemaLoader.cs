@@ -363,7 +363,7 @@ namespace Kros.Data.Schema.SqlServer
 
         private object GetDefaultValue(DataRow row, SqlServerColumnSchema column, TableSchema table)
         {
-            object? defaultValue = null;
+            object? defaultValue;
             string defaultValueString = string.Empty;
 
             if (row.IsNull(ColumnsSchemaNames.ColumnDefault))
