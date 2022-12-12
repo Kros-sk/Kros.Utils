@@ -274,9 +274,9 @@ namespace Kros.Data.Schema.SqlServer
         {
             using (DataTable schemaData = GetSchemaTables(connection))
             {
-                foreach (DataRow row in schemaData.Rows)
+                foreach (DataRow? row in schemaData.Rows)
                 {
-                    database.Tables.Add((string)row[TablesSchemaNames.TableName]);
+                    database.Tables.Add((string)row![TablesSchemaNames.TableName]);
                 }
             }
         }
@@ -295,9 +295,9 @@ namespace Kros.Data.Schema.SqlServer
         private void LoadColumns(TableSchema table, DataTable columnsSchemaData)
         {
             columnsSchemaData.DefaultView.RowFilter = $"{ColumnsSchemaNames.TableName} = '{table.Name}'";
-            foreach (DataRowView rowView in columnsSchemaData.DefaultView)
+            foreach (DataRowView? rowView in columnsSchemaData.DefaultView)
             {
-                table.Columns.Add(CreateColumnSchema(rowView.Row, table));
+                table.Columns.Add(CreateColumnSchema(rowView!.Row, table));
             }
         }
 
@@ -517,9 +517,9 @@ ORDER BY tables.name, indexes.name, index_columns.key_ordinal
             string lastIndexName = string.Empty;
             IndexSchema? index = null;
 
-            foreach (DataRowView rowView in schemaData)
+            foreach (DataRowView? rowView in schemaData)
             {
-                string indexName = (string)rowView.Row[IndexesQueryNames.IndexName];
+                string indexName = (string)rowView!.Row[IndexesQueryNames.IndexName];
                 if (indexName != lastIndexName)
                 {
                     lastIndexName = indexName;
@@ -630,17 +630,17 @@ ORDER BY foreign_key_columns.constraint_object_id
             DataView columnsView = foreignKeyColumnsData.DefaultView;
             List<string> primaryKeyColumns = new();
             List<string> foreignKeyColumns = new();
-            foreach (DataRow fkRow in foreignKeysData.Rows)
+            foreach (DataRow? fkRow in foreignKeysData.Rows)
             {
-                int foreignKeyId = (int)fkRow[ForeignKeyQueryNames.ForeignKeyId];
+                int foreignKeyId = (int)fkRow![ForeignKeyQueryNames.ForeignKeyId];
                 columnsView.RowFilter = $"[{ForeignKeyColumnsQueryNames.ForeignKeyId}] = {foreignKeyId}";
 
                 primaryKeyColumns.Clear();
                 foreignKeyColumns.Clear();
-                foreach (DataRowView fkColumnRow in columnsView)
+                foreach (DataRowView? fkColumnRow in columnsView)
                 {
-                    primaryKeyColumns.Add((string)fkColumnRow.Row[ForeignKeyColumnsQueryNames.ReferencedColumnName]);
-                    foreignKeyColumns.Add((string)fkColumnRow.Row[ForeignKeyColumnsQueryNames.ParentColumnName]);
+                    primaryKeyColumns.Add((string)fkColumnRow!.Row[ForeignKeyColumnsQueryNames.ReferencedColumnName]);
+                    foreignKeyColumns.Add((string)fkColumnRow!.Row[ForeignKeyColumnsQueryNames.ParentColumnName]);
                 }
                 ForeignKeySchema foreignKey = CreateForeignKey(fkRow, primaryKeyColumns, foreignKeyColumns);
                 database.Tables[(string)fkRow[ForeignKeyQueryNames.ParentTableName]].ForeignKeys.Add(foreignKey);
