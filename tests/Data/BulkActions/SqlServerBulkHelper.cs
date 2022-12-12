@@ -35,7 +35,7 @@ namespace Kros.Utils.UnitTests.Data.BulkActions
         {
             bool primaryKeysAreTheSame = false;
 
-            if ((actualTable.PrimaryKey != null) && (expectedTable.PrimaryKey != null) &&
+            if ((actualTable.PrimaryKey is not null) && (expectedTable.PrimaryKey is not null) &&
                 (actualTable.PrimaryKey.Length == expectedTable.PrimaryKey.Length))
             {
                 primaryKeysAreTheSame = true;
@@ -55,7 +55,7 @@ namespace Kros.Utils.UnitTests.Data.BulkActions
         }
 
         private static string GetPk(DataTable table) =>
-            table.PrimaryKey == null ? "null" : string.Join(", ", table.PrimaryKey.Select((col) => col.ColumnName));
+            table.PrimaryKey is null ? "null" : string.Join(", ", table.PrimaryKey.Select((col) => col.ColumnName));
 
         private static void CompareColumns(DataTable actualTable, DataTable expectedTable)
         {

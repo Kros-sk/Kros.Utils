@@ -44,7 +44,7 @@ namespace Kros.Data.Schema
         /// whitespace characters.</exception>
         public IndexColumnSchema Add(string columnName)
         {
-            IndexColumnSchema indexColumn = new IndexColumnSchema(columnName);
+            IndexColumnSchema indexColumn = new(columnName);
             Add(indexColumn);
             return indexColumn;
         }
@@ -61,7 +61,7 @@ namespace Kros.Data.Schema
         /// whitespace characters.</exception>
         public IndexColumnSchema Add(string columnName, SortOrder order)
         {
-            IndexColumnSchema indexColumn = new IndexColumnSchema(columnName, order);
+            IndexColumnSchema indexColumn = new(columnName, order);
             Add(indexColumn);
             return indexColumn;
         }
@@ -70,15 +70,13 @@ namespace Kros.Data.Schema
 
         #region KeyedCollection
 
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-        protected override string GetKeyForItem(IndexColumnSchema item)
-        {
-            return item.Name;
-        }
+        /// <inheritdoc/>
+        protected override string GetKeyForItem(IndexColumnSchema item) => item.Name;
 
+        /// <inheritdoc/>
         protected override void InsertItem(int index, IndexColumnSchema item)
         {
-            if (item.Index == null)
+            if (item.Index is null)
             {
                 item.Index = Index;
             }
@@ -90,6 +88,7 @@ namespace Kros.Data.Schema
             base.InsertItem(index, item);
         }
 
+        /// <inheritdoc/>
         protected override void RemoveItem(int index)
         {
             if (index < Count)
@@ -98,7 +97,6 @@ namespace Kros.Data.Schema
             }
             base.RemoveItem(index);
         }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
         #endregion
     }

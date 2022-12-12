@@ -103,7 +103,7 @@ namespace Kros.UnitTests
         {
             get
             {
-                if (_connection == null)
+                if (_connection is null)
                 {
                     CreateDatabase();
                 }
@@ -133,7 +133,7 @@ namespace Kros.UnitTests
         [SuppressMessage("Security", "CA2100:Review SQL queries for security vulnerabilities")]
         protected virtual void InitDatabase()
         {
-            if (_initDatabaseScripts != null)
+            if (_initDatabaseScripts is not null)
             {
                 using (ConnectionHelper.OpenConnection(Connection))
                 using (SqlCommand cmd = Connection.CreateCommand())
@@ -149,7 +149,7 @@ namespace Kros.UnitTests
 
         private void CreateDatabase()
         {
-            if (_connection == null)
+            if (_connection is null)
             {
                 CreateConnection();
                 InitDatabase();
@@ -174,7 +174,7 @@ namespace Kros.UnitTests
 
         private SqlConnection GetConnectionCore(string databaseName)
         {
-            SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder(BaseConnectionString)
+            SqlConnectionStringBuilder builder = new(BaseConnectionString)
             {
                 InitialCatalog = databaseName,
                 Pooling = false,
@@ -188,9 +188,9 @@ namespace Kros.UnitTests
         [SuppressMessage("Security", "CA2100:Review SQL queries for security vulnerabilities")]
         private void RemoveDatabase()
         {
-            if (_connection != null)
+            if (_connection is not null)
             {
-                SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder(_connection.ConnectionString);
+                SqlConnectionStringBuilder builder = new(_connection.ConnectionString);
                 _connection.Dispose();
                 _connection = null;
                 using (SqlConnection connection = GetConnectionCore(MasterDatabaseName))
@@ -227,6 +227,7 @@ namespace Kros.UnitTests
         public void Dispose()
         {
             Dispose(true);
+            GC.SuppressFinalize(this);
         }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 

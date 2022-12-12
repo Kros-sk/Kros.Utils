@@ -57,15 +57,11 @@ namespace Kros.Data.BulkActions.SqlServer
 
         /// <inheritdoc/>
         protected override IBulkInsert CreateBulkInsert()
-        {
-            return new SqlServerBulkInsert((SqlConnection)_connection, (SqlTransaction?)ExternalTransaction);
-        }
+            => new SqlServerBulkInsert((SqlConnection)_connection, (SqlTransaction?)ExternalTransaction);
 
         /// <inheritdoc/>
         protected override void InvokeAction(string tempTableName)
-        {
-            TempTableAction?.Invoke(_connection, ExternalTransaction, tempTableName);
-        }
+            => TempTableAction?.Invoke(_connection, ExternalTransaction, tempTableName);
 
         /// <inheritdoc/>
         protected override string GetTempTableName() => $"{PrefixTempTable}{DestinationTableName}_{Guid.NewGuid()}";
@@ -146,7 +142,7 @@ namespace Kros.Data.BulkActions.SqlServer
                 cmd.CommandText = $"UPDATE [{DestinationTableName}]\r\n" +
                     $"SET {GetUpdateColumnNames(reader, tempTableName)}\r\n" +
                     $"FROM [{DestinationTableName}]\r\n" +
-                    $"INNER JOIN [{tempTableName}] ON ({innerJoin.ToString()})";
+                    $"INNER JOIN [{tempTableName}] ON ({innerJoin})";
 
                 await ExecuteNonQueryAsync(useAsync, cmd);
             }

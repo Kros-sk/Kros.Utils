@@ -91,9 +91,7 @@ namespace Kros.IO
         /// <param name="fileName">File name.</param>
         /// <remarks>If resulting path is too long, the file name is shortened to make the path correct.</remarks>
         public string FormatPath(string folder, string fileName)
-        {
-            return FormatPathCore(folder, fileName, string.Empty, false);
-        }
+            => FormatPathCore(folder, fileName, string.Empty, false);
 
         /// <summary>
         /// Formats folder <paramref name="folder"/> and file name <paramref name="fileName"/> to the resulting path and
@@ -105,9 +103,7 @@ namespace Kros.IO
         /// to make the path to non-existing file. If resulting path is too long, file name is shortened to make it valid.
         /// Shortened is original <paramref name="fileName"/> - if counter was added, it is preserved.</remarks>
         public string FormatNewPath(string folder, string fileName)
-        {
-            return FormatPathCore(folder, fileName, string.Empty, true);
-        }
+            => FormatPathCore(folder, fileName, string.Empty, true);
 
         /// <summary>
         /// Formats folder <paramref name="folder"/> and file name <paramref name="fileName"/> to the resulting path.
@@ -128,9 +124,7 @@ namespace Kros.IO
         /// </para>
         /// </remarks>
         public string FormatPath(string folder, string fileName, string info)
-        {
-            return FormatPathCore(folder, fileName, info, false);
-        }
+            => FormatPathCore(folder, fileName, info, false);
 
         /// <summary>
         /// Formats folder <paramref name="folder"/> and file name <paramref name="fileName"/> to the resulting path.
@@ -155,9 +149,7 @@ namespace Kros.IO
         /// </para>
         /// </remarks>
         public string FormatNewPath(string folder, string fileName, string info)
-        {
-            return FormatPathCore(folder, fileName, info, true);
-        }
+            => FormatPathCore(folder, fileName, info, true);
 
         /// <summary>
         /// Creates a list of paths to files. The paths are created with base folder <paramref name="baseFolder"/>,
@@ -205,9 +197,7 @@ namespace Kros.IO
             string baseFileName,
             Dictionary<TKey, string> fileInfos)
             where TKey : notnull
-        {
-            return FormatPathsCore(baseFolder, baseFileName, false, string.Empty, fileInfos);
-        }
+            => FormatPathsCore(baseFolder, baseFileName, false, string.Empty, fileInfos);
 
         /// <summary>
         /// Creates a list of paths to files. The paths are created with base folder <paramref name="baseFolder"/>,
@@ -261,9 +251,7 @@ namespace Kros.IO
             string baseFileName,
             Dictionary<TKey, string> fileInfos)
             where TKey : notnull
-        {
-            return FormatPathsCore(baseFolder, baseFileName, true, string.Empty, fileInfos);
-        }
+            => FormatPathsCore(baseFolder, baseFileName, true, string.Empty, fileInfos);
 
         /// <summary>
         /// Creates a list of paths to files. The paths are created with base folder <paramref name="baseFolder"/>,
@@ -330,9 +318,7 @@ namespace Kros.IO
             string subfolderInfo,
             Dictionary<TKey, string> fileInfos)
             where TKey : notnull
-        {
-            return FormatPathsCore(baseFolder, baseFileName, true, subfolderInfo, fileInfos);
-        }
+            => FormatPathsCore(baseFolder, baseFileName, true, subfolderInfo, fileInfos);
 
         #endregion
 
@@ -349,14 +335,8 @@ namespace Kros.IO
         /// </remarks>
         public string InfoOpeningString
         {
-            get
-            {
-                return _infoOpeningString;
-            }
-            set
-            {
-                _infoOpeningString = value == null ? string.Empty : PathHelper.ReplaceInvalidPathChars(value);
-            }
+            get => _infoOpeningString;
+            set => _infoOpeningString = value is null ? string.Empty : PathHelper.ReplaceInvalidPathChars(value);
         }
 
         /// <summary>
@@ -370,14 +350,8 @@ namespace Kros.IO
         /// </remarks>
         public string InfoClosingString
         {
-            get
-            {
-                return _infoClosingString;
-            }
-            set
-            {
-                _infoClosingString = value == null ? string.Empty : PathHelper.ReplaceInvalidPathChars(value);
-            }
+            get => _infoClosingString;
+            set => _infoClosingString = value is null ? string.Empty : PathHelper.ReplaceInvalidPathChars(value);
         }
 
         /// <summary>
@@ -391,14 +365,8 @@ namespace Kros.IO
         /// </remarks>
         public string CounterOpeningString
         {
-            get
-            {
-                return _counterOpeningString;
-            }
-            set
-            {
-                _counterOpeningString = value == null ? string.Empty : PathHelper.ReplaceInvalidPathChars(value);
-            }
+            get => _counterOpeningString;
+            set => _counterOpeningString = value is null ? string.Empty : PathHelper.ReplaceInvalidPathChars(value);
         }
 
         /// <summary>
@@ -412,58 +380,34 @@ namespace Kros.IO
         /// </remarks>
         public string CounterClosingString
         {
-            get
-            {
-                return _counterClosingString;
-            }
-            set
-            {
-                _counterClosingString = value == null ? string.Empty : PathHelper.ReplaceInvalidPathChars(value);
-            }
+            get => _counterClosingString;
+            set => _counterClosingString = value is null ? string.Empty : PathHelper.ReplaceInvalidPathChars(value);
         }
 
         #endregion
 
         #region Helpers
 
-        // 260 characters is maximum path length on disk, taken from .NET framework.
-        // 12 characters is a reserve for numbers in case the file already exists.
-        private int _maxPathLength = 260 - 12;
-
         /// <summary>
         /// Maximum path length. Intended for internal use.
         /// </summary>
-        protected internal int MaxPathLength
-        {
-            get
-            {
-                return _maxPathLength;
-            }
-            set
-            {
-                _maxPathLength = value;
-            }
-        }
+        protected internal int MaxPathLength { get; set; } = 260 - 12;
+        // 260 characters is maximum path length on disk, taken from .NET framework.
+        // 12 characters is a reserve for numbers in case the file already exists.
 
         /// <summary>
         /// Checks if file <paramref name="filePath"/> exists. Method is intended for internal use.
         /// </summary>
         /// <param name="filePath">Path to file.</param>
         /// <returns><see langword="true"/> if file exists, <see langword="false"/> otherwise.</returns>
-        public virtual bool FileExists(string filePath)
-        {
-            return File.Exists(filePath);
-        }
+        public virtual bool FileExists(string filePath) => File.Exists(filePath);
 
         /// <summary>
         /// Checks if folder <paramref name="folderPath"/> exists. Method is intended for internal use.
         /// </summary>
         /// <param name="folderPath">Path to folder.</param>
         /// <returns><see langword="true"/> if folder exists, <see langword="false"/> otherwise.</returns>
-        public virtual bool FolderExists(string folderPath)
-        {
-            return Directory.Exists(folderPath);
-        }
+        public virtual bool FolderExists(string folderPath) => Directory.Exists(folderPath);
 
         private string FormatPathCore(string folder, string fileName, string info, bool fileMustNotExist)
         {
@@ -608,14 +552,10 @@ namespace Kros.IO
         }
 
         private string GetCounterString(int counter)
-        {
-            return string.Concat(CounterOpeningString, counter, CounterClosingString);
-        }
+            => string.Concat(CounterOpeningString, counter, CounterClosingString);
 
         private string GetInfoString(string info)
-        {
-            return string.Concat(InfoOpeningString, PathHelper.ReplaceInvalidPathChars(info), InfoClosingString);
-        }
+            => string.Concat(InfoOpeningString, PathHelper.ReplaceInvalidPathChars(info), InfoClosingString);
 
         #endregion
     }

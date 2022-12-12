@@ -116,7 +116,7 @@ namespace Kros.Data.BulkActions
         public bool IsDBNull(int i)
         {
             object? value = GetValue(i);
-            return (value == null) || (value == DBNull.Value);
+            return (value is null) || (value == DBNull.Value);
         }
 
         /// <summary>
@@ -172,6 +172,7 @@ namespace Kros.Data.BulkActions
         public void Dispose()
         {
             Dispose(true);
+            GC.SuppressFinalize(this);
         }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 

@@ -234,7 +234,6 @@ ALTER TABLE [dbo].[ChildTableCascade] CHECK CONSTRAINT [FK_ChildTableCascade_Par
         {
             SqlServerSchemaLoader loader = new SqlServerSchemaLoader();
             DatabaseSchema schema = loader.LoadSchema(ServerHelper.Connection);
-            TableSchema parentTable = schema.Tables["ParentTable"];
             TableSchema childTableNoAction = schema.Tables["ChildTableNoAction"];
             TableSchema childTableSetNull = schema.Tables["ChildTableSetNull"];
             TableSchema childTableSetDefault = schema.Tables["ChildTableSetDefault"];
@@ -331,7 +330,7 @@ ALTER TABLE [dbo].[ChildTableCascade] CHECK CONSTRAINT [FK_ChildTableCascade_Par
             string columnName = sqlServerColumn.Name;
             sqlServerColumn.SqlDbType.Should().Be(sqlDbType, $"{columnName} should have correct SqlDbType.");
             sqlServerColumn.AllowNull.Should().Be(allowNull, $"{columnName} should allow NULL.");
-            if (defaultValue != null)
+            if (defaultValue is not null)
             {
                 sqlServerColumn.DefaultValue.Should().Be(defaultValue, $"{columnName} should have correct default value.");
             }

@@ -9,12 +9,6 @@ namespace Kros.Data.Schema
     /// </summary>
     public class TableSchema
     {
-        #region Fields
-
-        private IndexSchema? _primaryKey;
-
-        #endregion
-
         #region Constructors
 
         /// <summary>
@@ -73,7 +67,7 @@ namespace Kros.Data.Schema
         /// <remarks>
         /// If table does not have a primary key, value is <see langword="null"/>.
         /// </remarks>
-        public IndexSchema? PrimaryKey => _primaryKey;
+        public IndexSchema? PrimaryKey { get; private set; }
 
         /// <summary>
         /// Sets primary key with name <paramref name="primaryKeyName"/> and flag <paramref name="clustered"/>.
@@ -85,10 +79,10 @@ namespace Kros.Data.Schema
         /// primary key is removed (value of <see cref="PrimaryKey"/> will be <see langword="null"/>).</remarks>
         public IndexSchema? SetPrimaryKey(string primaryKeyName, bool clustered)
         {
-            _primaryKey = string.IsNullOrWhiteSpace(primaryKeyName)
+            PrimaryKey = string.IsNullOrWhiteSpace(primaryKeyName)
                 ? null
                 : new IndexSchema(primaryKeyName, IndexType.PrimaryKey, clustered);
-            return _primaryKey;
+            return PrimaryKey;
         }
 
         /// <summary>
@@ -101,14 +95,14 @@ namespace Kros.Data.Schema
         /// </summary>
         public ForeignKeySchemaCollection ForeignKeys { get; }
 
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+        /// <inheritdoc/>
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder(50);
+            StringBuilder sb = new(50);
             sb.Append("Table ");
             sb.Append(Name);
             sb.Append(": Primary Key = ");
-            if ((PrimaryKey == null) || (PrimaryKey.Columns.Count == 0))
+            if ((PrimaryKey is null) || (PrimaryKey.Columns.Count == 0))
             {
                 sb.Append("*not set*");
             }
@@ -131,7 +125,6 @@ namespace Kros.Data.Schema
 
             return sb.ToString();
         }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
         #endregion
     }

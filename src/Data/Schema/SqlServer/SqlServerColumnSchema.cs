@@ -69,13 +69,10 @@ namespace Kros.Data.Schema.SqlServer
             }
         }
 
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+        /// <inheritdoc/>
         public override string ToString()
-        {
-            return string.Format("Column {0}: SqlDbType = {1}, AllowNull = {2}, DefaultValue = {3}, Size = {4}",
+            => string.Format("Column {0}: SqlDbType = {1}, AllowNull = {2}, DefaultValue = {3}, Size = {4}",
                 FullName, SqlDbType, AllowNull, ToStringDefaultValue(), Size);
-        }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
         #endregion
     }

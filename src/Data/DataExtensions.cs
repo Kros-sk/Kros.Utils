@@ -16,10 +16,7 @@ namespace Kros.Data
         /// </summary>
         /// <param name="cn">Database connection.</param>
         /// <returns><see langword="true"/>, if database connection is opened, <see langword="false"/> otherwise.</returns>
-        public static bool IsOpened(this IDbConnection cn)
-        {
-            return cn.State.HasFlag(ConnectionState.Open);
-        }
+        public static bool IsOpened(this IDbConnection cn) => cn.State.HasFlag(ConnectionState.Open);
 
         /// <summary>
         /// Returns error code for Microsoft SQL Server.

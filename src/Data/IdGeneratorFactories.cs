@@ -80,10 +80,8 @@ namespace Kros.Data
             SqlServer.SqlServerLongIdGeneratorFactory.Register();
         }
 
-        private static readonly Dictionary<string, List<FactoryInfo>> _byConnection
-            = new Dictionary<string, List<FactoryInfo>>();
-        private static readonly Dictionary<string, List<FactoryInfo>> _byClientName
-            = new Dictionary<string, List<FactoryInfo>>();
+        private static readonly Dictionary<string, List<FactoryInfo>> _byConnection= new();
+        private static readonly Dictionary<string, List<FactoryInfo>> _byClientName = new();
 
         /// <summary>
         /// Registers ID generator factory methods <paramref name="factoryByConnection"/> and
@@ -136,7 +134,7 @@ namespace Kros.Data
         private static void AddFactory(FactoryInfo info, List<FactoryInfo> factories)
         {
             FactoryInfo? current = factories.FirstOrDefault(item => item.DataType == info.DataType);
-            if (current != null)
+            if (current is not null)
             {
                 factories.Remove(current);
             }
@@ -157,7 +155,7 @@ namespace Kros.Data
             if (_byConnection.TryGetValue(connection.GetType().FullName!, out List<FactoryInfo>? factories))
             {
                 FactoryInfo? factory = factories.FirstOrDefault(item => item.DataType == dataType);
-                if (factory != null)
+                if (factory is not null)
                 {
                     return factory.FactoryByConnection!(connection);
                 }
@@ -182,7 +180,7 @@ namespace Kros.Data
             if (_byClientName.TryGetValue(clientName, out List<FactoryInfo>? factories))
             {
                 FactoryInfo? factory = factories.FirstOrDefault(item => item.DataType == dataType);
-                if (factory != null)
+                if (factory is not null)
                 {
                     return factory.FactoryByClientName!(connectionString);
                 }
@@ -221,25 +219,5 @@ namespace Kros.Data
             throw new InvalidOperationException(string.Format(Resources.FactoryNotRegisteredForClient,
                 nameof(IIdGeneratorFactory), clientName));
         }
-
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-
-        [Obsolete("Method is deprecated. Use 'Register' method with 'dataType' argument.")]
-        public static void Register<TConnection>(
-            string adoClientName,
-            Func<IDbConnection, IIdGeneratorFactory> factoryByConnection,
-            Func<string, IIdGeneratorFactory> factoryByConnectionString)
-            where TConnection : IDbConnection
-            => Register<TConnection>(typeof(int), adoClientName, factoryByConnection, factoryByConnectionString);
-
-        [Obsolete("Method is deprecated. Use 'GetFactory' method with 'dataType' argument.")]
-        public static IIdGeneratorFactory GetFactory(DbConnection connection)
-            => GetFactory(typeof(int), connection);
-
-        [Obsolete("Method is deprecated. Use 'GetFactory' method with 'dataType' argument.")]
-        public static IIdGeneratorFactory GetFactory(string connectionString, string adoClientName)
-            => GetFactory(typeof(int), connectionString, adoClientName);
-
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
 }

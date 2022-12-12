@@ -56,7 +56,7 @@ namespace Kros.Data.Schema
             string foreignKeyTableName,
             string foreignKeyTableColumn)
         {
-            ForeignKeySchema foreignKey = new ForeignKeySchema(
+            ForeignKeySchema foreignKey = new(
                 name,
                 primaryKeyTableName, primaryKeyTableColumn,
                 foreignKeyTableName, foreignKeyTableColumn);
@@ -88,7 +88,7 @@ namespace Kros.Data.Schema
             string foreignKeyTableName,
             IEnumerable<string> foreignKeyTableColumns)
         {
-            ForeignKeySchema foreignKey = new ForeignKeySchema(
+            ForeignKeySchema foreignKey = new(
                 name,
                 primaryKeyTableName, primaryKeyTableColumns,
                 foreignKeyTableName, foreignKeyTableColumns);
@@ -100,15 +100,13 @@ namespace Kros.Data.Schema
 
         #region KeyedCollection
 
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-        protected override string GetKeyForItem(ForeignKeySchema item)
-        {
-            return item.Name;
-        }
+        /// <inheritdoc/>
+        protected override string GetKeyForItem(ForeignKeySchema item) => item.Name;
 
+        /// <inheritdoc/>
         protected override void InsertItem(int index, ForeignKeySchema item)
         {
-            if (item.Table == null)
+            if (item.Table is null)
             {
                 item.Table = Table;
             }
@@ -120,6 +118,7 @@ namespace Kros.Data.Schema
             base.InsertItem(index, item);
         }
 
+        /// <inheritdoc/>
         protected override void RemoveItem(int index)
         {
             if (index < Count)
@@ -128,7 +127,6 @@ namespace Kros.Data.Schema
             }
             base.RemoveItem(index);
         }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
         #endregion
     }

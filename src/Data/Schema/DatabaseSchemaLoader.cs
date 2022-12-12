@@ -37,7 +37,7 @@ namespace Kros.Data.Schema
 
         private static DatabaseSchemaLoader InitDefault()
         {
-            DatabaseSchemaLoader loader = new DatabaseSchemaLoader();
+            DatabaseSchemaLoader loader = new();
             loader.AddSchemaLoader(new SqlServer.SqlServerSchemaLoader());
 
             return loader;
@@ -47,7 +47,7 @@ namespace Kros.Data.Schema
 
         #region Fields
 
-        private readonly List<IDatabaseSchemaLoader> _loaders = new List<IDatabaseSchemaLoader>();
+        private readonly List<IDatabaseSchemaLoader> _loaders = new();
 
         #endregion
 
@@ -68,32 +68,24 @@ namespace Kros.Data.Schema
         /// Removes <paramref name="loader"/> from the list of loaders.
         /// </summary>
         /// <param name="loader">Specific database schema loader to be removed from the list.</param>
-        public void RemoveSchemaLoader(IDatabaseSchemaLoader loader)
-        {
-            _loaders.Remove(loader);
-        }
+        public void RemoveSchemaLoader(IDatabaseSchemaLoader loader) => _loaders.Remove(loader);
 
         /// <summary>Removes all loaders in the list.</summary>
-        public void ClearSchemaLoaders()
-        {
-            _loaders.Clear();
-        }
+        public void ClearSchemaLoaders() => _loaders.Clear();
 
         #endregion
 
         #region IDatabaseSchemaLoader
 
-        private IDatabaseSchemaLoader? GetLoader(object connection)
-        {
-            return _loaders.FirstOrDefault((loader) => loader.SupportsConnectionType(connection));
-        }
+        private IDatabaseSchemaLoader? GetLoader(object connection) 
+            => _loaders.FirstOrDefault((loader) => loader.SupportsConnectionType(connection));
 
         private IDatabaseSchemaLoader CheckConnectionAndGetLoader(object connection)
         {
             Check.NotNull(connection, nameof(connection));
 
             IDatabaseSchemaLoader? loader = GetLoader(connection);
-            if (loader == null)
+            if (loader is null)
             {
                 throw new ArgumentException(
                     string.Format(Resources.UnsupportedConnectionType, connection.GetType().FullName), nameof(connection));
@@ -114,7 +106,7 @@ namespace Kros.Data.Schema
         public bool SupportsConnectionType(object connection)
         {
             Check.NotNull(connection, nameof(connection));
-            return GetLoader(connection) != null;
+            return GetLoader(connection) is not null;
         }
 
         /// <inheritdoc cref="IDatabaseSchemaLoader{T}.LoadSchema(T)"/>

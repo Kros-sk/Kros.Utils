@@ -1,4 +1,4 @@
-using Kros.Properties;
+﻿using Kros.Properties;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -36,7 +36,7 @@ namespace Kros.Utils
         [DebuggerStepThrough]
         public static T NotNull<T>(T? param, string paramName)
         {
-            if (param == null)
+            if (param is null)
             {
                 throw new ArgumentNullException(paramName, Resources.Check_NotNull);
             }
@@ -58,7 +58,7 @@ namespace Kros.Utils
         [DebuggerStepThrough]
         public static T NotNull<T>(T? param, string paramName, string message)
         {
-            if (param == null)
+            if (param is null)
             {
                 throw new ArgumentNullException(paramName, message);
             }
@@ -78,9 +78,7 @@ namespace Kros.Utils
         /// <exception cref="ArgumentException">The value of <paramref name="param"/> is not of required type.</exception>
         [DebuggerStepThrough]
         public static void IsOfType<T>(object param, string paramName)
-        {
-            IsOfType(param, typeof(T), paramName);
-        }
+            => IsOfType(param, typeof(T), paramName);
 
         /// <summary>
         /// The value of <paramref name="param"/> must be of given type <typeparamref name="T"/>.
@@ -93,9 +91,7 @@ namespace Kros.Utils
         /// <exception cref="ArgumentException">The value of <paramref name="param"/> is not of required type.</exception>
         [DebuggerStepThrough]
         public static void IsOfType<T>(object param, string paramName, string message)
-        {
-            IsOfType(param, typeof(T), paramName, message);
-        }
+            => IsOfType(param, typeof(T), paramName, message);
 
         /// <summary>
         /// The value of <paramref name="param"/> must be of given type <paramref name="expectedType"/>.
@@ -141,9 +137,7 @@ namespace Kros.Utils
         /// <exception cref="ArgumentException">The value of <paramref name="param"/> is of forbidden type.</exception>
         [DebuggerStepThrough]
         public static void IsNotOfType<T>(object param, string paramName)
-        {
-            IsNotOfType(param, typeof(T), paramName);
-        }
+            => IsNotOfType(param, typeof(T), paramName);
 
         /// <summary>
         /// The value of <paramref name="param"/> must not be of given type <typeparamref name="T"/>.
@@ -156,9 +150,7 @@ namespace Kros.Utils
         /// <exception cref="ArgumentException">The value of <paramref name="param"/> is of forbidden type.</exception>
         [DebuggerStepThrough]
         public static void IsNotOfType<T>(object param, string paramName, string message)
-        {
-            IsNotOfType(param, typeof(T), paramName, message);
-        }
+            => IsNotOfType(param, typeof(T), paramName, message);
 
         /// <summary>
         /// The value of <paramref name="param"/> must not be of type <paramref name="notExpectedType"/>.
@@ -626,22 +618,18 @@ namespace Kros.Utils
 
         [DebuggerStepThrough]
         private static string GetIsInListDefaultMessage<T>(T param, IEnumerable<T> list)
-        {
-            return string.Format(Resources.Check_IsInListDefaultMessage, param, GetValuesInListAsString(list));
-        }
+            => string.Format(Resources.Check_IsInListDefaultMessage, param, GetValuesInListAsString(list));
 
         [DebuggerStepThrough]
         private static string GetIsNotInListDefaultMessage<T>(T param, IEnumerable<T> list)
-        {
-            return string.Format(Resources.Check_IsNotInListDefaultMessage, param, GetValuesInListAsString(list));
-        }
+            => string.Format(Resources.Check_IsNotInListDefaultMessage, param, GetValuesInListAsString(list));
 
         [DebuggerStepThrough]
         private static string GetValuesInListAsString<T>(IEnumerable<T> list)
         {
             const int maxItemsInString = 10;
             bool hasMoreValues = false;
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
 
             int i = 0;
             foreach (T item in list)

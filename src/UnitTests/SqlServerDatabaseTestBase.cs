@@ -100,6 +100,7 @@ namespace Kros.UnitTests
         public void Dispose()
         {
             Dispose(true);
+            GC.SuppressFinalize(this);
         }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 

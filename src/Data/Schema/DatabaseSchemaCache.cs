@@ -58,9 +58,8 @@ namespace Kros.Data.Schema
 
         #region Private fields
 
-        private readonly List<LoaderInfo> _loaders = new List<LoaderInfo>();
-        private readonly ConcurrentDictionary<string, DatabaseSchema> _cache =
-            new ConcurrentDictionary<string, DatabaseSchema>(StringComparer.OrdinalIgnoreCase);
+        private readonly List<LoaderInfo> _loaders = new();
+        private readonly ConcurrentDictionary<string, DatabaseSchema> _cache = new(StringComparer.OrdinalIgnoreCase);
 
         #endregion
 
@@ -85,10 +84,7 @@ namespace Kros.Data.Schema
         }
 
         /// <inheritdoc cref="IDatabaseSchemaCache.ClearAllSchemas"/>
-        public void ClearAllSchemas()
-        {
-            _cache.Clear();
-        }
+        public void ClearAllSchemas() => _cache.Clear();
 
         /// <inheritdoc cref="IDatabaseSchemaCache.RefreshSchema(object)"/>
         /// <exception cref="InvalidOperationException">The cache does not contain a loader for database type
@@ -136,10 +132,7 @@ namespace Kros.Data.Schema
         /// <summary>
         /// Removes all database schema loaders.
         /// </summary>
-        public void ClearSchemaLoaders()
-        {
-            _loaders.Clear();
-        }
+        public void ClearSchemaLoaders() => _loaders.Clear();
 
         #endregion
 
@@ -148,7 +141,7 @@ namespace Kros.Data.Schema
         private LoaderInfo GetLoaderInfo(object connection)
         {
             LoaderInfo? linfo = _loaders.FirstOrDefault((tmpLoader) => tmpLoader.Loader.SupportsConnectionType(connection));
-            if (linfo == null)
+            if (linfo is null)
             {
                 throw new InvalidOperationException(
                     string.Format(Resources.UnsupportedConnectionType, connection.GetType().FullName));

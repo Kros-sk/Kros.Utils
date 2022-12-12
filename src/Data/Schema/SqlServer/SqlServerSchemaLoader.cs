@@ -15,7 +15,7 @@ namespace Kros.Data.Schema.SqlServer
     {
         #region Helper mappings
 
-        private static readonly Dictionary<SqlDbType, object> _defaultValueMapping = new Dictionary<SqlDbType, object>() {
+        private static readonly Dictionary<SqlDbType, object> _defaultValueMapping = new() {
             { SqlDbType.BigInt, ColumnSchema.DefaultValues.Int64 },
             { SqlDbType.Binary, ColumnSchema.DefaultValues.Null },
             { SqlDbType.Bit, ColumnSchema.DefaultValues.Boolean },
@@ -66,9 +66,7 @@ namespace Kros.Data.Schema.SqlServer
         /// </summary>
         /// <param name="e">Arguments for the event.</param>
         protected virtual void OnParseDefaultValue(SqlServerParseDefaultValueEventArgs e)
-        {
-            ParseDefaultValue?.Invoke(this, e);
-        }
+            => ParseDefaultValue?.Invoke(this, e);
 
         #endregion
 
@@ -81,9 +79,7 @@ namespace Kros.Data.Schema.SqlServer
         /// <returns><see langword="false"/> if value of <paramref name="connection"/> is <see langword="null"/>,
         /// otherwise <see langword="true"/>.</returns>
         public bool SupportsConnectionType(SqlConnection? connection)
-        {
-            return (connection != null);
-        }
+            => (connection is not null);
 
         /// <summary>
         /// Checks if it is poosible to load database schema for <paramref name="connection"/>.
@@ -92,9 +88,7 @@ namespace Kros.Data.Schema.SqlServer
         /// <returns><see langword="false"/> if value of <paramref name="connection"/> is not of <see cref="SqlConnection"/>
         /// type or is <see langword="null"/>, otherwise <see langword="true"/>.</returns>
         bool IDatabaseSchemaLoader.SupportsConnectionType(object connection)
-        {
-            return SupportsConnectionType(connection as SqlConnection);
-        }
+            => SupportsConnectionType(connection as SqlConnection);
 
         /// <summary>
         /// Loads database schema for <paramref name="connection"/>.
@@ -119,9 +113,7 @@ namespace Kros.Data.Schema.SqlServer
         /// </list>
         /// </exception>
         DatabaseSchema IDatabaseSchemaLoader.LoadSchema(object connection)
-        {
-            return LoadSchema((SqlConnection)connection);
-        }
+            => LoadSchema((SqlConnection)connection);
 
         /// <summary>
         /// Loads table schema for table <paramref name="tableName"/> in database <paramref name="connection"/>.
@@ -150,9 +142,7 @@ namespace Kros.Data.Schema.SqlServer
         /// </list>
         /// </exception>
         TableSchema? IDatabaseSchemaLoader.LoadTableSchema(object connection, string tableName)
-        {
-            return LoadTableSchema((SqlConnection)connection, tableName);
-        }
+            => LoadTableSchema((SqlConnection)connection, tableName);
 
         /// <summary>
         /// Loads database schema for <paramref name="connection"/>.
@@ -248,8 +238,8 @@ namespace Kros.Data.Schema.SqlServer
 
         private DatabaseSchema LoadSchemaCore(SqlConnection connection)
         {
-            SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder(connection.ConnectionString);
-            DatabaseSchema database = new DatabaseSchema(builder.InitialCatalog);
+            SqlConnectionStringBuilder builder = new(connection.ConnectionString);
+            DatabaseSchema database = new(builder.InitialCatalog);
             LoadTables(connection, database);
             LoadColumns(connection, database);
             LoadIndexes(connection, database);
@@ -280,13 +270,13 @@ namespace Kros.Data.Schema.SqlServer
             return table;
         }
 
-        private void LoadTables(SqlConnection connection, DatabaseSchema database)
+        private static void LoadTables(SqlConnection connection, DatabaseSchema database)
         {
             using (DataTable schemaData = GetSchemaTables(connection))
             {
-                foreach (DataRow row in schemaData.Rows)
+                foreach (DataRow? row in schemaData.Rows)
                 {
-                    database.Tables.Add((string)row[TablesSchemaNames.TableName]);
+                    database.Tables.Add((string)row![TablesSchemaNames.TableName]);
                 }
             }
         }
@@ -305,15 +295,15 @@ namespace Kros.Data.Schema.SqlServer
         private void LoadColumns(TableSchema table, DataTable columnsSchemaData)
         {
             columnsSchemaData.DefaultView.RowFilter = $"{ColumnsSchemaNames.TableName} = '{table.Name}'";
-            foreach (DataRowView rowView in columnsSchemaData.DefaultView)
+            foreach (DataRowView? rowView in columnsSchemaData.DefaultView)
             {
-                table.Columns.Add(CreateColumnSchema(rowView.Row, table));
+                table.Columns.Add(CreateColumnSchema(rowView!.Row, table));
             }
         }
 
         private SqlServerColumnSchema CreateColumnSchema(DataRow row, TableSchema table)
         {
-            SqlServerColumnSchema column = new SqlServerColumnSchema((string)row[ColumnsSchemaNames.ColumnName])
+            SqlServerColumnSchema column = new((string)row[ColumnsSchemaNames.ColumnName])
             {
                 AllowNull = ((string)row[ColumnsSchemaNames.IsNullable]).Equals("yes", StringComparison.OrdinalIgnoreCase),
                 SqlDbType = GetSqlDbType(row)
@@ -341,12 +331,10 @@ namespace Kros.Data.Schema.SqlServer
             return column;
         }
 
-        private SqlDbType GetSqlDbType(DataRow row)
+        private static SqlDbType GetSqlDbType(DataRow row)
         {
-            SqlDbType sqlType;
-
             string dataType = (string)row[ColumnsSchemaNames.DataType];
-            if (!Enum.TryParse(dataType, true, out sqlType))
+            if (!Enum.TryParse(dataType, true, out SqlDbType sqlType))
             {
                 if (dataType.Equals("numeric", StringComparison.OrdinalIgnoreCase))
                 {
@@ -376,7 +364,7 @@ namespace Kros.Data.Schema.SqlServer
                 defaultValue = GetDefaultValueFromString(defaultValueString, column.SqlDbType);
             }
 
-            SqlServerParseDefaultValueEventArgs e = new SqlServerParseDefaultValueEventArgs(
+            SqlServerParseDefaultValueEventArgs e = new(
                 table.Name, column.Name, column.SqlDbType, defaultValueString, defaultValue);
             OnParseDefaultValue(e);
             if (e.Handled)
@@ -384,7 +372,7 @@ namespace Kros.Data.Schema.SqlServer
                 defaultValue = e.DefaultValue;
             }
 
-            if ((defaultValue == null) || (defaultValue == DBNull.Value))
+            if ((defaultValue is null) || (defaultValue == DBNull.Value))
             {
                 return column.AllowNull ? DBNull.Value : _defaultValueMapping[column.SqlDbType];
             }
@@ -419,7 +407,7 @@ namespace Kros.Data.Schema.SqlServer
             return rawDefaultValueString;
         }
 
-        private object? GetDefaultValueFromString(string defaultValueString, SqlDbType dataType)
+        private static object? GetDefaultValueFromString(string defaultValueString, SqlDbType dataType)
         {
             object? result = null;
 
@@ -440,50 +428,22 @@ namespace Kros.Data.Schema.SqlServer
             return result;
         }
 
-        private DefaultValueParsers.ParseDefaultValueFunction? GetParseFunction(SqlDbType dataType)
-        {
-            switch (dataType)
+        private static DefaultValueParsers.ParseDefaultValueFunction? GetParseFunction(SqlDbType dataType)
+            => dataType switch
             {
-                case SqlDbType.BigInt:
-                    return DefaultValueParsers.ParseInt64;
-
-                case SqlDbType.Int:
-                    return DefaultValueParsers.ParseInt32;
-
-                case SqlDbType.SmallInt:
-                    return DefaultValueParsers.ParseInt16;
-
-                case SqlDbType.TinyInt:
-                    return DefaultValueParsers.ParseByte;
-
-                case SqlDbType.Bit:
-                    return DefaultValueParsers.ParseBool;
-
-                case SqlDbType.Decimal:
-                case SqlDbType.Money:
-                    return DefaultValueParsers.ParseDecimal;
-
-                case SqlDbType.Float:
-                    return DefaultValueParsers.ParseDouble;
-
-                case SqlDbType.Real:
-                    return DefaultValueParsers.ParseSingle;
-
-                case SqlDbType.Date:
-                case SqlDbType.DateTime:
-                case SqlDbType.DateTime2:
-                case SqlDbType.SmallDateTime:
-                    return DefaultValueParsers.ParseDateSql;
-
-                case SqlDbType.DateTimeOffset:
-                    return DefaultValueParsers.ParseDateTimeOffsetSql;
-
-                case SqlDbType.UniqueIdentifier:
-                    return DefaultValueParsers.ParseGuid;
-            }
-
-            return null;
-        }
+                SqlDbType.BigInt => DefaultValueParsers.ParseInt64,
+                SqlDbType.Int => DefaultValueParsers.ParseInt32,
+                SqlDbType.SmallInt => DefaultValueParsers.ParseInt16,
+                SqlDbType.TinyInt => DefaultValueParsers.ParseByte,
+                SqlDbType.Bit => DefaultValueParsers.ParseBool,
+                SqlDbType.Decimal or SqlDbType.Money => DefaultValueParsers.ParseDecimal,
+                SqlDbType.Float => DefaultValueParsers.ParseDouble,
+                SqlDbType.Real => DefaultValueParsers.ParseSingle,
+                SqlDbType.Date or SqlDbType.DateTime or SqlDbType.DateTime2 or SqlDbType.SmallDateTime => DefaultValueParsers.ParseDateSql,
+                SqlDbType.DateTimeOffset => DefaultValueParsers.ParseDateTimeOffsetSql,
+                SqlDbType.UniqueIdentifier => DefaultValueParsers.ParseGuid,
+                _ => null,
+            };
 
         #endregion
 
@@ -535,9 +495,9 @@ ORDER BY tables.name, indexes.name, index_columns.key_ordinal
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities")]
         private void LoadIndexes(SqlConnection connection, DatabaseSchema database)
         {
-            using (DataTable schemaData = new DataTable())
+            using (DataTable schemaData = new())
             {
-                using (SqlDataAdapter adapter = new SqlDataAdapter(LoadIndexesQuery, connection))
+                using (SqlDataAdapter adapter = new(LoadIndexesQuery, connection))
                 {
                     adapter.Fill(schemaData);
                 }
@@ -552,14 +512,14 @@ ORDER BY tables.name, indexes.name, index_columns.key_ordinal
             }
         }
 
-        private void LoadIndexesForTable(TableSchema table, DataView schemaData)
+        private static void LoadIndexesForTable(TableSchema table, DataView schemaData)
         {
             string lastIndexName = string.Empty;
             IndexSchema? index = null;
 
-            foreach (DataRowView rowView in schemaData)
+            foreach (DataRowView? rowView in schemaData)
             {
-                string indexName = (string)rowView.Row[IndexesQueryNames.IndexName];
+                string indexName = (string)rowView!.Row[IndexesQueryNames.IndexName];
                 if (indexName != lastIndexName)
                 {
                     lastIndexName = indexName;
@@ -569,7 +529,7 @@ ORDER BY tables.name, indexes.name, index_columns.key_ordinal
             }
         }
 
-        private IndexSchema? CreateIndexSchema(TableSchema table, DataRow row)
+        private static IndexSchema? CreateIndexSchema(TableSchema table, DataRow row)
         {
             string indexName = (string)row[IndexesQueryNames.IndexName];
             bool clustered = ((string)row[IndexesQueryNames.TypDesc]).Equals("CLUSTERED", StringComparison.OrdinalIgnoreCase);
@@ -584,12 +544,10 @@ ORDER BY tables.name, indexes.name, index_columns.key_ordinal
             }
         }
 
-        private void AddColumnToIndex(IndexSchema index, DataRow row)
-        {
-            index.Columns.Add(
+        private static void AddColumnToIndex(IndexSchema index, DataRow row)
+            => index.Columns.Add(
                 (string)row[IndexesQueryNames.ColumnName],
                 (bool)row[IndexesQueryNames.IsDesc] ? SortOrder.Descending : SortOrder.Ascending);
-        }
 
         #endregion
 
@@ -652,14 +610,14 @@ ORDER BY foreign_key_columns.constraint_object_id
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities")]
         private void LoadForeignKeys(SqlConnection connection, DatabaseSchema database)
         {
-            using (DataTable foreignKeysData = new DataTable("ForeignKeys"))
-            using (DataTable foreignKeyColumnsData = new DataTable("ForeignKeys"))
+            using (DataTable foreignKeysData = new("ForeignKeys"))
+            using (DataTable foreignKeyColumnsData = new("ForeignKeys"))
             {
-                using (SqlDataAdapter adapter = new SqlDataAdapter(LoadForeignKeysQuery, connection))
+                using (SqlDataAdapter adapter = new(LoadForeignKeysQuery, connection))
                 {
                     adapter.Fill(foreignKeysData);
                 }
-                using (SqlDataAdapter adapter = new SqlDataAdapter(LoadForeignKeyColumnsQuery, connection))
+                using (SqlDataAdapter adapter = new(LoadForeignKeyColumnsQuery, connection))
                 {
                     adapter.Fill(foreignKeyColumnsData);
                 }
@@ -667,34 +625,34 @@ ORDER BY foreign_key_columns.constraint_object_id
             }
         }
 
-        private void LoadForeignKeysSchema(DatabaseSchema database, DataTable foreignKeysData, DataTable foreignKeyColumnsData)
+        private static void LoadForeignKeysSchema(DatabaseSchema database, DataTable foreignKeysData, DataTable foreignKeyColumnsData)
         {
             DataView columnsView = foreignKeyColumnsData.DefaultView;
-            List<string> primaryKeyColumns = new List<string>();
-            List<string> foreignKeyColumns = new List<string>();
-            foreach (DataRow fkRow in foreignKeysData.Rows)
+            List<string> primaryKeyColumns = new();
+            List<string> foreignKeyColumns = new();
+            foreach (DataRow? fkRow in foreignKeysData.Rows)
             {
-                int foreignKeyId = (int)fkRow[ForeignKeyQueryNames.ForeignKeyId];
+                int foreignKeyId = (int)fkRow![ForeignKeyQueryNames.ForeignKeyId];
                 columnsView.RowFilter = $"[{ForeignKeyColumnsQueryNames.ForeignKeyId}] = {foreignKeyId}";
 
                 primaryKeyColumns.Clear();
                 foreignKeyColumns.Clear();
-                foreach (DataRowView fkColumnRow in columnsView)
+                foreach (DataRowView? fkColumnRow in columnsView)
                 {
-                    primaryKeyColumns.Add((string)fkColumnRow.Row[ForeignKeyColumnsQueryNames.ReferencedColumnName]);
-                    foreignKeyColumns.Add((string)fkColumnRow.Row[ForeignKeyColumnsQueryNames.ParentColumnName]);
+                    primaryKeyColumns.Add((string)fkColumnRow!.Row[ForeignKeyColumnsQueryNames.ReferencedColumnName]);
+                    foreignKeyColumns.Add((string)fkColumnRow!.Row[ForeignKeyColumnsQueryNames.ParentColumnName]);
                 }
                 ForeignKeySchema foreignKey = CreateForeignKey(fkRow, primaryKeyColumns, foreignKeyColumns);
                 database.Tables[(string)fkRow[ForeignKeyQueryNames.ParentTableName]].ForeignKeys.Add(foreignKey);
             }
         }
 
-        private ForeignKeySchema CreateForeignKey(
+        private static ForeignKeySchema CreateForeignKey(
             DataRow foreignKeyData,
             List<string> primaryKeyColumns,
             List<string> foreignKeyColumns)
         {
-            ForeignKeySchema foreignKey = new ForeignKeySchema(
+            ForeignKeySchema foreignKey = new(
                 (string)foreignKeyData[ForeignKeyQueryNames.ForeignKeyName],
                 (string)foreignKeyData[ForeignKeyQueryNames.ReferencedTableName],
                 primaryKeyColumns,
@@ -706,7 +664,7 @@ ORDER BY foreign_key_columns.constraint_object_id
             return foreignKey;
         }
 
-        private ForeignKeyRule GetForeignKeyRule(string ruleDesc)
+        private static ForeignKeyRule GetForeignKeyRule(string ruleDesc)
         {
             if (ruleDesc.Equals("CASCADE", StringComparison.OrdinalIgnoreCase))
             {
@@ -737,27 +695,20 @@ ORDER BY foreign_key_columns.constraint_object_id
             {
                 throw new ArgumentException(Resources.SqlServerUnsupportedConnectionType, nameof(connection));
             }
-            SqlConnectionStringBuilder cnBuilder = new SqlConnectionStringBuilder(((SqlConnection)connection).ConnectionString);
+            SqlConnectionStringBuilder cnBuilder = new(((SqlConnection)connection).ConnectionString);
             Check.NotNullOrWhiteSpace(
                 cnBuilder.InitialCatalog, nameof(connection), Resources.SqlServerNoInitialCatalog);
         }
 
-        private DataTable GetSchemaTables(SqlConnection connection)
-        {
-            return GetSchemaTables(connection, null);
-        }
+        private static DataTable GetSchemaTables(SqlConnection connection) => GetSchemaTables(connection, null);
 
-        private DataTable GetSchemaTables(SqlConnection connection, string? tableName)
-        {
-            return connection.GetSchema(SchemaNames.Tables, new string[] { null!, null!, tableName!, null! });
-        }
+        private static DataTable GetSchemaTables(SqlConnection connection, string? tableName)
+            => connection.GetSchema(SchemaNames.Tables, new string[] { null!, null!, tableName!, null! });
 
-        private DataTable GetSchemaColumns(SqlConnection connection)
-        {
-            return GetSchemaColumns(connection, null);
-        }
+        private static DataTable GetSchemaColumns(SqlConnection connection)
+            => GetSchemaColumns(connection, null);
 
-        private DataTable GetSchemaColumns(SqlConnection connection, string? tableName)
+        private static DataTable GetSchemaColumns(SqlConnection connection, string? tableName)
         {
             DataTable schemaData = connection.GetSchema(SchemaNames.Columns, new string[] { null!, null!, tableName!, null! });
             schemaData.DefaultView.Sort =

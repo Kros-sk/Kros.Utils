@@ -71,13 +71,10 @@ namespace Kros.Data.Schema
         /// </exception>
         public string Name
         {
-            get
-            {
-                return _name;
-            }
+            get => _name;
             set
             {
-                if (Table != null)
+                if (Table is not null)
                 {
                     throw new InvalidOperationException(string.Format(
                         Resources.CannotChangeIndexNameWhenIndexBelongsToTable, _name, Table.Name));
@@ -106,10 +103,10 @@ namespace Kros.Data.Schema
         /// </summary>
         public TableSchema? Table { get; internal set; }
 
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+        /// <inheritdoc/>
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder(50);
+            StringBuilder sb = new(50);
 
             sb.AppendFormat("Index {0}", Name);
             if ((IndexType != IndexType.Index) || Clustered)
@@ -158,7 +155,6 @@ namespace Kros.Data.Schema
 
             return sb.ToString();
         }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
         #endregion
     }

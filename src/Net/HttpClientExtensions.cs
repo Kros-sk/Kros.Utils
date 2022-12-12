@@ -79,22 +79,22 @@ namespace Kros.Net
         {
             var result = new List<KeyValuePair<string, string?>>();
 
-            if (data != null)
+            if (data is not null)
             {
                 foreach (PropertyInfo prop in typeof(T).GetProperties().Where(p => p.CanRead && (p.GetIndexParameters().Length == 0)))
                 {
                     object? propValue = prop.GetValue(data);
-                    if ((propValue is IEnumerable propValues) && !(propValue is string))
+                    if ((propValue is IEnumerable propValues) && (propValue is not string))
                     {
                         foreach (object? value in propValues)
                         {
-                            if (value != null)
+                            if (value is not null)
                             {
                                 result.Add(new KeyValuePair<string, string?>(prop.Name, value.ToString()));
                             }
                         }
                     }
-                    else if (propValue != null)
+                    else if (propValue is not null)
                     {
                         result.Add(new KeyValuePair<string, string?>(prop.Name, propValue.ToString()));
                     }

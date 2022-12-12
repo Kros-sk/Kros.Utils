@@ -11,7 +11,6 @@ namespace Kros.Utils.UnitTests.Net
 
         private class TestData
         {
-            private string LastName { get; set; } = "Lorem ipsum";
             public string Name { get; set; } = string.Empty;
             public int Age { get; set; }
             public List<string> Children { get; } = new List<string>();

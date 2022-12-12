@@ -41,7 +41,7 @@ namespace Kros.Data.Schema
         /// <returns>Created table schema.</returns>
         public TableSchema Add(string name)
         {
-            TableSchema schema = new TableSchema(Database, name);
+            TableSchema schema = new(Database, name);
             Add(schema);
             return schema;
         }
@@ -50,15 +50,13 @@ namespace Kros.Data.Schema
 
         #region KeyedCollection
 
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-        protected override string GetKeyForItem(TableSchema item)
-        {
-            return item.Name;
-        }
+        /// <inheritdoc/>
+        protected override string GetKeyForItem(TableSchema item) => item.Name;
 
+        /// <inheritdoc/>
         protected override void InsertItem(int index, TableSchema item)
         {
-            if (item.Database == null)
+            if (item.Database is null)
             {
                 item.Database = Database;
             }
@@ -70,6 +68,7 @@ namespace Kros.Data.Schema
             base.InsertItem(index, item);
         }
 
+        /// <inheritdoc/>
         protected override void RemoveItem(int index)
         {
             if (index < Count)
@@ -78,7 +77,6 @@ namespace Kros.Data.Schema
             }
             base.RemoveItem(index);
         }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
         #endregion
     }

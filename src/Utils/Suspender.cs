@@ -22,7 +22,7 @@ namespace Kros.Utils
 
         private class SuspenderInternal : IDisposable
         {
-            private Suspender _suspender;
+            private readonly Suspender _suspender;
 
             public SuspenderInternal(Suspender suspender)
             {
@@ -31,10 +31,7 @@ namespace Kros.Utils
 
             bool _disposed = false;
 
-            public void Dispose()
-            {
-                Dispose(true);
-            }
+            public void Dispose() => Dispose(true);
 
             protected virtual void Dispose(bool disposing)
             {

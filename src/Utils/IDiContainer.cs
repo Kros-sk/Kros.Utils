@@ -32,17 +32,17 @@ namespace Kros.Utils
         /// <inheritdoc cref="Register{T}()" select="returns"/>
         IDiContainer Register<T>(Func<IDiContainer, T> lambda);
 
-#pragma warning disable CS1573
         /// Parameter has no matching param tag in the XML comment (but other parameters do)
         /// <summary>
         /// Register named interface or class type using lambda function.
         /// </summary>
         /// <typeparam name="T">Interface or class type.</typeparam>
         /// <param name="name">Name of the registered interface or class type.</param>
-        /// <inheritdoc cref="Register{T}(Func{IDiContainer, T})" select="param"/>
+        /// <param name="lambda">
+        /// Function which takes current DI container as parameter and creates a new instance of <typeparamref name="T"/>.
+        /// </param>
         /// <inheritdoc cref="Register{T}()" select="returns"/>
         IDiContainer Register<T>(string name, Func<IDiContainer, T> lambda);
-#pragma warning restore CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
 
         /// <summary>
         /// Registers a interface-class pair.
@@ -111,21 +111,23 @@ namespace Kros.Utils
         /// Registers class instance as sigleton using function.
         /// </summary>
         /// <typeparam name="T">Registered class type.</typeparam>
-        /// <inheritdoc cref="Register{T}(Func{IDiContainer, T})" select="param"/>
+        /// <param name="lambda">
+        /// Function which takes current DI container as parameter and creates a new instance of <typeparamref name="T"/>.
+        /// </param>
         /// <inheritdoc cref="Register{T}()" select="returns"/>
         IDiContainer RegisterInstance<T>(Func<IDiContainer, T> lambda);
 
-#pragma warning disable CS1573
         /// Parameter has no matching param tag in the XML comment (but other parameters do)
         /// <summary>
         /// Registers named class instance as sigleton using function.
         /// </summary>
         /// <typeparam name="T">Registered class type.</typeparam>
         /// <param name="name">Name, under which is type registered.</param>
-        /// <inheritdoc cref="Register{T}(Func{IDiContainer, T})" select="param"/>
+        /// <param name="lambda">
+        /// Function which takes current DI container as parameter and creates a new instance of <typeparamref name="T"/>.
+        /// </param>
         /// <inheritdoc cref="Register{T}()" select="returns"/>
         IDiContainer RegisterInstance<T>(string name, Func<IDiContainer, T> lambda);
-#pragma warning restore CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
 
         /// <summary>
         /// Resolves the instance of type <typeparamref name="T"/>.

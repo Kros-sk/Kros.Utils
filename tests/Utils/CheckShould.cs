@@ -79,7 +79,7 @@ namespace Kros.Utils.UnitTests.Utils
         [Fact]
         public void NotThrowExceptionForValueTypeWithDefaultValue()
         {
-            int value = default(int);
+            int value = default;
             Action action = () => Check.NotNull(value, nameof(value));
             action.Should().NotThrow();
         }

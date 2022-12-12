@@ -15,15 +15,15 @@ namespace Kros.IO
     {
         #region Helpers
 
-        private static readonly Regex _reReplacePathChars = new Regex(CreatePathReplacePattern(), RegexOptions.Compiled);
+        private static readonly Regex _reReplacePathChars = new(CreatePathReplacePattern(), RegexOptions.Compiled);
 
         private static string CreatePathReplacePattern()
         {
-            HashSet<char> invalidChars = new HashSet<char>(Path.GetInvalidFileNameChars());
+            HashSet<char> invalidChars = new(Path.GetInvalidFileNameChars());
             invalidChars.UnionWith(Path.GetInvalidPathChars());
 
-            System.Text.StringBuilder result = new System.Text.StringBuilder(invalidChars.Count + 3);
-            result.Append("[");
+            System.Text.StringBuilder result = new(invalidChars.Count + 3);
+            result.Append('[');
             foreach (char c in invalidChars)
             {
                 result.Append(Regex.Escape(Convert.ToString(c)));
@@ -75,7 +75,7 @@ namespace Kros.IO
             Check.NotNull(parts, nameof(parts));
 
             int capacity = CheckBuildPathParts(parts);
-            System.Text.StringBuilder sb = new System.Text.StringBuilder(capacity);
+            System.Text.StringBuilder sb = new(capacity);
             foreach (string part in parts)
             {
                 if (part.Length > 0)
@@ -131,10 +131,7 @@ namespace Kros.IO
         /// <param name="pathName">Input path.</param>
         /// <remarks><inheritdoc cref="ReplaceInvalidPathChars(string, string)"/></remarks>
         /// <returns><inheritdoc cref="ReplaceInvalidPathChars(string, string)"/></returns>
-        public static string ReplaceInvalidPathChars(string? pathName)
-        {
-            return ReplaceInvalidPathChars(pathName, "-");
-        }
+        public static string ReplaceInvalidPathChars(string? pathName) => ReplaceInvalidPathChars(pathName, "-");
 
         /// <summary>
         /// Replaces invalid characters in <paramref name="pathName"/> with <paramref name="replacement"/>. If there are
@@ -152,11 +149,11 @@ namespace Kros.IO
         /// </returns>
         public static string ReplaceInvalidPathChars(string? pathName, string? replacement)
         {
-            if (pathName == null)
+            if (pathName is null)
             {
                 return string.Empty;
             }
-            if (replacement == null)
+            if (replacement is null)
             {
                 replacement = string.Empty;
             }
@@ -167,9 +164,7 @@ namespace Kros.IO
         /// Returns path to system temporary folder (<see cref="Path.GetTempPath"/>) <b>without</b> trailing directory separator.
         /// </summary>
         public static string GetTempPath()
-        {
-            return Path.GetTempPath().TrimEnd(new char[] { Path.DirectorySeparatorChar });
-        }
+            => Path.GetTempPath().TrimEnd(new char[] { Path.DirectorySeparatorChar });
 
         /// <summary>
         /// Checks, if specified <paramref name="path"/> is network share path. The path is considered network share path,
@@ -179,10 +174,7 @@ namespace Kros.IO
         /// <returns>
         /// <see langword="true"/> if <paramref name="path"/> is network share path, <see langword="false"/> otherwise.
         /// </returns>
-        public static bool IsNetworkPath(string path)
-        {
-            return (GetDriveTypeFromPath(path) == DriveType.Network);
-        }
+        public static bool IsNetworkPath(string path) => (GetDriveTypeFromPath(path) == DriveType.Network);
 
         private static DriveType GetDriveTypeFromPath(string path)
         {
@@ -199,7 +191,7 @@ namespace Kros.IO
             DriveInfo? drive = DriveInfo.GetDrives()
                 .Where(item => item.Name.Equals(driveName, StringComparison.OrdinalIgnoreCase))
                 .FirstOrDefault();
-            if (drive != null)
+            if (drive is not null)
             {
                 return drive.DriveType;
             }

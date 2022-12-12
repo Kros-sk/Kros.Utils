@@ -35,7 +35,9 @@ namespace Kros.Data
             _connection = connection;
         }
 
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+        /// <summary>
+        /// Open a connection.
+        /// </summary>
         protected override void SuspendCore()
         {
             base.SuspendCore();
@@ -46,6 +48,9 @@ namespace Kros.Data
             }
         }
 
+        /// <summary>
+        /// Close a connection.
+        /// </summary>
         protected override void ResumeCore()
         {
             base.ResumeCore();
@@ -55,6 +60,5 @@ namespace Kros.Data
                 _closeConnection = false;
             }
         }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
 }

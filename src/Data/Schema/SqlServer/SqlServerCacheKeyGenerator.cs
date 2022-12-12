@@ -20,14 +20,12 @@ namespace Kros.Data.Schema.SqlServer
         public string GenerateKey(SqlConnection connection)
         {
             Check.NotNull(connection, nameof(connection));
-            SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder(connection.ConnectionString);
+            SqlConnectionStringBuilder builder = new(connection.ConnectionString);
             return "SqlServer:" + builder.DataSource.ToUpper() + @"\" + builder.InitialCatalog.ToLower();
         }
 
         /// <inheritdoc cref="GenerateKey(SqlConnection)"/>
         string ISchemaCacheKeyGenerator.GenerateKey(object connection)
-        {
-            return GenerateKey((connection as SqlConnection)!);
-        }
+            => GenerateKey((connection as SqlConnection)!);
     }
 }

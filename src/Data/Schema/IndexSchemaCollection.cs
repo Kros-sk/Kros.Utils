@@ -44,7 +44,7 @@ namespace Kros.Data.Schema
         /// whitespace characters.</exception>
         public IndexSchema Add(string indexName)
         {
-            IndexSchema index = new IndexSchema(indexName);
+            IndexSchema index = new(indexName);
             Add(index);
             return index;
         }
@@ -61,7 +61,7 @@ namespace Kros.Data.Schema
         /// whitespace characters.</exception>
         public IndexSchema Add(string indexName, IndexType indexType)
         {
-            IndexSchema index = new IndexSchema(indexName, indexType);
+            IndexSchema index = new(indexName, indexType);
             Add(index);
             return index;
         }
@@ -79,7 +79,7 @@ namespace Kros.Data.Schema
         /// whitespace characters.</exception>
         public IndexSchema Add(string indexName, IndexType indexType, bool clustered)
         {
-            IndexSchema index = new IndexSchema(indexName, indexType, clustered);
+            IndexSchema index = new(indexName, indexType, clustered);
             Add(index);
             return index;
         }
@@ -88,15 +88,13 @@ namespace Kros.Data.Schema
 
         #region KeyedCollection
 
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-        protected override string GetKeyForItem(IndexSchema item)
-        {
-            return item.Name;
-        }
+        /// <inheritdoc/>
+        protected override string GetKeyForItem(IndexSchema item) => item.Name;
 
+        /// <inheritdoc/>
         protected override void InsertItem(int index, IndexSchema item)
         {
-            if (item.Table == null)
+            if (item.Table is null)
             {
                 item.Table = Table;
             }
@@ -108,6 +106,7 @@ namespace Kros.Data.Schema
             base.InsertItem(index, item);
         }
 
+        /// <inheritdoc/>
         protected override void RemoveItem(int index)
         {
             if (index < Count)
@@ -116,7 +115,6 @@ namespace Kros.Data.Schema
             }
             base.RemoveItem(index);
         }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
         #endregion
     }

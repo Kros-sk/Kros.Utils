@@ -30,7 +30,7 @@ namespace Kros.Data.BulkActions.SqlServer
 
         #region Private fields
 
-        private SqlConnection _connection;
+        private readonly SqlConnection _connection;
         private readonly bool _disposeOfConnection = false;
 
         #endregion
@@ -57,7 +57,7 @@ namespace Kros.Data.BulkActions.SqlServer
         /// <param name="externalTransaction">External transaction, in which bulk insert is executed.</param>
         public SqlServerBulkInsert(SqlConnection connection, SqlTransaction? externalTransaction)
             : this(connection, externalTransaction,
-                  externalTransaction == null ? DefaultBulkCopyOptions : DefaultBulkCopyOptionsExternalTransaction)
+                  externalTransaction is null ? DefaultBulkCopyOptions : DefaultBulkCopyOptionsExternalTransaction)
         {
         }
 
@@ -186,7 +186,7 @@ namespace Kros.Data.BulkActions.SqlServer
         private async Task InsertCoreAsync(IDataReader reader, bool useAsync)
         {
             using (ConnectionHelper.OpenConnection(_connection))
-            using (SqlBulkCopy bulkCopy = new SqlBulkCopy(_connection, BulkCopyOptions, ExternalTransaction))
+            using (SqlBulkCopy bulkCopy = new(_connection, BulkCopyOptions, ExternalTransaction))
             {
                 bulkCopy.DestinationTableName = DestinationTableName;
                 bulkCopy.BulkCopyTimeout = BulkInsertTimeout;
@@ -225,7 +225,7 @@ namespace Kros.Data.BulkActions.SqlServer
                 string sourceColumn = reader.GetName(i);
                 string destinationColumn = sourceColumn;
 
-                if (tableSchema != null)
+                if (tableSchema is not null)
                 {
                     if (tableSchema.Columns.Contains(sourceColumn))
                     {
@@ -248,7 +248,7 @@ namespace Kros.Data.BulkActions.SqlServer
             for (int columnNumber = 0; columnNumber < ColumnMappings.Count; columnNumber++)
             {
                 SqlBulkCopyColumnMapping mapping = ConvertColumnMapping(ColumnMappings[columnNumber]);
-                if (tableSchema != null)
+                if (tableSchema is not null)
                 {
                     if (!string.IsNullOrWhiteSpace(mapping.DestinationColumn))
                     {
@@ -305,7 +305,7 @@ namespace Kros.Data.BulkActions.SqlServer
                 exceptionDetail = string.Format(Resources.InvalidIndexInDestinationColumnMapping,
                     DestinationTableName, mappingOrdinal.Value);
             }
-            else if (mappingName != null)
+            else if (mappingName is not null)
             {
                 exceptionDetail = string.Format(Resources.InvalidNameInDestinationColumnMapping,
                     DestinationTableName, mappingName);
@@ -359,10 +359,11 @@ namespace Kros.Data.BulkActions.SqlServer
             }
         }
 
+        // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
         public void Dispose()
         {
-            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
             Dispose(true);
+            GC.SuppressFinalize(this);
         }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 

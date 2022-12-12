@@ -32,34 +32,28 @@ namespace Kros.Utils.UnitTest.IO
 
         [Fact]
         public void CombinePathParts()
-        {
-            PathHelper.BuildPath("lorem", "ipsum", "dolor", "sit", "amet").Should().Be(@"lorem\ipsum\dolor\sit\amet");
-        }
+            => PathHelper.BuildPath("lorem", "ipsum", "dolor", "sit", "amet")
+                .Should().Be(@"lorem\ipsum\dolor\sit\amet");
 
         [Fact]
         public void CombinePathPartsWithDirectorySeparatorAtBeginning()
-        {
-            PathHelper.BuildPath("\\lorem", "\\ipsum", "\\dolor\\sit", "\\amet").Should().Be(@"\lorem\ipsum\dolor\sit\amet");
-        }
+            => PathHelper.BuildPath("\\lorem", "\\ipsum", "\\dolor\\sit", "\\amet")
+                .Should().Be(@"\lorem\ipsum\dolor\sit\amet");
 
         [Fact]
         public void CombinePathPartsWithVolumeInfo()
-        {
-            PathHelper.BuildPath("c:", "lorem", "ipsum", "dolor", "sit", "amet").Should().Be(@"c:\lorem\ipsum\dolor\sit\amet");
-        }
+            => PathHelper.BuildPath("c:", "lorem", "ipsum", "dolor", "sit", "amet")
+                .Should().Be(@"c:\lorem\ipsum\dolor\sit\amet");
 
         [Fact]
         public void CombinePathPartsWithVolumeInfoAndDirectorySeparator()
-        {
-            PathHelper.BuildPath("c:\\", "lorem", "ipsum", "dolor", "sit", "amet").Should().Be(@"c:\lorem\ipsum\dolor\sit\amet");
-        }
+            => PathHelper.BuildPath("c:\\", "lorem", "ipsum", "dolor", "sit", "amet")
+                .Should().Be(@"c:\lorem\ipsum\dolor\sit\amet");
 
         [Fact]
         public void InsertOnlyOneSeparatorBetweenParts()
-        {
-            PathHelper.BuildPath("\\lorem\\", "\\ipsum\\", "\\dolor\\", "\\sit\\", "\\amet\\")
+            => PathHelper.BuildPath("\\lorem\\", "\\ipsum\\", "\\dolor\\", "\\sit\\", "\\amet\\")
                 .Should().Be(@"\lorem\ipsum\dolor\sit\amet\");
-        }
 
         #endregion
 
@@ -67,33 +61,23 @@ namespace Kros.Utils.UnitTest.IO
 
         [Fact]
         public void ReturnEmptyStringWhenPathNameIsNull()
-        {
-            PathHelper.ReplaceInvalidPathChars(null!).Should().Be(string.Empty);
-        }
+            => PathHelper.ReplaceInvalidPathChars(null!).Should().Be(string.Empty);
 
         [Fact]
         public void ReplaceWithEmptyStringInPathNameWhenReplacementIsNull()
-        {
-            PathHelper.ReplaceInvalidPathChars("a*z", null!).Should().Be("az");
-        }
+            => PathHelper.ReplaceInvalidPathChars("a*z", null!).Should().Be("az");
 
         [Fact]
         public void ReplaceInvalidCharsInPathName()
-        {
-            PathHelper.ReplaceInvalidPathChars("a\\b/c*d<e>f>g").Should().Be("a-b-c-d-e-f-g");
-        }
+            => PathHelper.ReplaceInvalidPathChars("a\\b/c*d<e>f>g").Should().Be("a-b-c-d-e-f-g");
 
         [Fact]
         public void ReplaceInvalidCharGroupsWithSingleReplacementInPathName()
-        {
-            PathHelper.ReplaceInvalidPathChars("a\\/*b<>c").Should().Be("a-b-c");
-        }
+            => PathHelper.ReplaceInvalidPathChars("a\\/*b<>c").Should().Be("a-b-c");
 
         [Fact]
         public void ReplaceInvalidCharsInPathNameWithCustomReplacement()
-        {
-            PathHelper.ReplaceInvalidPathChars("a\\b/c*d<e>f>g", "=").Should().Be("a=b=c=d=e=f=g");
-        }
+            => PathHelper.ReplaceInvalidPathChars("a\\b/c*d<e>f>g", "=").Should().Be("a=b=c=d=e=f=g");
 
         #endregion
 
