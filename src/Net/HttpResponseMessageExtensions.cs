@@ -1,7 +1,5 @@
-﻿#if !IsOldDotNet
-using Kros.Utils;
+﻿using Kros.Utils;
 using Microsoft.Net.Http.Headers;
-#endif
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -46,7 +44,6 @@ namespace Kros.Net
             return token;
         }
 
-#if !IsOldDotNet
         /// <summary>
         /// Sets cookie <paramref name="cookie"/> to the HTTP response.
         /// </summary>
@@ -140,6 +137,5 @@ namespace Kros.Net
             }
             return result;
         }
-#endif
     }
 }

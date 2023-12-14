@@ -20,23 +20,14 @@ namespace Kros.Data.SqlServer
         /// Returns SQL names and scripts for generator.
         /// </summary>
         /// <returns>SQL names and scripts.</returns>
-        public static
-#if IsOldDotNet
-            Tuple<string, string, string, string>
-#else
-            (string tableName, string storedProcedureName, string tableScript, string storedProcedureScript)
-#endif
+        public static (string tableName, string storedProcedureName, string tableScript, string storedProcedureScript)
             GetSqlInfo()
         {
             var generator = new SqlServerIntIdGenerator(new SqlConnection(), "_NonExistingtable", 1);
             string tableScript = generator.BackendTableScript;
             string storedProcedureScript = generator.BackendStoredProcedureScript;
             generator.Dispose();
-#if IsOldDotNet
-            return Tuple.Create(generator.BackendTableName, generator.BackendStoredProcedureName, tableScript, storedProcedureScript);
-#else
             return (generator.BackendTableName, generator.BackendStoredProcedureName, tableScript, storedProcedureScript);
-#endif
         }
 
         /// <summary>

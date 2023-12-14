@@ -1,7 +1,5 @@
-﻿#if !IsOldDotNet
-using Kros.Utils;
+﻿using Kros.Utils;
 using Microsoft.Net.Http.Headers;
-#endif
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -13,7 +11,6 @@ namespace Kros.Net
     /// </summary>
     public static class HttpRequestMessageExtensions
     {
-#if !IsOldDotNet
         /// <summary>
         /// Sets cookie <paramref name="cookie"/> to the request.
         /// </summary>
@@ -117,6 +114,5 @@ namespace Kros.Net
         /// <remarks><para>This method is available only in .NET Core version of the library.</para></remarks>
         public static HttpRequestMessage CopyCookiesFromResponse(this HttpRequestMessage request, HttpResponseMessage response)
             => request.SetCookies(response.GetCookieValues());
-#endif
     }
 }
