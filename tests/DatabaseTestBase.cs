@@ -9,6 +9,6 @@ namespace Kros.Utils.UnitTests
         : Kros.UnitTests.SqlServerDatabaseTestBase
     {
         protected override string BaseConnectionString
-            => ConfigurationHelper.GetConfiguration().GetConnectionString("DefaultConnection");
+            => ConfigurationHelper.GetConfiguration().GetConnectionString("DefaultConnection") ?? string.Empty;
     }
 }

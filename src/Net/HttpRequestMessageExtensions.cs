@@ -100,7 +100,10 @@ namespace Kros.Net
             var result = new Dictionary<string, string>();
             foreach (CookieHeaderValue cookie in request.GetCookies())
             {
-                result.Add(cookie.Name.Value, cookie.Value.Value);
+                if (cookie.Name.HasValue)
+                {
+                    result.Add(cookie.Name.Value, cookie.Value.Value ?? string.Empty);
+                }
             }
             return result;
         }
