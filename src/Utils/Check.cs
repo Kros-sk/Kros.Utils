@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 
@@ -34,7 +35,7 @@ namespace Kros.Utils
         /// The value of <paramref name="param"/> is <see langword="null"/>.
         /// </exception>
         [DebuggerStepThrough]
-        public static T NotNull<T>(T? param, string paramName)
+        public static T NotNull<T>([NotNull] T? param, string paramName)
         {
             if (param is null)
             {
@@ -56,7 +57,7 @@ namespace Kros.Utils
         /// The value of <paramref name="param"/> is <see langword="null"/>.
         /// </exception>
         [DebuggerStepThrough]
-        public static T NotNull<T>(T? param, string paramName, string message)
+        public static T NotNull<T>([NotNull] T? param, string paramName, string message)
         {
             if (param is null)
             {
@@ -200,14 +201,14 @@ namespace Kros.Utils
         /// <exception cref="ArgumentNullException">The value of <paramref name="param"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException">The value of <paramref name="param"/> is empty string.</exception>
         [DebuggerStepThrough]
-        public static string NotNullOrEmpty(string? param, string paramName)
+        public static string NotNullOrEmpty([NotNull] string? param, string paramName)
         {
             NotNull(param, paramName);
             if (string.IsNullOrEmpty(param))
             {
                 throw new ArgumentException(Resources.Check_StringNotNullOrEmpty, paramName);
             }
-            return param!;
+            return param;
         }
 
         /// <summary>
@@ -221,14 +222,14 @@ namespace Kros.Utils
         /// <exception cref="ArgumentNullException">The value of <paramref name="param"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException">The value of <paramref name="param"/> is empty string.</exception>
         [DebuggerStepThrough]
-        public static string NotNullOrEmpty(string? param, string paramName, string message)
+        public static string NotNullOrEmpty([NotNull] string? param, string paramName, string message)
         {
             NotNull(param, paramName, message);
             if (string.IsNullOrEmpty(param))
             {
                 throw new ArgumentException(message, paramName);
             }
-            return param!;
+            return param;
         }
 
         /// <summary>
@@ -242,14 +243,14 @@ namespace Kros.Utils
         /// <exception cref="ArgumentException">The value of <paramref name="param"/> is empty string or string containing
         /// only whitespace characters.</exception>
         [DebuggerStepThrough]
-        public static string NotNullOrWhiteSpace(string? param, string paramName)
+        public static string NotNullOrWhiteSpace([NotNull] string? param, string paramName)
         {
             NotNull(param, paramName);
             if (string.IsNullOrWhiteSpace(param))
             {
                 throw new ArgumentException(Resources.Check_StringNotNullOrWhiteSpace, paramName);
             }
-            return param!;
+            return param;
         }
 
         /// <summary>
@@ -265,14 +266,14 @@ namespace Kros.Utils
         /// <exception cref="ArgumentException">The value of <paramref name="param"/> is empty string or string containing
         /// only whitespace characters.</exception>
         [DebuggerStepThrough]
-        public static string NotNullOrWhiteSpace(string? param, string paramName, string message)
+        public static string NotNullOrWhiteSpace([NotNull] string? param, string paramName, string message)
         {
             NotNull(param, paramName, message);
             if (string.IsNullOrWhiteSpace(param))
             {
                 throw new ArgumentException(message, paramName);
             }
-            return param!;
+            return param;
         }
 
         #endregion

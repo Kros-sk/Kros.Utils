@@ -1,7 +1,5 @@
-﻿#if !IsOldDotNet
-using Kros.Utils;
+﻿using Kros.Utils;
 using Microsoft.Net.Http.Headers;
-#endif
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -46,7 +44,6 @@ namespace Kros.Net
             return token;
         }
 
-#if !IsOldDotNet
         /// <summary>
         /// Sets cookie <paramref name="cookie"/> to the HTTP response.
         /// </summary>
@@ -136,10 +133,12 @@ namespace Kros.Net
             var result = new Dictionary<string, string>();
             foreach (SetCookieHeaderValue cookie in response.GetCookies())
             {
-                result.Add(cookie.Name.Value, cookie.Value.Value);
+                if (cookie.Name.HasValue)
+                {
+                    result.Add(cookie.Name.Value, cookie.Value.Value ?? string.Empty);
+                }
             }
             return result;
         }
-#endif
     }
 }

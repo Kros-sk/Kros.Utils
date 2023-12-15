@@ -73,6 +73,8 @@ namespace Kros.Data.BulkActions
         /// <inheritdoc/>
         public Action<IDbConnection, IDbTransaction?, string>? TempTableAction { get; set; }
 
+        private static readonly char[] _primaryKeySeparator = [',', ' '];
+
         /// <summary>
         /// Primary key. The value can contain composite primary key (multiple columns). The columns of composite primary key
         /// is set in one string, where columns are separated by comma (for example <c>Id1, Id2</c>).
@@ -82,7 +84,7 @@ namespace Kros.Data.BulkActions
             get => _primaryKeyColumns.Length == 0 ? string.Empty : string.Join(", ", _primaryKeyColumns);
             set => _primaryKeyColumns = string.IsNullOrWhiteSpace(value)
                 ? Array.Empty<string>()
-                : value.Split(new[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                : value.Split(_primaryKeySeparator, StringSplitOptions.RemoveEmptyEntries);
         }
 
         /// <summary>
@@ -221,7 +223,7 @@ namespace Kros.Data.BulkActions
         /// </summary>
         /// <param name="reader">Reader for accesing data.</param>
         /// <param name="excludeColumn">Column name to exculde from list of columns.</param>
-        protected string GetColumnNamesForTempTable(IDataReader reader, string excludeColumn)
+        protected static string GetColumnNamesForTempTable(IDataReader reader, string excludeColumn)
         {
             var ret = new StringBuilder();
 

@@ -1,16 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFrameworks>net6.0;netstandard2.0;netcoreapp3.1;net46</TargetFrameworks>
-        <Version>2.1.0</Version>
+        <TargetFramework>net8.0</TargetFramework>
+        <Version>3.0.0</Version>
         <Authors>KROS a. s.</Authors>
         <Company>KROS a. s.</Company>
         <Description>General utilities and helpers.</Description>
         <Title>Kros.Utils</Title>
         <Copyright>Copyright © KROS a. s.</Copyright>
         <RootNamespace>Kros</RootNamespace>
-        <IsOldDotNet>false</IsOldDotNet>
-        <IsOldDotNet Condition="'$(TargetFramework)' == 'net46'">true</IsOldDotNet>
-        <DefineConstants Condition="'$(IsOldDotNet)' == 'true'">$(DefineConstants);IsOldDotNet</DefineConstants>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <LangVersion>latest</LangVersion>
@@ -21,6 +18,7 @@
         <IncludeSymbols>true</IncludeSymbols>
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     </PropertyGroup>
+
     <PropertyGroup>
         <PackageIcon>icon.png</PackageIcon>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -37,27 +35,18 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="Azure.Identity" Version="1.10.4" />
+        <PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.2" />
+        <PackageReference Include="Microsoft.Net.Http.Headers" Version="8.0.0" />
+    </ItemGroup>
+
+    <ItemGroup>
         <None Remove="Resources\NumericIdGeneratorStoredProcedure.sql" />
         <None Remove="Resources\NumericIdGeneratorTable.sql" />
     </ItemGroup>
     <ItemGroup>
         <EmbeddedResource Include="Resources\NumericIdGeneratorStoredProcedure.sql" />
         <EmbeddedResource Include="Resources\NumericIdGeneratorTable.sql" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
-    </ItemGroup>
-
-    <ItemGroup Condition="'$(IsOldDotNet)' == 'false'">
-        <PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.0" />
-        <PackageReference Include="Microsoft.Net.Http.Headers" Version="2.2.8" />
-        <PackageReference Include="System.Net.Http" Version="4.3.4" />
-    </ItemGroup>
-
-    <ItemGroup Condition="'$(IsOldDotNet)' == 'true'">
-        <PackageReference Include="Microsoft.Data.SqlClient" Version="2.1.5" />
-        <Reference Include="System.Net.Http" />
     </ItemGroup>
 
     <ItemGroup>
