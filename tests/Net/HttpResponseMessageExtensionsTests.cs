@@ -4,6 +4,7 @@ using Microsoft.Net.Http.Headers;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Kros.Utils.UnitTests.Net
@@ -28,7 +29,7 @@ namespace Kros.Utils.UnitTests.Net
 </html>";
 
         [Fact]
-        public async void AntiForgeryTokenMustBeNullIfResponseIsNotSuccessful()
+        public async Task AntiForgeryTokenMustBeNullIfResponseIsNotSuccessful()
         {
             var message = new HttpResponseMessage(HttpStatusCode.NotFound)
             {
@@ -39,7 +40,7 @@ namespace Kros.Utils.UnitTests.Net
         }
 
         [Fact]
-        public async void ShouldExtractAntiForgeryToken()
+        public async Task ShouldExtractAntiForgeryToken()
         {
             var message = new HttpResponseMessage(HttpStatusCode.OK)
             {
