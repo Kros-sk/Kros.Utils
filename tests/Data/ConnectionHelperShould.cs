@@ -5,9 +5,18 @@ using Xunit;
 
 namespace Kros.Utils.UnitTests.Data
 {
-    public class ConnectionHelperShould
-        : DatabaseTestBase
+    [Collection(TestsCollection.Name)]
+    public class ConnectionHelperShould : Kros.UnitTests.SqlServerDatabaseTestBase
     {
+        private readonly TestsFixture _context;
+
+        public ConnectionHelperShould(TestsFixture fixture)
+        {
+            _context = fixture;
+        }
+
+        protected override string BaseConnectionString => _context.GetConnectionString();
+
         [Fact]
         public void OpenConnectionOnStartAndCloseItAtTheEnd()
         {

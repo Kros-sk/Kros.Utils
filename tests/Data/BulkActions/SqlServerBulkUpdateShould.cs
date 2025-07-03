@@ -14,6 +14,7 @@ using Xunit;
 
 namespace Kros.Utils.UnitTests.Data.BulkActions
 {
+    [Collection(TestsCollection.Name)]
     public class SqlServerBulkUpdateShould : DatabaseTestBase
     {
         #region Nested types
@@ -142,6 +143,15 @@ INSERT INTO [{CompositeWithIdentity_TableName}] ([Id1], [Value]) VALUES (3, '3 -
 INSERT INTO [{CompositeWithIdentity_TableName}] ([Id1], [Value]) VALUES (3, '3 - 6')";
 
         #endregion
+
+        private readonly TestsFixture _context;
+
+        public SqlServerBulkUpdateShould(TestsFixture fixture)
+        {
+            _context = fixture;
+        }
+
+        protected override string BaseConnectionString => _context.GetConnectionString();
 
         #region DatabaseTestBase Overrides
 

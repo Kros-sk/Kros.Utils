@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using Kros.Data;
+using Kros.Data.SqlServer;
 using Kros.UnitTests;
 using Microsoft.Data.SqlClient;
 using System.Collections.Generic;
@@ -8,10 +9,20 @@ using Xunit;
 
 namespace Kros.Utils.UnitTests.Data.IdGenerator
 {
+    [Collection(TestsCollection.Name)]
     public abstract class SqlServerIntIdGeneratorTestsBase<T> : DatabaseTestBase
     {
-        protected string BackendTableName { get; private set; } = string.Empty;
-        protected string BackendProcedureName { get; private set; } = string.Empty;
+        private readonly TestsFixture _context;
+
+        public SqlServerIntIdGeneratorTestsBase(TestsFixture fixture)
+        {
+            _context = fixture;
+        }
+
+        protected override string BaseConnectionString => _context.GetConnectionString();
+
+        protected abstract string BackendTableName { get; }
+        protected abstract string BackendProcedureName { get; }
 
         private IEnumerable<string>? _databaseInitScripts = null;
 
@@ -21,14 +32,12 @@ namespace Kros.Utils.UnitTests.Data.IdGenerator
             {
                 if (_databaseInitScripts is null)
                 {
-                    (string tableName, string procedureName, string tableScript, string procedureScript) = InitBackendInfo();
+                    (string tableScript, string procedureScript) = InitBackendInfo();
                     _databaseInitScripts = new List<string>
                     {
                         tableScript,
                         procedureScript
                     };
-                    BackendTableName = tableName;
-                    BackendProcedureName = procedureName;
                 }
                 return _databaseInitScripts;
             }
@@ -174,7 +183,7 @@ namespace Kros.Utils.UnitTests.Data.IdGenerator
 
         #region Helpers
 
-        protected abstract (string tableName, string procedureName, string tableScript, string procedureScript) InitBackendInfo();
+        protected abstract (string tableScript, string procedureScript) InitBackendInfo();
 
         protected abstract IIdGeneratorFactory<T> CreateGeneratorFactory();
 

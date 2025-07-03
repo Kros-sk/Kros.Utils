@@ -111,6 +111,11 @@ namespace Kros.UnitTests
             }
         }
 
+        /// <summary>
+        /// Drop current database on dispose.
+        /// </summary>
+        public bool DropDatabaseOnDispose { get; set; } = true;
+
         #endregion
 
         #region Helpers
@@ -191,8 +196,7 @@ namespace Kros.UnitTests
             if (_connection is not null)
             {
                 SqlConnectionStringBuilder builder = new(_connection.ConnectionString);
-                _connection.Dispose();
-                _connection = null;
+                DisposeConnection();
                 using (SqlConnection connection = GetConnectionCore(MasterDatabaseName))
                 using (ConnectionHelper.OpenConnection(connection))
                 {
@@ -202,6 +206,19 @@ namespace Kros.UnitTests
                         cmd.ExecuteNonQuery();
                     }
                 }
+            }
+        }
+
+        /// <summary>
+        /// Close and dispose current connection and set it to <see langword="null"/>.
+        /// </summary>
+        protected void DisposeConnection()
+        {
+            if (_connection is not null)
+            {
+                _connection.Close();
+                _connection.Dispose();
+                _connection = null;
             }
         }
 
@@ -218,7 +235,14 @@ namespace Kros.UnitTests
             {
                 if (disposing)
                 {
-                    RemoveDatabase();
+                    if (DropDatabaseOnDispose)
+                    {
+                        RemoveDatabase();
+                    }
+                    else
+                    {
+                        DisposeConnection();
+                    }
                 }
                 disposedValue = true;
             }

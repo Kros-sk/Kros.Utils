@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using Kros.Extensions;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Kros.Utils.UnitTests.Extensions
@@ -8,7 +9,7 @@ namespace Kros.Utils.UnitTests.Extensions
     public class AsTaskExtensionsShould
     {
         [Fact]
-        public async void CreateTaskFromIEnumerable()
+        public async Task CreateTaskFromIEnumerable()
         {
             IEnumerable<int> data = new List<int>() { 1, 2, 5, 6 };
 
@@ -18,7 +19,7 @@ namespace Kros.Utils.UnitTests.Extensions
         }
 
         [Fact]
-        public async void CreateTaskFromSingleValue()
+        public async Task CreateTaskFromSingleValue()
         {
             var foo = new
             {

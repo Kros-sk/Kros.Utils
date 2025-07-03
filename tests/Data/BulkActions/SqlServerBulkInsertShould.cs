@@ -11,6 +11,7 @@ using Xunit;
 
 namespace Kros.Utils.UnitTests.Data.BulkActions
 {
+    [Collection(TestsCollection.Name)]
     public class SqlServerBulkInsertShould : DatabaseTestBase
     {
         #region Nested types
@@ -102,6 +103,15 @@ $@"CREATE TABLE[dbo].[{TableName}] (
 ";
 
         #endregion
+
+        private readonly TestsFixture _context;
+
+        public SqlServerBulkInsertShould(TestsFixture fixture)
+        {
+            _context = fixture;
+        }
+
+        protected override string BaseConnectionString => _context.GetConnectionString();
 
         #region DatabaseTestBase Overrides
 

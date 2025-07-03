@@ -4,7 +4,8 @@ trigger:
     include:
     - v*
 
-pool: Default
+pool:
+  vmImage: ubuntu-latest
 
 resources:
   repositories:
