@@ -69,11 +69,15 @@ namespace Kros.Data.SqlServer
         /// <inheritdoc/>
         public override string BackendDataType => "int";
 
-        /// <inheritdoc/>
-        public override string BackendTableName => "IdStore";
+        internal const string BackendTableNameValue = "IdStore";
 
         /// <inheritdoc/>
-        public override string BackendStoredProcedureName => "spGetNewId";
+        public override string BackendTableName => BackendTableNameValue;
+
+        internal const string BackendStoredProcedureNameValue = "spGetNewId";
+
+        /// <inheritdoc/>
+        public override string BackendStoredProcedureName => BackendStoredProcedureNameValue;
 
         /// <inheritdoc/>
         protected override DbConnection CreateConnection(string connectionString) => new SqlConnection(connectionString);

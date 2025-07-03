@@ -20,15 +20,17 @@ namespace Kros.UnitTests
     public abstract class SqlServerDatabaseTestBase
         : IDisposable
     {
-        private readonly SqlServerTestHelper _serverHelper;
+        private readonly Lazy<SqlServerTestHelper> _serverHelper;
 
         /// <summary>
         /// Creates an instance of <c>SqlServerDatabaseTestBase</c>.
         /// </summary>
         public SqlServerDatabaseTestBase()
         {
-            _serverHelper = new SqlServerTestHelper(BaseConnectionString, BaseDatabaseName, DatabaseInitScripts);
+            _serverHelper = new(CreateTestHelper);
         }
+
+        private SqlServerTestHelper CreateTestHelper() => new(BaseConnectionString, BaseDatabaseName, DatabaseInitScripts);
 
         /// <summary>
         /// Base database name. GUID is appended to this name to make it unique.
@@ -63,7 +65,7 @@ namespace Kros.UnitTests
             get
             {
                 CheckDisposed();
-                return _serverHelper;
+                return _serverHelper.Value;
             }
         }
 
@@ -91,7 +93,10 @@ namespace Kros.UnitTests
             {
                 if (disposing)
                 {
-                    _serverHelper.Dispose();
+                    if (_serverHelper.IsValueCreated)
+                    {
+                        _serverHelper.Value.Dispose();
+                    }
                 }
                 _disposedValue = true;
             }

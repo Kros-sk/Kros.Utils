@@ -9,6 +9,7 @@ using Xunit;
 
 namespace Kros.Utils.UnitTests.Data.Schema
 {
+    [Collection(TestsCollection.Name)]
     public class SqlServerSchemaLoaderShould : DatabaseTestBase
     {
         #region Constants
@@ -171,6 +172,15 @@ ALTER TABLE [dbo].[ChildTableCascade] CHECK CONSTRAINT [FK_ChildTableCascade_Par
 ";
 
         #endregion
+
+        private readonly TestsFixture _context;
+
+        public SqlServerSchemaLoaderShould(TestsFixture fixture)
+        {
+            _context = fixture;
+        }
+
+        protected override string BaseConnectionString => _context.GetConnectionString();
 
         #region DatabaseTestBase Overrides
 
