@@ -34,7 +34,4 @@
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
     </ItemGroup>
-    <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-        <Exec Command="if exist &quot;$(ProjectDir)appsettings.local.json&quot; (&#xD;&#xA;  copy &quot;$(ProjectDir)appsettings.local.json&quot; &quot;$(TargetDir)&quot;&#xD;&#xA;)" />
-    </Target>
 </Project>
