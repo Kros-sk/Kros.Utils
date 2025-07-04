@@ -33,27 +33,27 @@ namespace Kros.Utils.UnitTest.IO
         [Fact]
         public void CombinePathParts()
             => PathHelper.BuildPath("lorem", "ipsum", "dolor", "sit", "amet")
-                .Should().Be(@"lorem\ipsum\dolor\sit\amet");
+                .Should().Be(@"lorem/ipsum/dolor/sit/amet");
 
         [Fact]
         public void CombinePathPartsWithDirectorySeparatorAtBeginning()
             => PathHelper.BuildPath("\\lorem", "\\ipsum", "\\dolor\\sit", "\\amet")
-                .Should().Be(@"\lorem\ipsum\dolor\sit\amet");
+                .Should().Be(@"/lorem/ipsum/dolor/sit/amet");
 
         [Fact]
         public void CombinePathPartsWithVolumeInfo()
             => PathHelper.BuildPath("c:", "lorem", "ipsum", "dolor", "sit", "amet")
-                .Should().Be(@"c:\lorem\ipsum\dolor\sit\amet");
+                .Should().Be(@"c:/lorem/ipsum/dolor/sit/amet");
 
         [Fact]
         public void CombinePathPartsWithVolumeInfoAndDirectorySeparator()
             => PathHelper.BuildPath("c:\\", "lorem", "ipsum", "dolor", "sit", "amet")
-                .Should().Be(@"c:\lorem\ipsum\dolor\sit\amet");
+                .Should().Be(@"c:/lorem/ipsum/dolor/sit/amet");
 
         [Fact]
         public void InsertOnlyOneSeparatorBetweenParts()
             => PathHelper.BuildPath("\\lorem\\", "\\ipsum\\", "\\dolor\\", "\\sit\\", "\\amet\\")
-                .Should().Be(@"\lorem\ipsum\dolor\sit\amet\");
+                .Should().Be(@"/lorem/ipsum/dolor/sit/amet/");
 
         #endregion
 

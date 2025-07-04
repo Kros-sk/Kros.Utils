@@ -15,16 +15,28 @@ namespace Kros.IO
     {
         #region Helpers
 
+        private static readonly char[] _invalidPathChars = [
+            '*', '?', '\"', '\'', '`', '\0', '|', '<', '>',
+            (char)1, (char)2, (char)3, (char)4, (char)5, (char)6, (char)7, (char)8, (char)9, (char)10,
+            (char)11, (char)12, (char)13, (char)14, (char)15, (char)16, (char)17, (char)18, (char)19, (char)20,
+            (char)21, (char)22, (char)23, (char)24, (char)25, (char)26, (char)27, (char)28, (char)29, (char)30,
+            (char)31
+        ];
+
+        /// <summary>
+        /// List of characters, which are not allowed in file or folder names.
+        /// </summary>
+        public static IReadOnlyList<char> InvalidPathChars { get; } = [.. _invalidPathChars];
+
         private static readonly Regex _reReplacePathChars = new(CreatePathReplacePattern(), RegexOptions.Compiled);
 
         private static string CreatePathReplacePattern()
         {
-            HashSet<char> invalidChars = new(Path.GetInvalidFileNameChars());
-            invalidChars.UnionWith(Path.GetInvalidPathChars());
+            System.Text.StringBuilder result = new(InvalidPathChars.Count + 5);
 
-            System.Text.StringBuilder result = new(invalidChars.Count + 3);
             result.Append('[');
-            foreach (char c in invalidChars)
+            result.Append(Regex.Escape("\\/"));
+            foreach (char c in InvalidPathChars)
             {
                 result.Append(Regex.Escape(Convert.ToString(c)));
             }
@@ -37,6 +49,7 @@ namespace Kros.IO
 
         /// <summary>
         /// Joins parts <paramref name="parts"/> to one string, representing path to a file/folder.
+        /// Path separator is normalized to <c>/</c> because this is allowed in all operating systems.
         /// </summary>
         /// <param name="parts">Path parts.</param>
         /// <returns>Created path.</returns>
@@ -45,7 +58,7 @@ namespace Kros.IO
         /// </exception>
         /// <exception cref="ArgumentException">
         /// Any of the item in <paramref name="parts"/> contains invalid characters
-        /// defined in <see cref="Path.GetInvalidPathChars"/>.
+        /// defined in <see cref="InvalidPathChars"/>.
         /// </exception>
         /// <remarks>
         /// <para>
@@ -93,12 +106,13 @@ namespace Kros.IO
                         else if ((firstChar != Path.DirectorySeparatorChar) && (firstChar != Path.AltDirectorySeparatorChar) &&
                             (lastChar != Path.DirectorySeparatorChar) && (lastChar != Path.AltDirectorySeparatorChar))
                         {
-                            sb.Append(Path.DirectorySeparatorChar);
+                            sb.Append('/');
                         }
                     }
                     sb.Append(part);
                 }
             }
+            sb.Replace('\\', '/'); // Normalize path separators.
 
             return sb.ToString();
         }
@@ -107,13 +121,12 @@ namespace Kros.IO
         {
             int capacity = parts.Length;
             int partIndex = 0;
-            char[] invalidChars = Path.GetInvalidPathChars();
 
             foreach (string part in parts)
             {
                 Check.NotNull(part, nameof(parts));
 
-                if (part.IndexOfAny(invalidChars) >= 0)
+                if (part.IndexOfAny(_invalidPathChars) >= 0)
                 {
                     throw new ArgumentException(string.Format(Resources.PathContainsInvalidCharacters, partIndex, part));
                 }
@@ -141,7 +154,7 @@ namespace Kros.IO
         /// <param name="replacement">Value, by which are replaced invalid path charactes. If the value is <see langword="null"/>,
         /// empty stirng is used, so invalid characters are removed.</param>
         /// <remarks>
-        /// Replaced are all characters in <see cref="Path.GetInvalidFileNameChars"/> and <see cref="Path.GetInvalidPathChars"/>.
+        /// Replaced are all characters in <see cref="InvalidPathChars"/> and <see cref="Path.GetInvalidPathChars"/>.
         /// </remarks>
         /// <returns>
         /// String with invalid path characters replaced. If input <paramref name="pathName"/> is <see langword="null"/>,
@@ -164,7 +177,7 @@ namespace Kros.IO
         /// Returns path to system temporary folder (<see cref="Path.GetTempPath"/>) <b>without</b> trailing directory separator.
         /// </summary>
         public static string GetTempPath()
-            => Path.GetTempPath().TrimEnd(new char[] { Path.DirectorySeparatorChar });
+            => Path.GetTempPath().TrimEnd(new char[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar });
 
         /// <summary>
         /// Checks, if specified <paramref name="path"/> is network share path. The path is considered network share path,

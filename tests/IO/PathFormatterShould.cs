@@ -14,7 +14,7 @@ namespace Kros.Utils.UnitTest.IO
         {
             var formatter = new PathFormatter();
 
-            const string expected = @"C:\lorem\ipsum\file.txt";
+            const string expected = @"C:/lorem/ipsum/file.txt";
 
             var actual = formatter.FormatPath(@"C:\lorem\ipsum", "file.txt");
             actual.Should().Be(expected);
@@ -28,7 +28,7 @@ namespace Kros.Utils.UnitTest.IO
         {
             var formatter = new PathFormatter();
 
-            const string expected = @"C:\lorem\ipsum\file (some info).txt";
+            const string expected = @"C:/lorem/ipsum/file (some info).txt";
 
             var actual = formatter.FormatPath(@"C:\lorem\ipsum", "file.txt", "some info");
             actual.Should().Be(expected);
@@ -44,7 +44,7 @@ namespace Kros.Utils.UnitTest.IO
             formatter.InfoOpeningString = "-,-";
             formatter.InfoClosingString = "=;=";
 
-            const string expected = @"C:\lorem\ipsum\file -,-some info=;=.txt";
+            const string expected = @"C:/lorem/ipsum/file -,-some info=;=.txt";
 
             var actual = formatter.FormatPath(@"C:\lorem\ipsum", "file.txt", "some info");
             actual.Should().Be(expected);
@@ -67,7 +67,7 @@ namespace Kros.Utils.UnitTest.IO
                     return counter < 5;
                 });
 
-            const string expected = @"C:\lorem\ipsum\file -,-some info-;- =,=4=;=.txt";
+            const string expected = @"C:/lorem/ipsum/file -,-some info-;- =,=4=;=.txt";
 
             var actual = formatter.FormatNewPath(@"C:\lorem\ipsum", "file.txt", "some info");
             actual.Should().Be(expected);
@@ -85,7 +85,7 @@ namespace Kros.Utils.UnitTest.IO
                     return counter < 5;
                 });
 
-            const string expected = @"C:\lorem\ipsum\file (4).txt";
+            const string expected = @"C:/lorem/ipsum/file (4).txt";
 
             var actual = formatter.FormatNewPath(@"C:\lorem\ipsum", "file.txt");
             actual.Should().Be(expected);
@@ -105,7 +105,7 @@ namespace Kros.Utils.UnitTest.IO
 
             const string fileName = "file.txt";
             const string info = "some info";
-            const string expected = @"C:\lorem\ipsum\file (some info) (4).txt";
+            const string expected = @"C:/lorem/ipsum/file (some info) (4).txt";
 
             var actual = formatter.FormatNewPath(@"C:\lorem\ipsum", fileName, info);
             actual.Should().Be(expected);
@@ -116,7 +116,7 @@ namespace Kros.Utils.UnitTest.IO
         {
             var formatter = new PathFormatter();
 
-            const string expected = @"C:\lorem\ipsum\file (some-info-with-invalid-chars).txt";
+            const string expected = @"C:/lorem/ipsum/file (some-info-with-invalid-chars).txt";
 
             var actual = formatter.FormatPath(@"C:\lorem\ipsum", "file.txt", "some*info|with?invalid<chars");
             actual.Should().Be(expected);
@@ -138,10 +138,10 @@ namespace Kros.Utils.UnitTest.IO
                 {4, "info 4"}
             };
             var expected = new Dictionary<int, string>() {
-                {1, @"C:\lorem\ipsum\file (info 1).txt"},
-                {2, @"C:\lorem\ipsum\file (info 2).txt"},
-                {3, @"C:\lorem\ipsum\file (info 3).txt"},
-                {4, @"C:\lorem\ipsum\file (info 4).txt"}
+                {1, @"C:/lorem/ipsum/file (info 1).txt"},
+                {2, @"C:/lorem/ipsum/file (info 2).txt"},
+                {3, @"C:/lorem/ipsum/file (info 3).txt"},
+                {4, @"C:/lorem/ipsum/file (info 4).txt"}
             };
             var actual = formatter.FormatPaths(folder, fileName, fileInfos);
 
@@ -171,11 +171,11 @@ namespace Kros.Utils.UnitTest.IO
             // Výsledná dĺžka cesty najdlhšieho súboru by bola 15 + 21 + 13 = 49 znakov.
             // Limit je 40, preto musím cestu skrátiť o 9 znakov.
             var expected = new Dictionary<int, string>() {
-                {1, @"C:\lorem\ipsum\too long (info 1).txt"},
-                {2, @"C:\lorem\ipsum\too long (info 22).txt"},
-                {3, @"C:\lorem\ipsum\too long (info 333).txt"},
-                {4, @"C:\lorem\ipsum\too long (info 4444).txt"},
-                {5, @"C:\lorem\ipsum\too long (info 55555).txt"}
+                {1, @"C:/lorem/ipsum/too long (info 1).txt"},
+                {2, @"C:/lorem/ipsum/too long (info 22).txt"},
+                {3, @"C:/lorem/ipsum/too long (info 333).txt"},
+                {4, @"C:/lorem/ipsum/too long (info 4444).txt"},
+                {5, @"C:/lorem/ipsum/too long (info 55555).txt"}
             };
             var actual = formatter.FormatPaths(folder, fileName, fileInfos);
 
@@ -199,10 +199,10 @@ namespace Kros.Utils.UnitTest.IO
                 {4, "info 4"}
             };
             var expected = new Dictionary<int, string>() {
-                {1, @"C:\lorem\ipsum\file\file (info 1).txt"},
-                {2, @"C:\lorem\ipsum\file\file (info 2).txt"},
-                {3, @"C:\lorem\ipsum\file\file (info 3).txt"},
-                {4, @"C:\lorem\ipsum\file\file (info 4).txt"}
+                {1, @"C:/lorem/ipsum/file/file (info 1).txt"},
+                {2, @"C:/lorem/ipsum/file/file (info 2).txt"},
+                {3, @"C:/lorem/ipsum/file/file (info 3).txt"},
+                {4, @"C:/lorem/ipsum/file/file (info 4).txt"}
             };
             var actual = formatter.FormatPathsInSubfolder(folder, fileName, fileInfos);
 
@@ -227,10 +227,10 @@ namespace Kros.Utils.UnitTest.IO
                 {4, "info 4"}
             };
             var expected = new Dictionary<int, string>() {
-                {1, @"C:\lorem\ipsum\file some info\file (info 1).txt"},
-                {2, @"C:\lorem\ipsum\file some info\file (info 2).txt"},
-                {3, @"C:\lorem\ipsum\file some info\file (info 3).txt"},
-                {4, @"C:\lorem\ipsum\file some info\file (info 4).txt"}
+                {1, @"C:/lorem/ipsum/file some info/file (info 1).txt"},
+                {2, @"C:/lorem/ipsum/file some info/file (info 2).txt"},
+                {3, @"C:/lorem/ipsum/file some info/file (info 3).txt"},
+                {4, @"C:/lorem/ipsum/file some info/file (info 4).txt"}
             };
             var actual = formatter.FormatPathsInSubfolder(folder, fileName, subfolderInfo, fileInfos);
 
@@ -261,10 +261,10 @@ namespace Kros.Utils.UnitTest.IO
                 {4, "info 4"}
             };
             var expected = new Dictionary<int, string>() {
-                {1, @"C:\lorem\ipsum\file (4)\file (info 1).txt"},
-                {2, @"C:\lorem\ipsum\file (4)\file (info 2).txt"},
-                {3, @"C:\lorem\ipsum\file (4)\file (info 3).txt"},
-                {4, @"C:\lorem\ipsum\file (4)\file (info 4).txt"}
+                {1, @"C:/lorem/ipsum/file (4)/file (info 1).txt"},
+                {2, @"C:/lorem/ipsum/file (4)/file (info 2).txt"},
+                {3, @"C:/lorem/ipsum/file (4)/file (info 3).txt"},
+                {4, @"C:/lorem/ipsum/file (4)/file (info 4).txt"}
             };
             var actual = formatter.FormatPathsInSubfolder(folder, fileName, fileInfos);
 
@@ -300,10 +300,10 @@ namespace Kros.Utils.UnitTest.IO
                 {4, "info 4"}
             };
             var expected = new Dictionary<int, string>() {
-                {1, @"C:\lorem\ipsum\file =,=4=;=\file -,-info 1-;-.txt"},
-                {2, @"C:\lorem\ipsum\file =,=4=;=\file -,-info 2-;-.txt"},
-                {3, @"C:\lorem\ipsum\file =,=4=;=\file -,-info 3-;-.txt"},
-                {4, @"C:\lorem\ipsum\file =,=4=;=\file -,-info 4-;-.txt"}
+                {1, @"C:/lorem/ipsum/file =,=4=;=/file -,-info 1-;-.txt"},
+                {2, @"C:/lorem/ipsum/file =,=4=;=/file -,-info 2-;-.txt"},
+                {3, @"C:/lorem/ipsum/file =,=4=;=/file -,-info 3-;-.txt"},
+                {4, @"C:/lorem/ipsum/file =,=4=;=/file -,-info 4-;-.txt"}
             };
             var actual = formatter.FormatPathsInSubfolder(folder, fileName, fileInfos);
 
@@ -335,10 +335,10 @@ namespace Kros.Utils.UnitTest.IO
                 {4, "info 4"}
             };
             var expected = new Dictionary<int, string>() {
-                {1, @"C:\lorem\ipsum\file some info (4)\file (info 1).txt"},
-                {2, @"C:\lorem\ipsum\file some info (4)\file (info 2).txt"},
-                {3, @"C:\lorem\ipsum\file some info (4)\file (info 3).txt"},
-                {4, @"C:\lorem\ipsum\file some info (4)\file (info 4).txt"}
+                {1, @"C:/lorem/ipsum/file some info (4)/file (info 1).txt"},
+                {2, @"C:/lorem/ipsum/file some info (4)/file (info 2).txt"},
+                {3, @"C:/lorem/ipsum/file some info (4)/file (info 3).txt"},
+                {4, @"C:/lorem/ipsum/file some info (4)/file (info 4).txt"}
             };
             var actual = formatter.FormatPathsInSubfolder(folder, fileName, SubfolderInfo, fileInfos);
 
@@ -363,11 +363,11 @@ namespace Kros.Utils.UnitTest.IO
                 {5, "info 2"}
             };
             var expected = new Dictionary<int, string>() {
-                {1, @"C:\lorem\ipsum\file (info 1).txt"},
-                {2, @"C:\lorem\ipsum\file (info 1) (1).txt"},
-                {3, @"C:\lorem\ipsum\file (info 1) (2).txt"},
-                {4, @"C:\lorem\ipsum\file (info 2).txt"},
-                {5, @"C:\lorem\ipsum\file (info 2) (1).txt"}
+                {1, @"C:/lorem/ipsum/file (info 1).txt"},
+                {2, @"C:/lorem/ipsum/file (info 1) (1).txt"},
+                {3, @"C:/lorem/ipsum/file (info 1) (2).txt"},
+                {4, @"C:/lorem/ipsum/file (info 2).txt"},
+                {5, @"C:/lorem/ipsum/file (info 2) (1).txt"}
             };
             var actual = formatter.FormatPaths(folder, fileName, fileInfos);
 
@@ -392,11 +392,11 @@ namespace Kros.Utils.UnitTest.IO
                 {5, "info 2"}
             };
             var expected = new Dictionary<int, string>() {
-                {1, @"C:\lorem\ipsum\file\file (info 1).txt"},
-                {2, @"C:\lorem\ipsum\file\file (info 1) (1).txt"},
-                {3, @"C:\lorem\ipsum\file\file (info 1) (2).txt"},
-                {4, @"C:\lorem\ipsum\file\file (info 2).txt"},
-                {5, @"C:\lorem\ipsum\file\file (info 2) (1).txt"}
+                {1, @"C:/lorem/ipsum/file/file (info 1).txt"},
+                {2, @"C:/lorem/ipsum/file/file (info 1) (1).txt"},
+                {3, @"C:/lorem/ipsum/file/file (info 1) (2).txt"},
+                {4, @"C:/lorem/ipsum/file/file (info 2).txt"},
+                {5, @"C:/lorem/ipsum/file/file (info 2) (1).txt"}
             };
             var actual = formatter.FormatPathsInSubfolder(folder, fileName, fileInfos);
 
@@ -412,7 +412,7 @@ namespace Kros.Utils.UnitTest.IO
 
             const string folder = @"C:\lorem\ipsum\"; // 15 znakov
             const string fileName = "too long filename.txt"; // 17 znakov názov súboru, 4 znaky prípona
-            const string expected = @"C:\lorem\ipsum\too lo.txt"; // 25 znakov - nastavené maximum
+            const string expected = @"C:/lorem/ipsum/too lo.txt"; // 25 znakov - nastavené maximum
 
             var actual = formatter.FormatPath(folder, fileName);
             actual.Should().Be(expected);
@@ -427,7 +427,7 @@ namespace Kros.Utils.UnitTest.IO
             const string folder = @"C:\lorem\ipsum\"; // 15 znakov
             const string fileName = "too long filename.txt"; // 17 znakov názov súboru, 4 znaky prípona
             const string info = "info"; // 4 znaky, ale dokopy bude 7 - zátvorky a medzera
-            const string expected = @"C:\lorem\ipsum\too long filen (info).txt"; // 40 znakov - nastavené maximum
+            const string expected = @"C:/lorem/ipsum/too long filen (info).txt"; // 40 znakov - nastavené maximum
 
             var actual = formatter.FormatPath(folder, fileName, info);
             actual.Should().Be(expected);
@@ -457,11 +457,11 @@ namespace Kros.Utils.UnitTest.IO
             // Limit je 60, preto musím cestu skrátiť o 7 znakov.
             // Číslo sa rozdelí na polovicu (v tomto prípade 4) a o tento počet sa skracuje aj podadresár aj názov súboru.
             var expected = new Dictionary<int, string>() {
-                {1, @"C:\lorem\ipsum\too long file\too long file (info 1).txt"},
-                {2, @"C:\lorem\ipsum\too long file\too long file (info 22).txt"},
-                {3, @"C:\lorem\ipsum\too long file\too long file (info 333).txt"},
-                {4, @"C:\lorem\ipsum\too long file\too long file (info 4444).txt"},
-                {5, @"C:\lorem\ipsum\too long file\too long file (info 55555).txt"}
+                {1, @"C:/lorem/ipsum/too long file/too long file (info 1).txt"},
+                {2, @"C:/lorem/ipsum/too long file/too long file (info 22).txt"},
+                {3, @"C:/lorem/ipsum/too long file/too long file (info 333).txt"},
+                {4, @"C:/lorem/ipsum/too long file/too long file (info 4444).txt"},
+                {5, @"C:/lorem/ipsum/too long file/too long file (info 55555).txt"}
             };
             var actual = formatter.FormatPathsInSubfolder(folder, fileName, fileInfos);
 
@@ -494,11 +494,11 @@ namespace Kros.Utils.UnitTest.IO
             // Limit je 70, preto musím cestu skrátiť o 4 znaky.
             // Číslo sa rozdelí na polovicu (v tomto prípade 2) a o tento počet sa skracuje aj podadresár aj názov súboru.
             var expected = new Dictionary<int, string>() {
-                {1, @"C:\lorem\ipsum\too long filena sfinfo\too long filena (info 1).txt"},
-                {2, @"C:\lorem\ipsum\too long filena sfinfo\too long filena (info 22).txt"},
-                {3, @"C:\lorem\ipsum\too long filena sfinfo\too long filena (info 333).txt"},
-                {4, @"C:\lorem\ipsum\too long filena sfinfo\too long filena (info 4444).txt"},
-                {5, @"C:\lorem\ipsum\too long filena sfinfo\too long filena (info 55555).txt"}
+                {1, @"C:/lorem/ipsum/too long filena sfinfo/too long filena (info 1).txt"},
+                {2, @"C:/lorem/ipsum/too long filena sfinfo/too long filena (info 22).txt"},
+                {3, @"C:/lorem/ipsum/too long filena sfinfo/too long filena (info 333).txt"},
+                {4, @"C:/lorem/ipsum/too long filena sfinfo/too long filena (info 4444).txt"},
+                {5, @"C:/lorem/ipsum/too long filena sfinfo/too long filena (info 55555).txt"}
             };
             var actual = formatter.FormatPathsInSubfolder(folder, fileName, subfolderInfo, fileInfos);
 
