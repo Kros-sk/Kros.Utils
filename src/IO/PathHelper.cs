@@ -15,6 +15,10 @@ namespace Kros.IO
     {
         #region Helpers
 
+        private const char DirectorySeparatorChar1 = '/';
+        private const char DirectorySeparatorChar2 = '\\';
+        private static readonly char[] _directorySeparatorChars = [DirectorySeparatorChar1, DirectorySeparatorChar2];
+
         private static readonly char[] _invalidPathChars = [
             '*', '?', '\"', '\'', '`', '\0', '|', '<', '>',
             (char)1, (char)2, (char)3, (char)4, (char)5, (char)6, (char)7, (char)8, (char)9, (char)10,
@@ -98,13 +102,13 @@ namespace Kros.IO
                         char firstChar = part[0];
                         char lastChar = sb[sb.Length - 1];
 
-                        if (((firstChar == Path.DirectorySeparatorChar) || (firstChar == Path.AltDirectorySeparatorChar)) &&
-                            ((lastChar == Path.DirectorySeparatorChar) || (lastChar == Path.AltDirectorySeparatorChar)))
+                        if (((firstChar == DirectorySeparatorChar1) || (firstChar == DirectorySeparatorChar2)) &&
+                            ((lastChar == DirectorySeparatorChar1) || (lastChar == DirectorySeparatorChar2)))
                         {
                             sb.Length -= 1;
                         }
-                        else if ((firstChar != Path.DirectorySeparatorChar) && (firstChar != Path.AltDirectorySeparatorChar) &&
-                            (lastChar != Path.DirectorySeparatorChar) && (lastChar != Path.AltDirectorySeparatorChar))
+                        else if ((firstChar != DirectorySeparatorChar1) && (firstChar != DirectorySeparatorChar2) &&
+                            (lastChar != DirectorySeparatorChar1) && (lastChar != DirectorySeparatorChar2))
                         {
                             sb.Append('/');
                         }
@@ -177,7 +181,7 @@ namespace Kros.IO
         /// Returns path to system temporary folder (<see cref="Path.GetTempPath"/>) <b>without</b> trailing directory separator.
         /// </summary>
         public static string GetTempPath()
-            => Path.GetTempPath().TrimEnd(new char[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar });
+            => Path.GetTempPath().TrimEnd(_directorySeparatorChars);
 
         /// <summary>
         /// Checks, if specified <paramref name="path"/> is network share path. The path is considered network share path,
