@@ -7,11 +7,5 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
-resources:
-  repositories:
-    - repository: templates
-      type: git
-      name: DevShared/Templates
-
 steps:
   - template: build-and-test.yml
