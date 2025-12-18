@@ -5,7 +5,7 @@ using NSubstitute;
 using System.Collections.Generic;
 using Xunit;
 
-namespace Kros.Utils.UnitTest.IO
+namespace Kros.Utils.UnitTests.IO
 {
     public class PathFormatterShould
     {
