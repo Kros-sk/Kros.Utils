@@ -11,7 +11,7 @@ public sealed class TestsFixture : IAsyncDisposable, IAsyncLifetime
 
     public TestsFixture()
     {
-        _msSqlContainer = new MsSqlBuilder().Build();
+        _msSqlContainer = new MsSqlBuilder("mcr.microsoft.com/mssql/server:2022-CU10-ubuntu-22.04").Build();
     }
 
     internal string GetConnectionString() => _msSqlContainer.GetConnectionString();
