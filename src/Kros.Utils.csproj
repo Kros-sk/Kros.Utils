@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFrameworks>net10.0;netstandard2.0</TargetFrameworks>
-        <Version>4.1.0</Version>
+        <Version>4.2.0</Version>
         <Authors>KROS a. s.</Authors>
         <Company>KROS a. s.</Company>
         <Description>General utilities and helpers.</Description>
@@ -38,12 +38,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Azure.Identity" Version="1.17.1" />
-        <PackageReference Include="Microsoft.Data.SqlClient" Version="6.1.4" />
+        <PackageReference Include="Azure.Identity" Version="1.21.0" />
+        <PackageReference Include="Microsoft.Data.SqlClient" Version="7.0.0" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(IsNetStandard)' == 'false'">
-        <PackageReference Include="Microsoft.Net.Http.Headers" Version="10.0.3" />
+        <PackageReference Include="Microsoft.Net.Http.Headers" Version="10.0.6" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(IsNetStandard)' == 'true'">
