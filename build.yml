@@ -1,8 +1,8 @@
 trigger:
-  batch: true
-  tags:
+  batch: false
+  branches:
     include:
-    - v*
+      - main
 
 pool:
   vmImage: ubuntu-latest
@@ -16,17 +16,38 @@ steps:
       Get-ChildItem -Path '$(Build.SourcesDirectory)' -Recurse -Include *.nupkg, *.snupkg | Remove-Item
     displayName: Clear NuGet packages
 
-  - template: build-and-test.yml
+  - task: DotNetCoreCLI@2
+    displayName: Build
+    inputs:
+      command: build
+      projects: Kros.Utils.sln
+      arguments: --configuration Release
+
+  - task: DotNetCoreCLI@2
+    displayName: Test
+    inputs:
+      command: test
+      projects: Kros.Utils.sln
+      publishTestResults: false
+      arguments: --configuration Release --logger trx --results-directory "$(Common.TestResultsDirectory)"
+
+  - task: PublishTestResults@2
+    displayName: Publish test results
+    condition: always()
+    inputs:
+      testResultsFormat: VSTest
+      testResultsFiles: '*.trx'
+      searchFolder: $(Common.TestResultsDirectory)
 
   - task: CopyFiles@2
-    displayName: Copy package files to staging directory
+    displayName: Copy package files to staging folder
     inputs:
       Contents: |
         **/*.nupkg
         **/*.snupkg
-      TargetFolder: $(build.artifactStagingDirectory)
+      TargetFolder: $(Build.ArtifactStagingDirectory)
       FlattenFolders: true
 
   - pwsh: |
-      dotnet nuget push --api-key $(nugetOrgApiKey) --source 'https://api.nuget.org/v3/index.json' '$(Build.ArtifactStagingDirectory)/*.nupkg'
+      dotnet nuget push --api-key $(nugetOrgApiKey) --source 'https://api.nuget.org/v3/index.json'  --skip-duplicate '$(Build.ArtifactStagingDirectory)/*.nupkg'
     displayName: Push to NuGet.org
