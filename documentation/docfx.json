@@ -13,7 +13,7 @@
           "src": "../"
         }
       ],
-      "dest": "api",      
+      "dest": "api",
       "disableGitFeatures": false,
       "disableDefaultFilter": false,
       "filter": "filterConfig.yml",
@@ -43,7 +43,8 @@
       {
         "files": [
           "images/**",
-          "favicon.ico"
+          "logo.svg",
+          "logo.png"
         ]
       }
     ],
@@ -62,9 +63,9 @@
     "globalMetadata": {
       "_appTitle": "Kros.Utils",
       "_appFooter": "KROS a.s.",
-      "_appLogoPath": "images/Kros.png",
+      "_appLogoPath": "logo.svg",
       "_enableSearch": true,
-      "_disableContribution": true    
+      "_disableContribution": true
     },
     "fileMetadataFiles": [],
     "template": [
