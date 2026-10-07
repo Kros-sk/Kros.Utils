@@ -40,11 +40,12 @@
 
     <ItemGroup>
         <PackageReference Include="Azure.Identity" Version="1.21.0" />
-        <PackageReference Include="Microsoft.Data.SqlClient" Version="7.0.0" />
+        <PackageReference Include="Microsoft.Data.SqlClient" Version="7.1.1" />
+        <PackageReference Include="Microsoft.Data.SqlClient.Extensions.Azure" Version="7.1.1" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(IsNetStandard)' == 'false'">
-        <PackageReference Include="Microsoft.Net.Http.Headers" Version="10.0.6" />
+        <PackageReference Include="Microsoft.Net.Http.Headers" Version="10.0.12" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(IsNetStandard)' == 'true'">
