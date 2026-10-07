@@ -1,4 +1,3 @@
-using FluentAssertions;
 using System;
 using Xunit;
 
@@ -50,7 +49,7 @@ namespace Kros.Utils.UnitTest.Utils
             var suspender = new Suspender();
             using (suspender.Suspend())
             {
-                suspender.IsSuspended.Should().BeTrue();
+                Assert.True(suspender.IsSuspended);
             }
         }
 
@@ -61,7 +60,7 @@ namespace Kros.Utils.UnitTest.Utils
             using (suspender.Suspend())
             {
             }
-            suspender.IsSuspended.Should().BeFalse();
+            Assert.False(suspender.IsSuspended);
         }
 
         [Fact]
@@ -76,7 +75,7 @@ namespace Kros.Utils.UnitTest.Utils
                 }
             }
             catch (Exception) { }
-            suspender.IsSuspended.Should().BeFalse();
+            Assert.False(suspender.IsSuspended);
         }
 
         [Fact]
@@ -90,7 +89,7 @@ namespace Kros.Utils.UnitTest.Utils
                 {
                 }
 
-                suspender.IsSuspended.Should().BeTrue();
+                Assert.True(suspender.IsSuspended);
             }
         }
 
@@ -104,8 +103,8 @@ namespace Kros.Utils.UnitTest.Utils
             {
             }
 
-            state.SuspendCoreState.Should().BeFalse();
-            state.ResumeCoreState.Should().BeFalse();
+            Assert.False(state.SuspendCoreState);
+            Assert.False(state.ResumeCoreState);
         }
 
         [Fact]
@@ -124,8 +123,8 @@ namespace Kros.Utils.UnitTest.Utils
                 }
             }
 
-            state.SuspendCoreCallCount.Should().Be(1);
-            state.ResumeCoreCallCount.Should().Be(1);
+            Assert.Equal(1, state.SuspendCoreCallCount);
+            Assert.Equal(1, state.ResumeCoreCallCount);
         }
 
         #endregion

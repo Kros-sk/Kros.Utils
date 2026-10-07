@@ -1,5 +1,4 @@
-﻿using FluentAssertions;
-using Kros.Data;
+﻿using Kros.Data;
 using Kros.Data.SqlServer;
 using Microsoft.Data.SqlClient;
 using System;
@@ -19,7 +18,7 @@ namespace Kros.Utils.UnitTests.Data
             {
                 var factory = IdGeneratorFactories.GetFactory(dataType, conn);
 
-                factory.Should().NotBeNull();
+                Assert.NotNull(factory);
             }
         }
 
@@ -31,7 +30,7 @@ namespace Kros.Utils.UnitTests.Data
         {
             var factory = IdGeneratorFactories.GetFactory(dataType, "connectionstring", SqlServerDataHelper.ClientId);
 
-            factory.Should().NotBeNull();
+            Assert.NotNull(factory);
         }
 
         [Fact]
@@ -41,7 +40,7 @@ namespace Kros.Utils.UnitTests.Data
             {
                 Action action = () => { var factory = IdGeneratorFactories.GetFactory(typeof(DateTime), conn); };
 
-                action.Should().Throw<InvalidOperationException>();
+                Assert.Throws<InvalidOperationException>(action);
             }
         }
 
@@ -52,8 +51,8 @@ namespace Kros.Utils.UnitTests.Data
             {
                 Action action = () => { var factory = IdGeneratorFactories.GetFactory(typeof(int), conn); };
 
-                action.Should().Throw<InvalidOperationException>()
-                    .WithMessage("*CustomConnection*");
+                InvalidOperationException ex = Assert.Throws<InvalidOperationException>(action);
+                Assert.Contains("CustomConnection", ex.Message);
             }
         }
 
@@ -62,8 +61,8 @@ namespace Kros.Utils.UnitTests.Data
         {
             Action action = () => { var factory = IdGeneratorFactories.GetFactory(typeof(int), "constring", "System.Data.CustomClient"); };
 
-            action.Should().Throw<InvalidOperationException>()
-                .WithMessage("*System.Data.CustomClient*");
+            InvalidOperationException ex = Assert.Throws<InvalidOperationException>(action);
+            Assert.Contains("System.Data.CustomClient", ex.Message);
         }
     }
 }

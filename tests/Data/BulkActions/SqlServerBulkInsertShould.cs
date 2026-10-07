@@ -1,5 +1,4 @@
-﻿using FluentAssertions;
-using Kros.Data.BulkActions;
+﻿using Kros.Data.BulkActions;
 using Kros.Data.BulkActions.SqlServer;
 using Microsoft.Data.SqlClient;
 using Nito.AsyncEx;
@@ -295,8 +294,9 @@ $@"CREATE TABLE[dbo].[{TableName}] (
                 {
                     bulkInsert.DestinationTableName = TableName_IgnoreCaseInColumnNames;
                     Action action = () => bulkInsert.Insert(reader);
-                    action.Should().Throw<InvalidOperationException>()
-                        .WithMessage($"*{TableName_IgnoreCaseInColumnNames}*{nameof(NonExistingColumnDataItem.NonExistingColumn)}*");
+                    InvalidOperationException ex = Assert.Throws<InvalidOperationException>(action);
+                    Assert.Contains(TableName_IgnoreCaseInColumnNames, ex.Message);
+                    Assert.Contains(nameof(NonExistingColumnDataItem.NonExistingColumn), ex.Message);
                 }
             }
         }

@@ -1,5 +1,4 @@
-﻿using FluentAssertions;
-using Kros.Data.SqlServer;
+﻿using Kros.Data.SqlServer;
 using Microsoft.Data.SqlClient;
 using Xunit;
 
@@ -15,8 +14,8 @@ namespace Kros.Utils.UnitTests.Data
                 var factory = new SqlServerIntIdGeneratorFactory(conn);
                 var generator = (SqlServerIntIdGenerator)factory.GetGenerator("Person", 150);
 
-                generator.TableName.Should().Be("Person");
-                generator.BatchSize.Should().Be(150);
+                Assert.Equal("Person", generator.TableName);
+                Assert.Equal(150, generator.BatchSize);
             }
         }
 
@@ -28,8 +27,8 @@ namespace Kros.Utils.UnitTests.Data
                 var factory = new SqlServerLongIdGeneratorFactory(conn);
                 var generator = (SqlServerLongIdGenerator)factory.GetGenerator("Person", 150);
 
-                generator.TableName.Should().Be("Person");
-                generator.BatchSize.Should().Be(150);
+                Assert.Equal("Person", generator.TableName);
+                Assert.Equal(150, generator.BatchSize);
             }
         }
     }

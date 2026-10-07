@@ -1,5 +1,4 @@
-﻿using FluentAssertions;
-using Kros.Data;
+﻿using Kros.Data;
 using System.Data;
 using Xunit;
 
@@ -22,12 +21,12 @@ namespace Kros.Utils.UnitTests.Data
         {
             ServerHelper.Connection.Close();
 
-            ServerHelper.Connection.State.Should().Be(ConnectionState.Closed);
+            Assert.Equal(ConnectionState.Closed, ServerHelper.Connection.State);
             using (ConnectionHelper.OpenConnection(ServerHelper.Connection))
             {
-                ServerHelper.Connection.State.Should().Be(ConnectionState.Open);
+                Assert.Equal(ConnectionState.Open, ServerHelper.Connection.State);
             }
-            ServerHelper.Connection.State.Should().Be(ConnectionState.Closed);
+            Assert.Equal(ConnectionState.Closed, ServerHelper.Connection.State);
         }
 
         [Fact]
@@ -38,12 +37,12 @@ namespace Kros.Utils.UnitTests.Data
                 ServerHelper.Connection.Open();
             }
 
-            ServerHelper.Connection.State.Should().Be(ConnectionState.Open);
+            Assert.Equal(ConnectionState.Open, ServerHelper.Connection.State);
             using (ConnectionHelper.OpenConnection(ServerHelper.Connection))
             {
-                ServerHelper.Connection.State.Should().Be(ConnectionState.Open);
+                Assert.Equal(ConnectionState.Open, ServerHelper.Connection.State);
             }
-            ServerHelper.Connection.State.Should().Be(ConnectionState.Open);
+            Assert.Equal(ConnectionState.Open, ServerHelper.Connection.State);
         }
     }
 }

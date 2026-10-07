@@ -1,7 +1,7 @@
-﻿using FluentAssertions;
-using Kros.Net;
+﻿using Kros.Net;
 using Microsoft.Net.Http.Headers;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using Xunit;
 
@@ -18,7 +18,8 @@ namespace Kros.Utils.UnitTests.Net
             var expectedCookie = new CookieHeaderValue("cookie1", "value1");
 
             IList<CookieHeaderValue> actualCookies = request.GetCookies();
-            actualCookies.Should().BeEquivalentTo(new[] { expectedCookie });
+            CookieHeaderValue actualCookie = Assert.Single(actualCookies);
+            Assert.Equal(expectedCookie.ToString(), actualCookie.ToString());
         }
 
         [Fact]
@@ -42,7 +43,7 @@ namespace Kros.Utils.UnitTests.Net
             };
 
             IList<CookieHeaderValue> actualCookies = request.GetCookies();
-            actualCookies.Should().BeEquivalentTo(expectedCookies);
+            Assert.Equal(expectedCookies.Select(c => c.ToString()), actualCookies.Select(c => c.ToString()));
         }
 
         [Fact]
@@ -59,7 +60,7 @@ namespace Kros.Utils.UnitTests.Net
             request.SetCookies(cookies);
 
             IDictionary<string, string> actualCookies = request.GetCookieValues();
-            actualCookies.Should().BeEquivalentTo(cookies);
+            Assert.Equal(cookies, actualCookies);
         }
 
         [Fact]
@@ -83,7 +84,7 @@ namespace Kros.Utils.UnitTests.Net
             request.CopyCookiesFromResponse(response);
 
             IDictionary<string, string> requestCookies = request.GetCookieValues();
-            requestCookies.Should().BeEquivalentTo(cookies);
+            Assert.Equal(cookies, requestCookies);
         }
     }
 }

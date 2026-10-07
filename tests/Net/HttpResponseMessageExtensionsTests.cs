@@ -1,7 +1,7 @@
-﻿using FluentAssertions;
-using Kros.Net;
+﻿using Kros.Net;
 using Microsoft.Net.Http.Headers;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -36,7 +36,7 @@ namespace Kros.Utils.UnitTests.Net
                 Content = new StringContent(HtmlContent)
             };
             string? token = await message.GetAntiForgeryTokenAsync();
-            token.Should().BeNull();
+            Assert.Null(token);
         }
 
         [Fact]
@@ -47,7 +47,7 @@ namespace Kros.Utils.UnitTests.Net
                 Content = new StringContent(HtmlContent)
             };
             string? token = await message.GetAntiForgeryTokenAsync();
-            token.Should().Be("anti-forgery-token");
+            Assert.Equal("anti-forgery-token", token);
         }
 
         [Fact]
@@ -59,7 +59,8 @@ namespace Kros.Utils.UnitTests.Net
             var expectedCookie = new SetCookieHeaderValue("cookie1", "value1");
 
             IList<SetCookieHeaderValue> actualCookies = response.GetCookies();
-            actualCookies.Should().BeEquivalentTo(new[] { expectedCookie });
+            SetCookieHeaderValue actualCookie = Assert.Single(actualCookies);
+            Assert.Equal(expectedCookie.ToString(), actualCookie.ToString());
         }
 
         [Fact]
@@ -83,7 +84,7 @@ namespace Kros.Utils.UnitTests.Net
             };
 
             IList<SetCookieHeaderValue> actualCookies = response.GetCookies();
-            actualCookies.Should().BeEquivalentTo(expectedCookies);
+            Assert.Equal(expectedCookies.Select(c => c.ToString()), actualCookies.Select(c => c.ToString()));
         }
 
         [Fact]
@@ -100,7 +101,7 @@ namespace Kros.Utils.UnitTests.Net
             response.SetCookies(cookies);
 
             IDictionary<string, string> actualCookies = response.GetCookieValues();
-            actualCookies.Should().BeEquivalentTo(cookies);
+            Assert.Equal(cookies, actualCookies);
         }
     }
 }

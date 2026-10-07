@@ -1,5 +1,4 @@
-﻿using FluentAssertions;
-using Kros.Extensions;
+﻿using Kros.Extensions;
 using Xunit;
 
 namespace Kros.Utils.UnitTests.Extensions
@@ -22,9 +21,7 @@ namespace Kros.Utils.UnitTests.Extensions
         [InlineData("https://com", "com")]
         public void GetDomainFromUri(string uri, string expectedDomain)
         {
-            uri.GetDomain()
-                .Should()
-                .Be(expectedDomain);
+            Assert.Equal(expectedDomain, uri.GetDomain());
         }
     }
 }

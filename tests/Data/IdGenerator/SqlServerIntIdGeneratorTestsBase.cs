@@ -1,8 +1,8 @@
-﻿using FluentAssertions;
-using Kros.Data;
+﻿using Kros.Data;
 using Kros.Data.SqlServer;
 using Kros.UnitTests;
 using Microsoft.Data.SqlClient;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using Xunit;
@@ -50,7 +50,7 @@ namespace Kros.Utils.UnitTests.Data.IdGenerator
             {
                 for (int i = 0; i < 10; i++)
                 {
-                    idGenerator.GetNext().Should().Be(i + 1);
+                    AssertId(i + 1, idGenerator.GetNext());
                 }
             }
         }
@@ -62,7 +62,7 @@ namespace Kros.Utils.UnitTests.Data.IdGenerator
             {
                 for (int i = 0; i < 15; i++)
                 {
-                    idGenerator.GetNext().Should().Be(i + 1);
+                    AssertId(i + 1, idGenerator.GetNext());
                 }
             }
         }
@@ -83,7 +83,7 @@ namespace Kros.Utils.UnitTests.Data.IdGenerator
             {
                 for (int i = 0; i < 10; i++)
                 {
-                    idGenerator.GetNext().Should().Be(10 + i + 1);
+                    AssertId(10 + i + 1, idGenerator.GetNext());
                 }
             }
         }
@@ -104,7 +104,7 @@ namespace Kros.Utils.UnitTests.Data.IdGenerator
             {
                 for (int i = 0; i < 15; i++)
                 {
-                    idGenerator.GetNext().Should().Be(10 + i + 1);
+                    AssertId(10 + i + 1, idGenerator.GetNext());
                 }
             }
         }
@@ -114,18 +114,18 @@ namespace Kros.Utils.UnitTests.Data.IdGenerator
         {
             using (IIdGenerator<T> idGenerator = CreateGeneratorFactory().GetGenerator("People"))
             {
-                idGenerator.GetNext().Should().Be(1);
+                AssertId(1, idGenerator.GetNext());
 
                 using (IIdGenerator<T> nextGenerator = CreateGeneratorFactory().GetGenerator("People", 3))
                 {
-                    nextGenerator.GetNext().Should().Be(2);
-                    idGenerator.GetNext().Should().Be(5);
-                    nextGenerator.GetNext().Should().Be(3);
-                    nextGenerator.GetNext().Should().Be(4);
-                    nextGenerator.GetNext().Should().Be(6);
+                    AssertId(2, nextGenerator.GetNext());
+                    AssertId(5, idGenerator.GetNext());
+                    AssertId(3, nextGenerator.GetNext());
+                    AssertId(4, nextGenerator.GetNext());
+                    AssertId(6, nextGenerator.GetNext());
                 }
 
-                idGenerator.GetNext().Should().Be(9);
+                AssertId(9, idGenerator.GetNext());
             }
         }
 
@@ -136,13 +136,13 @@ namespace Kros.Utils.UnitTests.Data.IdGenerator
             {
                 for (int i = 0; i < 10; i++)
                 {
-                    idGenerator.GetNext().Should().Be(i + 1);
+                    AssertId(i + 1, idGenerator.GetNext());
 
                     using (IIdGenerator<T> addressIdGenerator = CreateGeneratorFactory().GetGenerator("Addresses", 5))
                     {
                         for (int j = 0; j < 5; j++)
                         {
-                            addressIdGenerator.GetNext().Should().Be(j + 5 * i + 1);
+                            AssertId(j + 5 * i + 1, addressIdGenerator.GetNext());
                         }
                     }
                 }
@@ -154,14 +154,14 @@ namespace Kros.Utils.UnitTests.Data.IdGenerator
         {
             using (var helper = new SqlServerTestHelper(BaseConnectionString, BaseDatabaseName))
             {
-                HasTable(helper.Connection, BackendTableName).Should().BeFalse();
-                HasProcedure(helper.Connection, BackendProcedureName).Should().BeFalse();
+                Assert.False(HasTable(helper.Connection, BackendTableName));
+                Assert.False(HasProcedure(helper.Connection, BackendProcedureName));
 
                 IIdGenerator<T> idGenerator = CreateGenerator(helper.Connection);
                 idGenerator.InitDatabaseForIdGenerator();
 
-                HasTable(helper.Connection, BackendTableName).Should().BeTrue();
-                HasProcedure(helper.Connection, BackendProcedureName).Should().BeTrue();
+                Assert.True(HasTable(helper.Connection, BackendTableName));
+                Assert.True(HasProcedure(helper.Connection, BackendProcedureName));
             }
         }
 
@@ -170,14 +170,14 @@ namespace Kros.Utils.UnitTests.Data.IdGenerator
         {
             using (var helper = new SqlServerTestHelper(BaseConnectionString, BaseDatabaseName, DatabaseInitScripts))
             {
-                HasTable(helper.Connection, BackendTableName).Should().BeTrue();
-                HasProcedure(helper.Connection, BackendProcedureName).Should().BeTrue();
+                Assert.True(HasTable(helper.Connection, BackendTableName));
+                Assert.True(HasProcedure(helper.Connection, BackendProcedureName));
 
                 IIdGenerator<T> idGenerator = CreateGenerator(helper.Connection);
                 idGenerator.InitDatabaseForIdGenerator();
 
-                HasTable(helper.Connection, BackendTableName).Should().BeTrue();
-                HasProcedure(helper.Connection, BackendProcedureName).Should().BeTrue();
+                Assert.True(HasTable(helper.Connection, BackendTableName));
+                Assert.True(HasProcedure(helper.Connection, BackendProcedureName));
             }
         }
 
@@ -188,6 +188,9 @@ namespace Kros.Utils.UnitTests.Data.IdGenerator
         protected abstract IIdGeneratorFactory<T> CreateGeneratorFactory();
 
         protected abstract IIdGenerator<T> CreateGenerator(SqlConnection connection);
+
+        private static void AssertId(long expected, T actual)
+            => Assert.Equal(expected, Convert.ToInt64(actual));
 
         protected static bool HasTable(SqlConnection connection, string tableName)
         {

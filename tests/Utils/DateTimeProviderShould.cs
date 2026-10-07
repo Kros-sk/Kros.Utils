@@ -1,5 +1,4 @@
-﻿using FluentAssertions;
-using System;
+﻿using System;
 using Xunit;
 
 namespace Kros.Utils.UnitTests.Utils
@@ -9,7 +8,7 @@ namespace Kros.Utils.UnitTests.Utils
         [Fact]
         public void ReturnCorrectDateTime()
         {
-            DateTimeProvider.Now.Should().BeSameDateAs(DateTime.Now);
+            Assert.Equal(DateTime.Now.Date, DateTimeProvider.Now.Date);
         }
 
         [Fact]
@@ -18,7 +17,7 @@ namespace Kros.Utils.UnitTests.Utils
             var expected = new DateTime(2017, 10, 11, 5, 22, 33, 11);
             using (DateTimeProvider.InjectActualDateTime(expected))
             {
-                DateTimeProvider.Now.Should().Be(expected);
+                Assert.Equal(expected, DateTimeProvider.Now);
             }
         }
 
@@ -30,7 +29,7 @@ namespace Kros.Utils.UnitTests.Utils
             {
             }
 
-            DateTimeProvider.Now.Should().BeSameDateAs(DateTime.Now);
+            Assert.Equal(DateTime.Now.Date, DateTimeProvider.Now.Date);
         }
 
         [Fact]
@@ -42,8 +41,8 @@ namespace Kros.Utils.UnitTests.Utils
 
             using (DateTimeProvider.InjectActualDateTime(injected))
             {
-                DateTimeProvider.UtcNow.Should().Be(injected);
-                DateTimeProvider.Now.Should().Be(local);
+                Assert.Equal(injected, DateTimeProvider.UtcNow);
+                Assert.Equal(local, DateTimeProvider.Now);
             }
         }
     }

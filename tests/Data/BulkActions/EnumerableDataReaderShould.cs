@@ -1,5 +1,4 @@
-﻿using FluentAssertions;
-using Kros.Data.BulkActions;
+﻿using Kros.Data.BulkActions;
 using System;
 using System.Collections.Generic;
 using Xunit;
@@ -28,8 +27,8 @@ namespace Kros.Utils.UnitTests.Data.BulkActions
             {
                 var instance = new EnumerableDataReader<DataItem>(null!, new string[] { "Id" });
             };
-            createInstance.Should().Throw<ArgumentNullException>()
-                .And.ParamName.Should().Be("data");
+            ArgumentNullException ex = Assert.Throws<ArgumentNullException>(createInstance);
+            Assert.Equal("data", ex.ParamName);
         }
 
         [Fact]
@@ -39,8 +38,8 @@ namespace Kros.Utils.UnitTests.Data.BulkActions
             {
                 var instance = new EnumerableDataReader<DataItem>(new List<DataItem>(), null!);
             };
-            createInstance.Should().Throw<ArgumentNullException>()
-                .And.ParamName.Should().Be("columnNames");
+            ArgumentNullException ex = Assert.Throws<ArgumentNullException>(createInstance);
+            Assert.Equal("columnNames", ex.ParamName);
         }
 
         [Fact]
@@ -50,8 +49,8 @@ namespace Kros.Utils.UnitTests.Data.BulkActions
             {
                 var instance = new EnumerableDataReader<DataItem>(new List<DataItem>(), new string[] { });
             };
-            createInstance.Should().Throw<ArgumentException>()
-                .And.ParamName.Should().Be("columnNames");
+            ArgumentException ex = Assert.Throws<ArgumentException>(createInstance);
+            Assert.Equal("columnNames", ex.ParamName);
         }
 
         [Fact]
@@ -63,18 +62,19 @@ namespace Kros.Utils.UnitTests.Data.BulkActions
             {
                 var instance = new EnumerableDataReader<DataItem>(new List<DataItem>(), new string[] { "Id", invalidColumn });
             };
-            createInstance.Should().Throw<InvalidOperationException>()
-                .WithMessage($"*{typeof(DataItem).FullName}*{invalidColumn}*");
+            InvalidOperationException ex = Assert.Throws<InvalidOperationException>(createInstance);
+            Assert.Contains(typeof(DataItem).FullName!, ex.Message);
+            Assert.Contains(invalidColumn, ex.Message);
         }
 
         [Fact]
         public void CreateInstanceCorrectly()
         {
             var reader = new EnumerableDataReader<DataItem>(new List<DataItem>(), new string[] { "Id", "Name" });
-            reader.GetOrdinal("Id").Should().Be(0, "Id column must have ordinal 0.");
-            reader.GetOrdinal("Name").Should().Be(1, "Name column must have ordinal 1.");
-            reader.GetName(0).Should().Be("Id", "Column at index 0 must be Id.");
-            reader.GetName(1).Should().Be("Name", "Column at index 1 must be Name.");
+            Assert.Equal(0, reader.GetOrdinal("Id"));
+            Assert.Equal(1, reader.GetOrdinal("Name"));
+            Assert.Equal("Id", reader.GetName(0));
+            Assert.Equal("Name", reader.GetName(1));
         }
 
         [Fact]
@@ -89,8 +89,8 @@ namespace Kros.Utils.UnitTests.Data.BulkActions
                 int itemIndex = 0;
                 while (reader.Read())
                 {
-                    reader.GetValue(0).Should().Be(data[itemIndex].Id);
-                    reader.GetValue(1).Should().Be(data[itemIndex].Name);
+                    Assert.Equal(data[itemIndex].Id, reader.GetValue(0));
+                    Assert.Equal(data[itemIndex].Name, reader.GetValue(1));
                     itemIndex++;
                 }
             }

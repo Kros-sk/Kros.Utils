@@ -1,5 +1,4 @@
-﻿using FluentAssertions;
-using Kros.Data.BulkActions.SqlServer;
+﻿using Kros.Data.BulkActions.SqlServer;
 using Microsoft.Data.SqlClient;
 using Xunit;
 
@@ -15,7 +14,7 @@ namespace Kros.Utils.UnitTests.Data.BulkActions
                 var factory = new SqlServerBulkActionFactory(conn);
                 var bulkInsert = (SqlServerBulkInsert)factory.GetBulkInsert(SqlBulkCopyOptions.UseInternalTransaction);
 
-                bulkInsert.BulkCopyOptions.Should().Be(SqlBulkCopyOptions.UseInternalTransaction);
+                Assert.Equal(SqlBulkCopyOptions.UseInternalTransaction, bulkInsert.BulkCopyOptions);
             }
         }
 
@@ -27,7 +26,7 @@ namespace Kros.Utils.UnitTests.Data.BulkActions
                 var factory = new SqlServerBulkActionFactory(conn);
                 var bulkUpdate = factory.GetBulkUpdate() as SqlServerBulkUpdate;
 
-                bulkUpdate.Should().NotBeNull();
+                Assert.NotNull(bulkUpdate);
             }
         }
     }
