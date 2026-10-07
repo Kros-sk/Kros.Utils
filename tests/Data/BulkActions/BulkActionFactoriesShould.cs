@@ -1,5 +1,4 @@
-﻿using FluentAssertions;
-using Kros.Data.BulkActions;
+﻿using Kros.Data.BulkActions;
 using Kros.Data.SqlServer;
 using Microsoft.Data.SqlClient;
 using System;
@@ -16,7 +15,7 @@ namespace Kros.Utils.UnitTests.Data
             {
                 var factory = BulkActionFactories.GetFactory(conn);
 
-                factory.Should().NotBeNull();
+                Assert.NotNull(factory);
             }
         }
 
@@ -25,7 +24,7 @@ namespace Kros.Utils.UnitTests.Data
         {
             var factory = BulkActionFactories.GetFactory("connectionstring", SqlServerDataHelper.ClientId);
 
-            factory.Should().NotBeNull();
+            Assert.NotNull(factory);
         }
 
         [Fact]
@@ -35,8 +34,8 @@ namespace Kros.Utils.UnitTests.Data
             {
                 Action action = () => { var factory = BulkActionFactories.GetFactory(conn); };
 
-                action.Should().Throw<InvalidOperationException>()
-                    .WithMessage($"*{typeof(CustomConnection).FullName}*");
+                InvalidOperationException ex = Assert.Throws<InvalidOperationException>(action);
+                Assert.Contains(typeof(CustomConnection).FullName!, ex.Message);
             }
         }
 
@@ -45,8 +44,8 @@ namespace Kros.Utils.UnitTests.Data
         {
             Action action = () => { var factory = BulkActionFactories.GetFactory("constring", "System.Data.CustomClient"); };
 
-            action.Should().Throw<InvalidOperationException>()
-                .WithMessage($"*System.Data.CustomClient*");
+            InvalidOperationException ex = Assert.Throws<InvalidOperationException>(action);
+            Assert.Contains("System.Data.CustomClient", ex.Message);
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using FluentAssertions;
-using Kros.IO;
+﻿using Kros.IO;
 using System;
 using Xunit;
 
@@ -13,47 +12,42 @@ namespace Kros.Utils.UnitTest.IO
         public void ThrowArgumentNullExceptionWhenInputIsNull()
         {
             Action action = () => PathHelper.BuildPath(null!);
-            action.Should().Throw<ArgumentException>();
+            Assert.Throws<ArgumentNullException>(action);
         }
 
         [Fact]
         public void ThrowArgumentNullExceptionWhenAnyPartIsNull()
         {
             Action action = () => PathHelper.BuildPath("lorem", null!, "ipsum");
-            action.Should().Throw<ArgumentException>();
+            Assert.Throws<ArgumentNullException>(action);
         }
 
         [Fact]
         public void ThrowArgumentExceptionWhenAnyPartContainsInvalidPathCharacters()
         {
             Action action = () => PathHelper.BuildPath("lorem", "ips|um");
-            action.Should().Throw<ArgumentException>();
+            Assert.Throws<ArgumentException>(action);
         }
 
         [Fact]
         public void CombinePathParts()
-            => PathHelper.BuildPath("lorem", "ipsum", "dolor", "sit", "amet")
-                .Should().Be(@"lorem/ipsum/dolor/sit/amet");
+            => Assert.Equal(@"lorem/ipsum/dolor/sit/amet", PathHelper.BuildPath("lorem", "ipsum", "dolor", "sit", "amet"));
 
         [Fact]
         public void CombinePathPartsWithDirectorySeparatorAtBeginning()
-            => PathHelper.BuildPath("\\lorem", "\\ipsum", "\\dolor\\sit", "\\amet")
-                .Should().Be(@"/lorem/ipsum/dolor/sit/amet");
+            => Assert.Equal(@"/lorem/ipsum/dolor/sit/amet", PathHelper.BuildPath("\\lorem", "\\ipsum", "\\dolor\\sit", "\\amet"));
 
         [Fact]
         public void CombinePathPartsWithVolumeInfo()
-            => PathHelper.BuildPath("c:", "lorem", "ipsum", "dolor", "sit", "amet")
-                .Should().Be(@"c:/lorem/ipsum/dolor/sit/amet");
+            => Assert.Equal(@"c:/lorem/ipsum/dolor/sit/amet", PathHelper.BuildPath("c:", "lorem", "ipsum", "dolor", "sit", "amet"));
 
         [Fact]
         public void CombinePathPartsWithVolumeInfoAndDirectorySeparator()
-            => PathHelper.BuildPath("c:\\", "lorem", "ipsum", "dolor", "sit", "amet")
-                .Should().Be(@"c:/lorem/ipsum/dolor/sit/amet");
+            => Assert.Equal(@"c:/lorem/ipsum/dolor/sit/amet", PathHelper.BuildPath("c:\\", "lorem", "ipsum", "dolor", "sit", "amet"));
 
         [Fact]
         public void InsertOnlyOneSeparatorBetweenParts()
-            => PathHelper.BuildPath("\\lorem\\", "\\ipsum\\", "\\dolor\\", "\\sit\\", "\\amet\\")
-                .Should().Be(@"/lorem/ipsum/dolor/sit/amet/");
+            => Assert.Equal(@"/lorem/ipsum/dolor/sit/amet/", PathHelper.BuildPath("\\lorem\\", "\\ipsum\\", "\\dolor\\", "\\sit\\", "\\amet\\"));
 
         #endregion
 
@@ -61,23 +55,23 @@ namespace Kros.Utils.UnitTest.IO
 
         [Fact]
         public void ReturnEmptyStringWhenPathNameIsNull()
-            => PathHelper.ReplaceInvalidPathChars(null!).Should().Be(string.Empty);
+            => Assert.Equal(string.Empty, PathHelper.ReplaceInvalidPathChars(null!));
 
         [Fact]
         public void ReplaceWithEmptyStringInPathNameWhenReplacementIsNull()
-            => PathHelper.ReplaceInvalidPathChars("a*z", null!).Should().Be("az");
+            => Assert.Equal("az", PathHelper.ReplaceInvalidPathChars("a*z", null!));
 
         [Fact]
         public void ReplaceInvalidCharsInPathName()
-            => PathHelper.ReplaceInvalidPathChars("a\\b/c*d<e>f>g").Should().Be("a-b-c-d-e-f-g");
+            => Assert.Equal("a-b-c-d-e-f-g", PathHelper.ReplaceInvalidPathChars("a\\b/c*d<e>f>g"));
 
         [Fact]
         public void ReplaceInvalidCharGroupsWithSingleReplacementInPathName()
-            => PathHelper.ReplaceInvalidPathChars("a\\/*b<>c").Should().Be("a-b-c");
+            => Assert.Equal("a-b-c", PathHelper.ReplaceInvalidPathChars("a\\/*b<>c"));
 
         [Fact]
         public void ReplaceInvalidCharsInPathNameWithCustomReplacement()
-            => PathHelper.ReplaceInvalidPathChars("a\\b/c*d<e>f>g", "=").Should().Be("a=b=c=d=e=f=g");
+            => Assert.Equal("a=b=c=d=e=f=g", PathHelper.ReplaceInvalidPathChars("a\\b/c*d<e>f>g", "="));
 
         #endregion
 
@@ -90,7 +84,7 @@ namespace Kros.Utils.UnitTest.IO
             string expected = systemTempPath.Remove(systemTempPath.Length - 1, 1);
             string actual = PathHelper.GetTempPath();
 
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
 
         #endregion

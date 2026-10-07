@@ -1,5 +1,4 @@
-﻿using FluentAssertions;
-using Kros.Extensions;
+﻿using Kros.Extensions;
 using System;
 using Xunit;
 
@@ -16,7 +15,7 @@ namespace Kros.Utils.UnitTests.Extensions
         public void RoundDecimalToTwoPlaces(decimal input, decimal expected)
         {
             decimal actual = input.Round(2);
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Theory]
@@ -28,7 +27,7 @@ namespace Kros.Utils.UnitTests.Extensions
         public void RoundDecimalToInteger(decimal input, decimal expected)
         {
             decimal actual = input.Round();
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Theory]
@@ -40,7 +39,7 @@ namespace Kros.Utils.UnitTests.Extensions
         public void RoundDecimalToTwoPlaces_MidpointRoundingToEven(decimal input, decimal expected)
         {
             decimal actual = input.Round(2, MidpointRounding.ToEven);
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Theory]
@@ -52,7 +51,7 @@ namespace Kros.Utils.UnitTests.Extensions
         public void RoundDecimalToInteger_MidpointRoundingToEven(decimal input, decimal expected)
         {
             decimal actual = input.Round(MidpointRounding.ToEven);
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Theory]
@@ -64,7 +63,7 @@ namespace Kros.Utils.UnitTests.Extensions
         public void RoundDoubleToTwoPlaces(double input, double expected)
         {
             double actual = input.Round(2);
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Theory]
@@ -76,7 +75,7 @@ namespace Kros.Utils.UnitTests.Extensions
         public void RoundDoubleToInteger(double input, double expected)
         {
             double actual = input.Round();
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Theory]
@@ -88,7 +87,7 @@ namespace Kros.Utils.UnitTests.Extensions
         public void RoundDoubleToTwoPlaces_MidpointRoundingToEven(double input, double expected)
         {
             double actual = input.Round(2, MidpointRounding.ToEven);
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Theory]
@@ -100,7 +99,7 @@ namespace Kros.Utils.UnitTests.Extensions
         public void RoundDoubleToInteger_MidpointRoundingToEven(double input, double expected)
         {
             double actual = input.Round(MidpointRounding.ToEven);
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
     }
 }

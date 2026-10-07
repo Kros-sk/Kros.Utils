@@ -1,5 +1,4 @@
-﻿using FluentAssertions;
-using Xunit;
+﻿using Xunit;
 
 namespace Kros.Utils.UnitTests
 {
@@ -33,28 +32,20 @@ namespace Kros.Utils.UnitTests
         [Fact]
         public void RegisterClassTypeAndReturnNewInstanceOnEachResolve()
         {
-            const string info = "container.Register<Foo>();";
-
             IDiContainer container = CreateConntainer();
 
             container.Register<Foo>();
 
             Foo instance1 = container.GetInstance<Foo>();
-            instance1.Should().NotBeNull(info);
+            Assert.NotNull(instance1);
 
             Foo instance2 = container.GetInstance<Foo>();
-            instance2.Should().NotBeSameAs(instance1, info);
+            Assert.NotSame(instance1, instance2);
         }
 
         [Fact]
         public void RegisterNamedClassTypeAndReturnNewInstanceOnEachResolve()
         {
-            const string info =
-@"container
-    .Register<Foo>()
-    .Register<Foo>(""foo2"");
-";
-
             IDiContainer container = CreateConntainer();
 
             container
@@ -62,180 +53,130 @@ namespace Kros.Utils.UnitTests
                 .Register<Foo>("foo2");
 
             Foo instance1 = container.GetInstance<Foo>();
-            instance1.Should().NotBeNull(info + "container.GetInstance<Foo>();");
+            Assert.NotNull(instance1);
 
             Foo instance2 = container.GetInstance<Foo>("foo2");
-            instance2.Should().NotBeSameAs(instance1, info + "container.GetInstance<Foo>(\"foo2\");");
+            Assert.NotSame(instance1, instance2);
         }
 
         [Fact]
         public void RegisterInterfaceWithClassAndReturnNewInstanceOnEachResolve()
         {
-            const string info = "container.Register<IFoo, Foo>();";
-
             IDiContainer container = CreateConntainer();
 
             container.Register<IFoo, Foo>();
 
             IFoo instance1 = container.GetInstance<IFoo>();
-            instance1.Should()
-                .NotBeNull(info)
-                .And.BeOfType<Foo>(info);
+            Assert.IsType<Foo>(instance1);
 
             IFoo instance2 = container.GetInstance<IFoo>();
-            instance2.Should()
-                .BeOfType<Foo>(info)
-                .And.NotBeSameAs(instance1, info);
+            Assert.IsType<Foo>(instance2);
+            Assert.NotSame(instance1, instance2);
         }
 
         [Fact]
         public void RegisterNamedInterfaceWithClassAndReturnNewInstanceOnEachResolve()
         {
-            const string info =
-@"container
-    .Register<IFoo, Foo>()
-    .Register<IFoo, Foo>(""foo2"");
-";
-
             IDiContainer container = CreateConntainer();
 
             container
                 .Register<IFoo, Foo>()
                 .Register<IFoo, Foo>("foo2");
 
-            const string additionalInfo1 = "container.GetInstance<IFoo>();";
             IFoo instance1 = container.GetInstance<IFoo>();
-            instance1.Should()
-                .NotBeNull(info + additionalInfo1)
-                .And.BeOfType<Foo>(info + additionalInfo1);
+            Assert.IsType<Foo>(instance1);
 
-            const string additionalInfo2 = "container.GetInstance<IFoo>(\"foo2\");";
             IFoo instance2 = container.GetInstance<IFoo>("foo2");
-            instance2.Should()
-                .BeOfType<Foo>(info + additionalInfo2)
-                .And.NotBeSameAs(instance1, info + additionalInfo2);
+            Assert.IsType<Foo>(instance2);
+            Assert.NotSame(instance1, instance2);
         }
 
         [Fact]
         public void RegisterClassTypeUsingLambdaAndReturnNewInstanceOnEachResolve()
         {
-            const string info = "container.Register<IFoo>(c => new Foo());";
-
             IDiContainer container = CreateConntainer();
 
             container.Register<IFoo>(c => new Foo());
 
             IFoo instance1 = container.GetInstance<IFoo>();
-            instance1.Should()
-                .NotBeNull(info)
-                .And.BeOfType<Foo>(info);
+            Assert.IsType<Foo>(instance1);
 
             IFoo instance2 = container.GetInstance<IFoo>();
-            instance2.Should()
-                .BeOfType<Foo>(info)
-                .And.NotBeSameAs(instance1, info);
+            Assert.IsType<Foo>(instance2);
+            Assert.NotSame(instance1, instance2);
         }
 
         [Fact]
         public void RegisterNamedClassTypeUsingLambdaAndReturnNewInstanceOnEachResolve()
         {
-            const string info =
-@"container
-    .Register<IFoo>(c => new Foo())
-    .Register<IFoo>(""foo2"", c => new Foo());
-";
-
             IDiContainer container = CreateConntainer();
 
             container
                 .Register<IFoo>(c => new Foo())
                 .Register<IFoo>("foo2", c => new Foo());
 
-            const string additionalInfo1 = "container.GetInstance<IFoo>();";
             IFoo instance1 = container.GetInstance<IFoo>();
-            instance1.Should()
-                .NotBeNull(info + additionalInfo1)
-                .And.BeOfType<Foo>(info + additionalInfo1);
+            Assert.IsType<Foo>(instance1);
 
-            const string additionalInfo2 = "container.GetInstance<IFoo>(\"foo2\");";
             IFoo instance2 = container.GetInstance<IFoo>("foo2");
-            instance2.Should()
-                .BeOfType<Foo>(info + additionalInfo2)
-                .And.NotBeSameAs(instance1, info + additionalInfo2);
+            Assert.IsType<Foo>(instance2);
+            Assert.NotSame(instance1, instance2);
         }
 
         [Fact]
         public void RegisterClassTypeAsSingleton()
         {
-            const string info = "container.RegisterInstance<Foo>();";
-
             IDiContainer container = CreateConntainer();
 
             container.RegisterInstance<Foo>();
 
             Foo instance1 = container.GetInstance<Foo>();
-            instance1.Should().NotBeNull(info);
+            Assert.NotNull(instance1);
 
             Foo instance2 = container.GetInstance<Foo>();
-            instance2.Should().BeSameAs(instance1, info);
+            Assert.Same(instance1, instance2);
         }
 
         [Fact]
         public void RegisterNamedClassTypeAsSingleton()
         {
-            const string info =
-@"container
-    .RegisterInstance<Foo>()
-    .RegisterInstance<Foo>(""foo2"");
-";
-
             IDiContainer container = CreateConntainer();
 
             container
                 .RegisterInstance<Foo>()
                 .RegisterInstance<Foo>("foo2");
 
-            const string additionalInfo1 = "container.GetInstance<Foo>()";
             Foo instance1 = container.GetInstance<Foo>();
-            instance1.Should().NotBeNull(info + additionalInfo1);
+            Assert.NotNull(instance1);
 
             Foo instance2 = container.GetInstance<Foo>();
-            instance2.Should().BeSameAs(instance1, info + additionalInfo1);
+            Assert.Same(instance1, instance2);
 
-            const string additionalInfo2 = "container.GetInstance<Foo>(\"foo2\")";
             Foo instance3 = container.GetInstance<Foo>("foo2");
-            instance3.Should().NotBeSameAs(instance2, info + additionalInfo2);
+            Assert.NotSame(instance2, instance3);
 
             Foo instance4 = container.GetInstance<Foo>("foo2");
-            instance4.Should().BeSameAs(instance3, info + additionalInfo2);
+            Assert.Same(instance3, instance4);
         }
 
         [Fact]
         public void RegisterSpecificInstanceAsSingleton()
         {
-            const string info = "container.RegisterInstance<IFoo>(specificInstance);";
-
             Foo specificInstance = new Foo();
             IDiContainer container = CreateConntainer();
 
             container.RegisterInstance<IFoo>(specificInstance);
 
             IFoo instance1 = container.GetInstance<IFoo>();
-            instance1.Should().BeSameAs(specificInstance, info);
+            Assert.Same(specificInstance, instance1);
 
             IFoo instance2 = container.GetInstance<IFoo>();
-            instance2.Should().BeSameAs(specificInstance, info);
+            Assert.Same(specificInstance, instance2);
         }
 
         [Fact]
         public void RegisterNamedSpecificInstanceAsSingleton()
         {
-            const string info =
-@"container
-    .RegisterInstance<IFoo>(specificInstance1)
-    .RegisterInstance<IFoo>(""foo2"", specificInstance2);
-";
-
             Foo specificInstance1 = new Foo();
             Foo specificInstance2 = new Foo();
             IDiContainer container = CreateConntainer();
@@ -244,119 +185,91 @@ namespace Kros.Utils.UnitTests
                 .RegisterInstance<IFoo>(specificInstance1)
                 .RegisterInstance<IFoo>("foo2", specificInstance2);
 
-            const string additionalInfo1 = "container.GetInstance<IFoo>();";
             IFoo instance1 = container.GetInstance<IFoo>();
-            instance1.Should().BeSameAs(specificInstance1, info + additionalInfo1);
+            Assert.Same(specificInstance1, instance1);
 
             IFoo instance2 = container.GetInstance<IFoo>();
-            instance2.Should().BeSameAs(specificInstance1, info + additionalInfo1);
+            Assert.Same(specificInstance1, instance2);
 
-            const string additionalInfo2 = "container.GetInstance<IFoo>(\"foo2\");";
             IFoo instance3 = container.GetInstance<IFoo>("foo2");
-            instance3.Should().BeSameAs(specificInstance2, info + additionalInfo2);
+            Assert.Same(specificInstance2, instance3);
 
             IFoo instance4 = container.GetInstance<IFoo>("foo2");
-            instance4.Should().BeSameAs(specificInstance2, info + additionalInfo2);
+            Assert.Same(specificInstance2, instance4);
         }
 
         [Fact]
         public void RegisterInterfaceWithClassAsSingleton()
         {
-            const string info = "container.RegisterInstance<IFoo, Foo>();";
-
             IDiContainer container = CreateConntainer();
 
             container.RegisterInstance<IFoo, Foo>();
 
             IFoo instance1 = container.GetInstance<IFoo>();
-            instance1.Should().NotBeNull(info);
+            Assert.NotNull(instance1);
 
             IFoo instance2 = container.GetInstance<IFoo>();
-            instance2.Should().BeSameAs(instance1, info);
+            Assert.Same(instance1, instance2);
         }
 
         [Fact]
         public void RegisterNamedInterfaceWithClassAsSingleton()
         {
-            const string info =
-@"container
-    .RegisterInstance<IFoo, Foo>()
-    .RegisterInstance<IFoo, Foo>(""foo2"");
-";
-
             IDiContainer container = CreateConntainer();
 
             container
                 .RegisterInstance<IFoo, Foo>()
                 .RegisterInstance<IFoo, Foo>("foo2");
 
-            const string additionalInfo1 = "container.GetInstance<IFoo>();";
             IFoo instance1 = container.GetInstance<IFoo>();
-            instance1.Should().NotBeNull(info + additionalInfo1);
+            Assert.NotNull(instance1);
 
             IFoo instance2 = container.GetInstance<IFoo>();
-            instance2.Should().BeSameAs(instance1, info + additionalInfo1);
+            Assert.Same(instance1, instance2);
 
-            const string additionalInfo2 = "container.GetInstance<IFoo>(\"foo2\")";
             IFoo instance3 = container.GetInstance<IFoo>("foo2");
-            instance3.Should()
-                .NotBeNull(info + container.GetInstance<IFoo>("foo2"))
-                .And.NotBeSameAs(instance1, info + additionalInfo2);
+            Assert.NotNull(instance3);
+            Assert.NotSame(instance1, instance3);
+
             IFoo instance4 = container.GetInstance<IFoo>("foo2");
-            instance4.Should().BeSameAs(instance3, info + additionalInfo2);
+            Assert.Same(instance3, instance4);
         }
 
         [Fact]
         public void RegisterInterfaceWithClassUsingLambdaAsSingleton()
         {
-            const string info = "container.RegisterInstance<IFoo>(c => new Foo());";
-
             IDiContainer container = CreateConntainer();
 
             container.RegisterInstance<IFoo>(c => new Foo());
 
             IFoo instance1 = container.GetInstance<IFoo>();
-            instance1.Should()
-                .NotBeNull(info)
-                .And.BeOfType<Foo>(info);
+            Assert.IsType<Foo>(instance1);
 
             IFoo instance2 = container.GetInstance<IFoo>();
-            instance2.Should().BeSameAs(instance1, info);
+            Assert.Same(instance1, instance2);
         }
 
         [Fact]
         public void RegisterNamedInterfaceWithClassUsingLambdaAsSingleton()
         {
-            const string info =
-@"container
-    .RegisterInstance<IFoo>(c => new Foo())
-    .RegisterInstance<IFoo>(""foo2"", c => new Foo());
-";
-
             IDiContainer container = CreateConntainer();
 
             container
                 .RegisterInstance<IFoo>(c => new Foo())
                 .RegisterInstance<IFoo>("foo2", c => new Foo());
 
-            const string additionalInfo1 = "container.GetInstance<IFoo>();";
             IFoo instance1 = container.GetInstance<IFoo>();
-            instance1.Should()
-                .NotBeNull(info + additionalInfo1)
-                .And.BeOfType<Foo>(info + additionalInfo1);
+            Assert.IsType<Foo>(instance1);
 
             IFoo instance2 = container.GetInstance<IFoo>();
-            instance2.Should().BeSameAs(instance1, info + additionalInfo1);
+            Assert.Same(instance1, instance2);
 
-            const string additionalInfo2 = "container.GetInstance<IFoo>(\"foo2\");";
             IFoo instance3 = container.GetInstance<IFoo>("foo2");
-            instance3.Should()
-                .NotBeNull(info + additionalInfo2)
-                .And.BeOfType<Foo>(info + additionalInfo2)
-                .And.NotBeSameAs(instance1, info + additionalInfo2);
+            Assert.IsType<Foo>(instance3);
+            Assert.NotSame(instance1, instance3);
 
             IFoo instance4 = container.GetInstance<IFoo>("foo2");
-            instance3.Should().BeSameAs(instance3, info + additionalInfo2);
+            Assert.Same(instance3, instance4);
         }
 
         [Fact]
@@ -369,12 +282,8 @@ namespace Kros.Utils.UnitTests
                 .Register<IBar, Bar>();
 
             IBar instance = container.GetInstance<IBar>();
-            instance.Should()
-                .NotBeNull()
-                .And.BeOfType<Bar>();
-            ((Bar)instance).Foo.Should()
-                .NotBeNull()
-                .And.BeOfType<Foo>();
+            Bar bar = Assert.IsType<Bar>(instance);
+            Assert.IsType<Foo>(bar.Foo);
         }
 
         [Fact]
@@ -390,22 +299,14 @@ namespace Kros.Utils.UnitTests
             childContainer.Register<IFoo, FooChild>();
 
             IFoo instance = container.GetInstance<IFoo>();
-            instance.Should()
-                .NotBeNull()
-                .And.BeOfType<Foo>();
+            Assert.IsType<Foo>(instance);
 
             IFoo childInstance = childContainer.GetInstance<IFoo>();
-            childInstance.Should()
-                .NotBeNull()
-                .And.BeOfType<FooChild>();
+            Assert.IsType<FooChild>(childInstance);
 
             IBar parentInstance = childContainer.GetInstance<IBar>();
-            parentInstance.Should()
-                .NotBeNull()
-                .And.BeOfType<Bar>();
-            ((Bar)parentInstance).Foo.Should()
-                .NotBeNull()
-                .And.BeOfType<FooChild>();
+            Bar parentBar = Assert.IsType<Bar>(parentInstance);
+            Assert.IsType<FooChild>(parentBar.Foo);
         }
 
         #endregion

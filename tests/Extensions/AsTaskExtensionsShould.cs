@@ -1,5 +1,4 @@
-﻿using FluentAssertions;
-using Kros.Extensions;
+﻿using Kros.Extensions;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
@@ -15,7 +14,7 @@ namespace Kros.Utils.UnitTests.Extensions
 
             IEnumerable<int> actual = await data.AsTask();
 
-            actual.Should().BeEquivalentTo(data);
+            Assert.Equal(data, actual);
         }
 
         [Fact]
@@ -29,7 +28,7 @@ namespace Kros.Utils.UnitTests.Extensions
 
             var actual = await foo.AsTaskSingleValue();
 
-            actual.Should().BeEquivalentTo(foo);
+            Assert.Equal(foo, actual);
         }
     }
 }

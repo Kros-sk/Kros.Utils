@@ -1,6 +1,5 @@
 ﻿using System;
 using Kros.Caching;
-using FluentAssertions;
 using Xunit;
 
 namespace Kros.Utils.UnitTests.Caching
@@ -15,7 +14,7 @@ namespace Kros.Utils.UnitTests.Caching
 
             var actual = cache.Get(111, () => new Foo() { Value = "111" });
 
-            actual.Value.Should().Be(expected);
+            Assert.Equal(expected, actual.Value);
         }
 
         [Fact]
@@ -27,7 +26,7 @@ namespace Kros.Utils.UnitTests.Caching
 
             actual = cache.Get("car", () => new Foo() { Value = "car_new"});
 
-            actual.Value.Should().Be("car");
+            Assert.Equal("car", actual.Value);
         }
 
         [Fact]
@@ -41,7 +40,7 @@ namespace Kros.Utils.UnitTests.Caching
 
             actual = cache.Get("car", () => new Foo() { Value = "car_new" });
 
-            actual.Value.Should().Be("car_new");
+            Assert.Equal("car_new", actual.Value);
         }
 
         [Fact]
@@ -53,7 +52,7 @@ namespace Kros.Utils.UnitTests.Caching
 
             var actual = cache.Get("TeSt", () => 999);
 
-            actual.Should().Be(111);
+            Assert.Equal(111, actual);
         }
 
         class Foo

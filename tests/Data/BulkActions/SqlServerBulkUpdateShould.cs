@@ -1,5 +1,4 @@
-﻿using FluentAssertions;
-using Kros.Data.BulkActions;
+﻿using Kros.Data.BulkActions;
 using Kros.Data.BulkActions.SqlServer;
 using Kros.UnitTests;
 using Microsoft.Data.SqlClient;
@@ -178,7 +177,7 @@ INSERT INTO [{CompositeWithIdentity_TableName}] ([Id1], [Value]) VALUES (3, '3 -
                 }
             };
 
-            action.Should().Throw<ArgumentNullException>();
+            Assert.Throws<ArgumentNullException>(action);
         }
 
         [Fact]
@@ -194,7 +193,7 @@ INSERT INTO [{CompositeWithIdentity_TableName}] ([Id1], [Value]) VALUES (3, '3 -
                 }
             };
 
-            action.Should().Throw<InvalidOperationException>();
+            Assert.Throws<InvalidOperationException>(action);
         }
 
         [Fact]
@@ -345,12 +344,13 @@ INSERT INTO [{CompositeWithIdentity_TableName}] ([Id1], [Value]) VALUES (3, '3 -
                 actualData = LoadDataForTableWithIdentity(helper.Connection);
             }
 
-            actualData.Should().Equal(new List<BulkUpdateItemIdentity>(new[]
+            var expectedData = new List<BulkUpdateItemIdentity>(new[]
             {
                 new BulkUpdateItemIdentity() { Id = 1, Value = "one" },
                 new BulkUpdateItemIdentity() { Id = 2, Value = "lorem ipsum" },
                 new BulkUpdateItemIdentity() { Id = 3, Value = "three" }
-            }));
+            });
+            Assert.Equal(expectedData, actualData);
         }
 
         [Fact]
@@ -377,7 +377,7 @@ INSERT INTO [{CompositeWithIdentity_TableName}] ([Id1], [Value]) VALUES (3, '3 -
                 actualData = LoadDataForTableWithCompositePk(helper.Connection, Composite_TableName);
             }
 
-            actualData.Should().Equal(new List<BulkUpdateItemComposite>(new[]
+            var expectedData = new List<BulkUpdateItemComposite>(new[]
             {
                 new BulkUpdateItemComposite() { Id1 = 1, Id2 = 1, Value = "1 - 1" },
                 new BulkUpdateItemComposite() { Id1 = 1, Id2 = 2, Value = "lorem ipsum 1" },
@@ -385,7 +385,8 @@ INSERT INTO [{CompositeWithIdentity_TableName}] ([Id1], [Value]) VALUES (3, '3 -
                 new BulkUpdateItemComposite() { Id1 = 2, Id2 = 2, Value = "lorem ipsum 2" },
                 new BulkUpdateItemComposite() { Id1 = 3, Id2 = 1, Value = "3 - 1" },
                 new BulkUpdateItemComposite() { Id1 = 3, Id2 = 2, Value = "lorem ipsum 3" },
-            }));
+            });
+            Assert.Equal(expectedData, actualData);
         }
 
         [Fact]
@@ -412,7 +413,7 @@ INSERT INTO [{CompositeWithIdentity_TableName}] ([Id1], [Value]) VALUES (3, '3 -
                 actualData = LoadDataForTableWithCompositePk(helper.Connection, CompositeWithIdentity_TableName);
             }
 
-            actualData.Should().Equal(new List<BulkUpdateItemComposite>(new[]
+            var expectedData = new List<BulkUpdateItemComposite>(new[]
             {
                 new BulkUpdateItemComposite() { Id1 = 1, Id2 = 1, Value = "1 - 1" },
                 new BulkUpdateItemComposite() { Id1 = 1, Id2 = 2, Value = "lorem ipsum 2" },
@@ -420,7 +421,8 @@ INSERT INTO [{CompositeWithIdentity_TableName}] ([Id1], [Value]) VALUES (3, '3 -
                 new BulkUpdateItemComposite() { Id1 = 2, Id2 = 4, Value = "2 - 4" },
                 new BulkUpdateItemComposite() { Id1 = 3, Id2 = 5, Value = "3 - 5" },
                 new BulkUpdateItemComposite() { Id1 = 3, Id2 = 6, Value = "lorem ipsum 6" },
-            }));
+            });
+            Assert.Equal(expectedData, actualData);
         }
 
         #endregion

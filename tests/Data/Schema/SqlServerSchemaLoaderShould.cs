@@ -1,5 +1,4 @@
-﻿using FluentAssertions;
-using Kros.Data.Schema;
+﻿using Kros.Data.Schema;
 using Kros.Data.Schema.SqlServer;
 using System;
 using System.Collections.Generic;
@@ -212,7 +211,7 @@ ALTER TABLE [dbo].[ChildTableCascade] CHECK CONSTRAINT [FK_ChildTableCascade_Par
             SqlServerSchemaLoader loader = new SqlServerSchemaLoader();
             TableSchema? actual = loader.LoadTableSchema(ServerHelper.Connection, "NonExistingTable");
 
-            actual.Should().BeNull();
+            Assert.Null(actual);
         }
 
         [Fact]
@@ -222,8 +221,8 @@ ALTER TABLE [dbo].[ChildTableCascade] CHECK CONSTRAINT [FK_ChildTableCascade_Par
             DatabaseSchema schema = loader.LoadSchema(ServerHelper.Connection);
             TableSchema table = schema.Tables["IndexesTest"];
 
-            table.PrimaryKey.Should().NotBeNull();
-            table.PrimaryKey!.Name.Should().Be("PK_IndexesTest_PK", "Primary key does not have correct name.");
+            Assert.NotNull(table.PrimaryKey);
+            Assert.Equal("PK_IndexesTest_PK", table.PrimaryKey!.Name);
             CheckIndex(table.PrimaryKey, IndexType.PrimaryKey,
                 new Tuple<string, SortOrder>[] { Tuple.Create("Id", SortOrder.Ascending) });
             CheckIndex(table.Indexes["I_Index"], IndexType.Index, new Tuple<string, SortOrder>[]
@@ -249,17 +248,13 @@ ALTER TABLE [dbo].[ChildTableCascade] CHECK CONSTRAINT [FK_ChildTableCascade_Par
             TableSchema childTableSetDefault = schema.Tables["ChildTableSetDefault"];
             TableSchema childTableCascade = schema.Tables["ChildTableCascade"];
 
-            childTableNoAction.ForeignKeys.Count.Should().Be(1, "Tabuľka ChildTableNoAction by mala mať jeden cudzí kľúč.");
-            CheckForeignKey(childTableNoAction.ForeignKeys[0], "FK_ChildTableNoAction_ParentTable", ForeignKeyRule.NoAction);
+            CheckForeignKey(Assert.Single(childTableNoAction.ForeignKeys), "FK_ChildTableNoAction_ParentTable", ForeignKeyRule.NoAction);
 
-            childTableSetNull.ForeignKeys.Count.Should().Be(1, "Tabuľka ChildTableSetNull by mala mať jeden cudzí kľúč.");
-            CheckForeignKey(childTableSetNull.ForeignKeys[0], "FK_ChildTableSetNull_ParentTable", ForeignKeyRule.SetNull);
+            CheckForeignKey(Assert.Single(childTableSetNull.ForeignKeys), "FK_ChildTableSetNull_ParentTable", ForeignKeyRule.SetNull);
 
-            childTableSetDefault.ForeignKeys.Count.Should().Be(1, "Tabuľka ChildTableSetDefault by mala mať jeden cudzí kľúč.");
-            CheckForeignKey(childTableSetDefault.ForeignKeys[0], "FK_ChildTableSetDefault_ParentTable", ForeignKeyRule.SetDefault);
+            CheckForeignKey(Assert.Single(childTableSetDefault.ForeignKeys), "FK_ChildTableSetDefault_ParentTable", ForeignKeyRule.SetDefault);
 
-            childTableCascade.ForeignKeys.Count.Should().Be(1, "Tabuľka ChildTableCascade by mala mať jeden cudzí kľúč.");
-            CheckForeignKey(childTableCascade.ForeignKeys[0], "FK_ChildTableCascade_ParentTable", ForeignKeyRule.Cascade);
+            CheckForeignKey(Assert.Single(childTableCascade.ForeignKeys), "FK_ChildTableCascade_ParentTable", ForeignKeyRule.Cascade);
         }
 
         #endregion
@@ -292,7 +287,7 @@ ALTER TABLE [dbo].[ChildTableCascade] CHECK CONSTRAINT [FK_ChildTableCascade_Par
             };
 
             IEnumerable<string> actualColumns = from column in table.Columns select column.Name;
-            actualColumns.Should().BeEquivalentTo(expectedColumns, "Missing or invalid columns in table.");
+            Assert.Equivalent(expectedColumns, actualColumns, strict: true);
 
             CheckColumnSchema(table.Columns["ColByte"], SqlDbType.TinyInt, null, true);
             CheckColumnSchema(table.Columns["ColInt32"], SqlDbType.Int, 32, true);
@@ -338,48 +333,48 @@ ALTER TABLE [dbo].[ChildTableCascade] CHECK CONSTRAINT [FK_ChildTableCascade_Par
         {
             SqlServerColumnSchema sqlServerColumn = (SqlServerColumnSchema)column;
             string columnName = sqlServerColumn.Name;
-            sqlServerColumn.SqlDbType.Should().Be(sqlDbType, $"{columnName} should have correct SqlDbType.");
-            sqlServerColumn.AllowNull.Should().Be(allowNull, $"{columnName} should allow NULL.");
+            Assert.Equal(sqlDbType, sqlServerColumn.SqlDbType);
+            Assert.Equal(allowNull, sqlServerColumn.AllowNull);
             if (defaultValue is not null)
             {
-                sqlServerColumn.DefaultValue.Should().Be(defaultValue, $"{columnName} should have correct default value.");
+                Assert.Equal(defaultValue, sqlServerColumn.DefaultValue);
             }
             if (size.HasValue)
             {
-                sqlServerColumn.Size.Should().Be(size, $"{columnName} should have correct size.");
+                Assert.Equal(size.Value, sqlServerColumn.Size);
             }
             if (precision.HasValue)
             {
-                sqlServerColumn.Precision.Should().Be(precision, $"{columnName} should have correct precision.");
+                Assert.Equal(precision.Value, sqlServerColumn.Precision);
             }
             if (scale.HasValue)
             {
-                sqlServerColumn.Scale.Should().Be(scale, $"{columnName} should have correct scale.");
+                Assert.Equal(scale.Value, sqlServerColumn.Scale);
             }
         }
 
         private static void CheckIndex(IndexSchema index, IndexType indexType, Tuple<string, SortOrder>[] columns)
         {
-            index.IndexType.Should().Be(indexType, $"Index {index.Name} should have correct type.");
-            index.Columns.Count.Should().Be(columns.Length, $"Index {index.Name} should have correct columns count.");
+            Assert.Equal(indexType, index.IndexType);
+            Assert.Equal(columns.Length, index.Columns.Count);
 
             IEnumerable<string> expectedColumns = from column in columns select column.Item1;
             IEnumerable<string> actualColumns = from column in index.Columns select column.Name;
-            actualColumns.Should().Equal(expectedColumns, $"Index {index.Name} should have correct columns.");
+            Assert.Equal(expectedColumns, actualColumns);
 
             IEnumerable<SortOrder> expectedOrdering = from column in columns select column.Item2;
             IEnumerable<SortOrder> actualOrdering = from column in index.Columns select column.Order;
-            actualOrdering.Should().Equal(expectedOrdering, $"Index {index.Name} should have correct columns ordering.");
+            Assert.Equal(expectedOrdering, actualOrdering);
         }
 
         private static void CheckForeignKey(ForeignKeySchema foreignKey, string foreignKeyName, ForeignKeyRule rule)
         {
-            foreignKey.Name.Should().Be(foreignKeyName, "Meno cudzieho kľúča musí byť správne.");
-            foreignKey.PrimaryKeyTableName.Should().Be("ParentTable", "Meno tabuľky s primárnym kľúčom musí byť správne.");
-            foreignKey.PrimaryKeyTableColumns.Should().Equal(new string[] { "Id" });
-            foreignKey.ForeignKeyTableColumns.Should().Equal(new string[] { "ParentId" });
-            foreignKey.DeleteRule.Should().Be(rule, "Pravidlo pri vymazaní (DELETE RULE) musí byť správne.");
-            foreignKey.UpdateRule.Should().Be(rule, "Pravidlo pri vymazaní (UPDATE RULE) musí byť správne.");
+            Assert.Equal(foreignKeyName, foreignKey.Name);
+            Assert.Equal("ParentTable", foreignKey.PrimaryKeyTableName);
+            Assert.Equal(new string[] { "Id" }, foreignKey.PrimaryKeyTableColumns);
+            Assert.Equal(new string[] { "ParentId" }, foreignKey.ForeignKeyTableColumns);
+            Assert.Equal(rule, foreignKey.DeleteRule);
+            Assert.Equal(rule, foreignKey.UpdateRule);
         }
 
         #endregion

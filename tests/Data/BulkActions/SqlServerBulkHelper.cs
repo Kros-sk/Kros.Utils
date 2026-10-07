@@ -1,7 +1,7 @@
-﻿using FluentAssertions;
-using System;
+﻿using System;
 using System.Data;
 using System.Linq;
+using Xunit;
 
 namespace Kros.Utils.UnitTests.Data.BulkActions
 {
@@ -19,11 +19,9 @@ namespace Kros.Utils.UnitTests.Data.BulkActions
 
         public static void CompareColumnValues(DataTable actualTable, DataTable expectedTable, string columnName)
         {
-            actualTable.Columns[columnName].Should().NotBeNull($"Missing column [{columnName}].");
+            Assert.True(actualTable.Columns.Contains(columnName), $"Missing column [{columnName}].");
 
-            actualTable.Rows.Count.Should().Be(expectedTable.Rows.Count,
-                $"Tables have different number of columns: actual = {actualTable.Rows.Count}, " +
-                $"expected = {expectedTable.Rows.Count}.");
+            Assert.Equal(expectedTable.Rows.Count, actualTable.Rows.Count);
 
             foreach (DataRow actual in expectedTable.Rows)
             {
@@ -50,7 +48,7 @@ namespace Kros.Utils.UnitTests.Data.BulkActions
                 }
             }
 
-            primaryKeysAreTheSame.Should().BeTrue("Tables primary keys must be equal. " +
+            Assert.True(primaryKeysAreTheSame, "Tables primary keys must be equal. " +
                 $"actual = {GetPk(actualTable)}; expected = {GetPk(expectedTable)}");
         }
 
@@ -59,20 +57,16 @@ namespace Kros.Utils.UnitTests.Data.BulkActions
 
         private static void CompareColumns(DataTable actualTable, DataTable expectedTable)
         {
-            actualTable.Columns.Count.Should().Be(expectedTable.Columns.Count,
-                $"Tables have different number of columns: actual = {actualTable.Columns.Count}, " +
-                $"expected = {expectedTable.Columns.Count}.");
+            Assert.Equal(expectedTable.Columns.Count, actualTable.Columns.Count);
 
             foreach (DataColumn column in expectedTable.Columns)
             {
-                actualTable.Columns[column.ColumnName].Should().NotBeNull($"Missing column [{column.ColumnName}].");
+                Assert.True(actualTable.Columns.Contains(column.ColumnName), $"Missing column [{column.ColumnName}].");
             }
         }
 
         private static void CompareRowCounts(DataTable actualTable, DataTable expectedTable) =>
-            actualTable.Rows.Count.Should().Be(expectedTable.Rows.Count,
-                $"Tables have different number of rows: actual = {actualTable.Rows.Count}, " +
-                $"expected = {expectedTable.Rows.Count}.");
+            Assert.Equal(expectedTable.Rows.Count, actualTable.Rows.Count);
 
         private static void CompareData(DataTable actualTable, DataTable expectedTable)
         {
@@ -112,7 +106,7 @@ namespace Kros.Utils.UnitTests.Data.BulkActions
                 pk += expectedRow[expectedRow.Table.PrimaryKey[i]].ToString();
             }
 
-            actualRow.Should().NotBeNull($"Table does not contain row with primary key \"{pk}\".");
+            Assert.True(actualRow is not null, $"Table does not contain row with primary key \"{pk}\".");
 
             foreach (DataColumn column in expectedRow.Table.Columns)
             {
@@ -121,7 +115,8 @@ namespace Kros.Utils.UnitTests.Data.BulkActions
                     object expectedValue = expectedRow[column] == DBNull.Value ? "NULL" : expectedRow[column];
                     object actualValue = actualRow[column.ColumnName] == DBNull.Value ? "NULL" : actualRow[column.ColumnName];
 
-                    actualValue.Should().Be(expectedValue, $"Row with primary key \"{pk}\" does not contain expected data. " +
+                    Assert.True(Equals(expectedValue, actualValue),
+                        $"Row with primary key \"{pk}\" does not contain expected data. " +
                         $"In column [{column.ColumnName}] is expected value \"{expectedValue}\", " +
                         $"but found value \"{actualValue}\".");
                 }

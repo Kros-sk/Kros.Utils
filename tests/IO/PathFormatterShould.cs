@@ -1,6 +1,4 @@
-﻿using FluentAssertions;
-using FluentAssertions.Collections;
-using Kros.IO;
+﻿using Kros.IO;
 using NSubstitute;
 using System.Collections.Generic;
 using Xunit;
@@ -17,10 +15,10 @@ namespace Kros.Utils.UnitTests.IO
             const string expected = @"C:/lorem/ipsum/file.txt";
 
             var actual = formatter.FormatPath(@"C:\lorem\ipsum", "file.txt");
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
 
             actual = formatter.FormatPath(@"C:\lorem\ipsum\", "file.txt");
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
@@ -31,10 +29,10 @@ namespace Kros.Utils.UnitTests.IO
             const string expected = @"C:/lorem/ipsum/file (some info).txt";
 
             var actual = formatter.FormatPath(@"C:\lorem\ipsum", "file.txt", "some info");
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
 
             actual = formatter.FormatPath(@"C:\lorem\ipsum\", "file.txt", "some info");
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
@@ -47,7 +45,7 @@ namespace Kros.Utils.UnitTests.IO
             const string expected = @"C:/lorem/ipsum/file -,-some info=;=.txt";
 
             var actual = formatter.FormatPath(@"C:\lorem\ipsum", "file.txt", "some info");
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
@@ -70,7 +68,7 @@ namespace Kros.Utils.UnitTests.IO
             const string expected = @"C:/lorem/ipsum/file -,-some info-;- =,=4=;=.txt";
 
             var actual = formatter.FormatNewPath(@"C:\lorem\ipsum", "file.txt", "some info");
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
@@ -88,7 +86,7 @@ namespace Kros.Utils.UnitTests.IO
             const string expected = @"C:/lorem/ipsum/file (4).txt";
 
             var actual = formatter.FormatNewPath(@"C:\lorem\ipsum", "file.txt");
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
@@ -108,7 +106,7 @@ namespace Kros.Utils.UnitTests.IO
             const string expected = @"C:/lorem/ipsum/file (some info) (4).txt";
 
             var actual = formatter.FormatNewPath(@"C:\lorem\ipsum", fileName, info);
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
@@ -119,7 +117,7 @@ namespace Kros.Utils.UnitTests.IO
             const string expected = @"C:/lorem/ipsum/file (some-info-with-invalid-chars).txt";
 
             var actual = formatter.FormatPath(@"C:\lorem\ipsum", "file.txt", "some*info|with?invalid<chars");
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
@@ -145,8 +143,7 @@ namespace Kros.Utils.UnitTests.IO
             };
             var actual = formatter.FormatPaths(folder, fileName, fileInfos);
 
-            var comparer = new GenericDictionaryAssertions<Dictionary<int, string>, int, string>(actual);
-            comparer.Equal(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
@@ -179,8 +176,7 @@ namespace Kros.Utils.UnitTests.IO
             };
             var actual = formatter.FormatPaths(folder, fileName, fileInfos);
 
-            var comparer = new GenericDictionaryAssertions<Dictionary<int, string>, int, string>(actual);
-            comparer.Equal(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
@@ -206,8 +202,7 @@ namespace Kros.Utils.UnitTests.IO
             };
             var actual = formatter.FormatPathsInSubfolder(folder, fileName, fileInfos);
 
-            var comparer = new GenericDictionaryAssertions<Dictionary<int, string>, int, string>(actual);
-            comparer.Equal(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
@@ -234,8 +229,7 @@ namespace Kros.Utils.UnitTests.IO
             };
             var actual = formatter.FormatPathsInSubfolder(folder, fileName, subfolderInfo, fileInfos);
 
-            var comparer = new GenericDictionaryAssertions<Dictionary<int, string>, int, string>(actual);
-            comparer.Equal(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
@@ -268,8 +262,7 @@ namespace Kros.Utils.UnitTests.IO
             };
             var actual = formatter.FormatPathsInSubfolder(folder, fileName, fileInfos);
 
-            var comparer = new GenericDictionaryAssertions<Dictionary<int, string>, int, string>(actual);
-            comparer.Equal(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
@@ -307,8 +300,7 @@ namespace Kros.Utils.UnitTests.IO
             };
             var actual = formatter.FormatPathsInSubfolder(folder, fileName, fileInfos);
 
-            var comparer = new GenericDictionaryAssertions<Dictionary<int, string>, int, string>(actual);
-            comparer.Equal(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
@@ -342,8 +334,7 @@ namespace Kros.Utils.UnitTests.IO
             };
             var actual = formatter.FormatPathsInSubfolder(folder, fileName, SubfolderInfo, fileInfos);
 
-            var comparer = new GenericDictionaryAssertions<Dictionary<int, string>, int, string>(actual);
-            comparer.Equal(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
@@ -371,8 +362,7 @@ namespace Kros.Utils.UnitTests.IO
             };
             var actual = formatter.FormatPaths(folder, fileName, fileInfos);
 
-            var comparer = new GenericDictionaryAssertions<Dictionary<int, string>, int, string>(actual);
-            comparer.Equal(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
@@ -400,8 +390,7 @@ namespace Kros.Utils.UnitTests.IO
             };
             var actual = formatter.FormatPathsInSubfolder(folder, fileName, fileInfos);
 
-            var comparer = new GenericDictionaryAssertions<Dictionary<int, string>, int, string>(actual);
-            comparer.Equal(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
@@ -415,7 +404,7 @@ namespace Kros.Utils.UnitTests.IO
             const string expected = @"C:/lorem/ipsum/too lo.txt"; // 25 znakov - nastavené maximum
 
             var actual = formatter.FormatPath(folder, fileName);
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
@@ -430,7 +419,7 @@ namespace Kros.Utils.UnitTests.IO
             const string expected = @"C:/lorem/ipsum/too long filen (info).txt"; // 40 znakov - nastavené maximum
 
             var actual = formatter.FormatPath(folder, fileName, info);
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
@@ -465,8 +454,7 @@ namespace Kros.Utils.UnitTests.IO
             };
             var actual = formatter.FormatPathsInSubfolder(folder, fileName, fileInfos);
 
-            var comparer = new GenericDictionaryAssertions<Dictionary<int, string>, int, string>(actual);
-            comparer.Equal(expected);
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
@@ -502,8 +490,7 @@ namespace Kros.Utils.UnitTests.IO
             };
             var actual = formatter.FormatPathsInSubfolder(folder, fileName, subfolderInfo, fileInfos);
 
-            var comparer = new GenericDictionaryAssertions<Dictionary<int, string>, int, string>(actual);
-            comparer.Equal(expected);
+            Assert.Equal(expected, actual);
         }
     }
 }

@@ -16,20 +16,11 @@ steps:
       Get-ChildItem -Path '$(Build.SourcesDirectory)' -Recurse -Include *.nupkg, *.snupkg | Remove-Item
     displayName: Clear NuGet packages
 
-  - task: DotNetCoreCLI@2
+  - pwsh: dotnet build Kros.Utils.sln --configuration Release
     displayName: Build
-    inputs:
-      command: build
-      projects: Kros.Utils.sln
-      arguments: --configuration Release
 
-  - task: DotNetCoreCLI@2
+  - pwsh: dotnet test --solution Kros.Utils.sln --configuration Release --no-build --results-directory '$(Common.TestResultsDirectory)' --report-xunit-trx
     displayName: Test
-    inputs:
-      command: test
-      projects: Kros.Utils.sln
-      publishTestResults: false
-      arguments: --configuration Release --logger trx --results-directory "$(Common.TestResultsDirectory)"
 
   - task: PublishTestResults@2
     displayName: Publish test results

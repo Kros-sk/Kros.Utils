@@ -1,5 +1,4 @@
-﻿using FluentAssertions;
-using Kros.Net;
+﻿using Kros.Net;
 using System.Collections.Generic;
 using Xunit;
 
@@ -44,7 +43,7 @@ namespace Kros.Utils.UnitTests.Net
             });
 
             List<KeyValuePair<string, string?>> actualData = HttpClientExtensions.CreateFormPostData(data);
-            actualData.Should().BeEquivalentTo(expectedData);
+            Assert.Equivalent(expectedData, actualData, strict: true);
         }
 
         [Fact]
@@ -68,7 +67,7 @@ namespace Kros.Utils.UnitTests.Net
             });
 
             List<KeyValuePair<string, string?>> actualData = HttpClientExtensions.CreateFormPostData(data, "anti-forgery-token");
-            actualData.Should().BeEquivalentTo(expectedData);
+            Assert.Equivalent(expectedData, actualData, strict: true);
         }
     }
 }

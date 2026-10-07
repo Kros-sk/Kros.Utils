@@ -1,5 +1,4 @@
-﻿using FluentAssertions;
-using Kros.Net;
+﻿using Kros.Net;
 using System;
 using System.Net.Http;
 using System.Threading;
@@ -65,7 +64,7 @@ namespace Kros.Utils.UnitTests.Net
         {
             var checker = new TestNetworkChecker(throwException: false);
 
-            checker.IsNetworkAvailable().Should().BeTrue();
+            Assert.True(checker.IsNetworkAvailable());
         }
 
         [Fact]
@@ -73,7 +72,7 @@ namespace Kros.Utils.UnitTests.Net
         {
             var checker = new TestNetworkChecker(throwException: true);
 
-            checker.IsNetworkAvailable().Should().BeFalse();
+            Assert.False(checker.IsNetworkAvailable());
         }
 
         [Fact]
@@ -89,7 +88,7 @@ namespace Kros.Utils.UnitTests.Net
             using (DateTimeProvider.InjectActualDateTime(new DateTime(2017, 10, 11, 15, 3, 3, 209)))
             {
                 checker.ThrowException = true;
-                checker.IsNetworkAvailable().Should().BeTrue();
+                Assert.True(checker.IsNetworkAvailable());
             }
         }
 
@@ -106,7 +105,7 @@ namespace Kros.Utils.UnitTests.Net
             using (DateTimeProvider.InjectActualDateTime(new DateTime(2017, 10, 11, 15, 3, 3, 211)))
             {
                 checker.ThrowException = true;
-                checker.IsNetworkAvailable().Should().BeFalse();
+                Assert.False(checker.IsNetworkAvailable());
             }
         }
 
@@ -116,7 +115,7 @@ namespace Kros.Utils.UnitTests.Net
             var checker = new TestNetworkChecker(throwException: false);
             checker.CheckNetworkResponse = false;
 
-            checker.IsNetworkAvailable().Should().BeFalse();
+            Assert.False(checker.IsNetworkAvailable());
         }
 
         #endregion
