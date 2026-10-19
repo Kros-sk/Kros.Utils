@@ -1,4 +1,4 @@
-# Kros.Utils [![Build Status](https://dev.azure.com/krossk/DevShared/_apis/build/status%2FKros-sk.Kros.Utils?branchName=main)](https://dev.azure.com/krossk/DevShared/_build/latest?definitionId=768&branchName=main)
+# Kros.Utils [![Build](https://github.com/Kros-sk/Kros.Utils/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/Kros-sk/Kros.Utils/actions/workflows/build.yml)
 
 **Kros.Utils** is universal library of various tools to simplify the work of the programmer.
 Library is:
