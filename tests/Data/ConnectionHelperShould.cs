@@ -82,7 +82,7 @@ namespace Kros.Utils.UnitTests.Data
         {
             ServerHelper.Connection.Close();
 
-            using (await ConnectionHelper.OpenConnectionAsync(ServerHelper.Connection))
+            using (await ConnectionHelper.OpenConnectionAsync(ServerHelper.Connection, TestContext.Current.CancellationToken))
             {
                 Assert.Equal(ConnectionState.Open, ServerHelper.Connection.State);
             }
