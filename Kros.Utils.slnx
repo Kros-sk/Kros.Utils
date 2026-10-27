@@ -1,0 +1,15 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path=".github/workflows/build.yml" />
+    <File Path=".gitignore" />
+    <File Path="CONTRIBUTING.md" />
+    <File Path="global.json" />
+    <File Path="PULL_REQUEST_TEMPLATE.md" />
+    <File Path="README.md" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Kros.Utils.UnitTests.csproj" />
+  </Folder>
+  <Project Path="src/Kros.Utils.csproj" />
+</Solution>

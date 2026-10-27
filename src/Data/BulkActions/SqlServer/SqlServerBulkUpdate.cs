@@ -4,6 +4,7 @@ using System;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Kros.Data.BulkActions.SqlServer
@@ -127,7 +128,15 @@ namespace Kros.Data.BulkActions.SqlServer
         }
 
         /// <inheritdoc/>
-        protected async override Task UpdateDestinationTableAsync(IDataReader reader, string tempTableName, bool useAsync)
+        protected sealed override Task UpdateDestinationTableAsync(IDataReader reader, string tempTableName, bool useAsync)
+            => UpdateDestinationTableAsync(reader, tempTableName, useAsync, CancellationToken.None);
+
+        /// <inheritdoc/>
+        protected async override Task UpdateDestinationTableAsync(
+            IDataReader reader,
+            string tempTableName,
+            bool useAsync,
+            CancellationToken cancellationToken)
         {
             using (var cmd = _connection.CreateCommand())
             {
@@ -144,27 +153,31 @@ namespace Kros.Data.BulkActions.SqlServer
                     $"FROM [{DestinationTableName}]\r\n" +
                     $"INNER JOIN [{tempTableName}] ON ({innerJoin})";
 
-                await ExecuteNonQueryAsync(useAsync, cmd);
+                await ExecuteNonQueryAsync(useAsync, cmd, cancellationToken);
             }
         }
 
         /// <inheritdoc/>
-        protected async override Task DoneTempTableAsync(string tempTableName, bool useAsync)
+        protected sealed override Task DoneTempTableAsync(string tempTableName, bool useAsync)
+            => DoneTempTableAsync(tempTableName, useAsync, CancellationToken.None);
+
+        /// <inheritdoc/>
+        protected async override Task DoneTempTableAsync(string tempTableName, bool useAsync, CancellationToken cancellationToken)
         {
             using (IDbCommand cmd = _connection.CreateCommand())
             {
                 cmd.Transaction = ExternalTransaction;
                 cmd.CommandText = $"DROP TABLE [{tempTableName}]";
 
-                await ExecuteNonQueryAsync(useAsync, cmd);
+                await ExecuteNonQueryAsync(useAsync, cmd, cancellationToken);
             }
         }
 
-        private static async Task ExecuteNonQueryAsync(bool useAsync, IDbCommand cmd)
+        private static async Task ExecuteNonQueryAsync(bool useAsync, IDbCommand cmd, CancellationToken cancellationToken)
         {
             if (useAsync)
             {
-                await ((DbCommand)cmd).ExecuteNonQueryAsync();
+                await ((DbCommand)cmd).ExecuteNonQueryAsync(cancellationToken);
             }
             else
             {

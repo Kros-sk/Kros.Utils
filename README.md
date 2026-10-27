@@ -183,6 +183,12 @@ private class BulkUpdateItem
 }
 ```
 
+Asynchronous variants accept a `CancellationToken`:
+
+```c#
+await bulkInsert.InsertAsync(reader, cancellationToken);
+```
+
 #### Bulk Update
 
 ```c#
@@ -200,6 +206,12 @@ public void UpdateManyItems()
         }
     }
 }
+```
+
+Asynchronous variants accept a `CancellationToken`:
+
+```c#
+await bulkUpdate.UpdateAsync(reader, cancellationToken);
 ```
 
 ### IdGenerator

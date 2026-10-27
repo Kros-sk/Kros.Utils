@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Kros.Data.BulkActions
@@ -54,6 +55,16 @@ namespace Kros.Data.BulkActions
         Task UpdateAsync(IBulkActionDataReader reader);
 
         /// <summary>
+        /// Asynchronously updates all data from source <paramref name="reader"/>.
+        /// </summary>
+        /// <param name="reader">Data source.</param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        /// <returns>
+        /// A task that represents the asynchronous Insert operation.
+        /// </returns>
+        Task UpdateAsync(IBulkActionDataReader reader, CancellationToken cancellationToken);
+
+        /// <summary>
         /// Updates all data from source <paramref name="reader"/>.
         /// </summary>
         /// <param name="reader">Data source.</param>
@@ -69,6 +80,16 @@ namespace Kros.Data.BulkActions
         Task UpdateAsync(IDataReader reader);
 
         /// <summary>
+        /// Asynchronously updates all data from source <paramref name="reader"/>.
+        /// </summary>
+        /// <param name="reader">Data source.</param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        /// <returns>
+        /// A task that represents the asynchronous Insert operation.
+        /// </returns>
+        Task UpdateAsync(IDataReader reader, CancellationToken cancellationToken);
+
+        /// <summary>
         /// Updates all data from table <paramref name="table"/>.
         /// </summary>
         /// <param name="table">Data source.</param>
@@ -82,5 +103,15 @@ namespace Kros.Data.BulkActions
         /// A task that represents the asynchronous Insert operation.
         /// </returns>
         Task UpdateAsync(DataTable table);
+
+        /// <summary>
+        /// Asynchronously updates all data from table <paramref name="table"/>.
+        /// </summary>
+        /// <param name="table">Data source.</param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        /// <returns>
+        /// A task that represents the asynchronous Insert operation.
+        /// </returns>
+        Task UpdateAsync(DataTable table, CancellationToken cancellationToken);
     }
 }

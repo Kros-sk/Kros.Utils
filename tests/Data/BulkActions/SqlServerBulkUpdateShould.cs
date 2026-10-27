@@ -8,6 +8,8 @@ using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -227,7 +229,7 @@ INSERT INTO [{CompositeWithIdentity_TableName}] ([Id1], [Value]) VALUES (3, '3 -
             {
                 bulkUpdate.DestinationTableName = TableName;
                 bulkUpdate.PrimaryKeyColumn = PrimaryKeyColumn;
-                await bulkUpdate.UpdateAsync(reader);
+                await bulkUpdate.UpdateAsync(reader, TestContext.Current.CancellationToken);
             }
 
             DataTable actualData = LoadData(ServerHelper.Connection);
@@ -263,7 +265,7 @@ INSERT INTO [{CompositeWithIdentity_TableName}] ([Id1], [Value]) VALUES (3, '3 -
             {
                 bulkUpdate.DestinationTableName = TableName;
                 bulkUpdate.PrimaryKeyColumn = PrimaryKeyColumn;
-                await bulkUpdate.UpdateAsync(reader);
+                await bulkUpdate.UpdateAsync(reader, TestContext.Current.CancellationToken);
             }
 
             DataTable actualData = LoadData(ServerHelper.Connection);
@@ -316,12 +318,117 @@ INSERT INTO [{CompositeWithIdentity_TableName}] ([Id1], [Value]) VALUES (3, '3 -
             {
                 bulkUpdate.DestinationTableName = TableName;
                 bulkUpdate.PrimaryKeyColumn = PrimaryKeyColumn;
-                await bulkUpdate.UpdateAsync(expectedData);
+                await bulkUpdate.UpdateAsync(expectedData, TestContext.Current.CancellationToken);
             }
 
             DataTable actualData = LoadData(ServerHelper.Connection);
 
             SqlServerBulkHelper.CompareTables(actualData, expectedData);
+        }
+
+        [Fact]
+        public async Task BulkUpdateDataFromIDataReaderAsynchronouslyWithCancellationToken()
+        {
+            DataTable expectedData = CreateExpectedData();
+
+            using (IDataReader reader = expectedData.CreateDataReader())
+            using (var bulkUpdate = new SqlServerBulkUpdate(ServerHelper.Connection))
+            {
+                bulkUpdate.DestinationTableName = TableName;
+                bulkUpdate.PrimaryKeyColumn = PrimaryKeyColumn;
+                await bulkUpdate.UpdateAsync(reader, TestContext.Current.CancellationToken);
+            }
+
+            DataTable actualData = LoadData(ServerHelper.Connection);
+
+            SqlServerBulkHelper.CompareTables(actualData, expectedData);
+        }
+
+        [Fact]
+        public async Task BulkUpdateDataFromIBulkInsertDataReaderAsynchronouslyWithCancellationToken()
+        {
+            DataTable expectedData = CreateExpectedData();
+
+            using (IBulkActionDataReader reader = CreateDataReaderForUpdate())
+            using (var bulkUpdate = new SqlServerBulkUpdate(ServerHelper.Connection))
+            {
+                bulkUpdate.DestinationTableName = TableName;
+                bulkUpdate.PrimaryKeyColumn = PrimaryKeyColumn;
+                await bulkUpdate.UpdateAsync(reader, TestContext.Current.CancellationToken);
+            }
+
+            DataTable actualData = LoadData(ServerHelper.Connection);
+
+            SqlServerBulkHelper.CompareTables(actualData, expectedData);
+        }
+
+        [Fact]
+        public async Task BulkUpdateDataFromDataTableAsynchronouslyWithCancellationToken()
+        {
+            DataTable expectedData = CreateExpectedData();
+
+            using (var bulkUpdate = new SqlServerBulkUpdate(ServerHelper.Connection))
+            {
+                bulkUpdate.DestinationTableName = TableName;
+                bulkUpdate.PrimaryKeyColumn = PrimaryKeyColumn;
+                await bulkUpdate.UpdateAsync(expectedData, TestContext.Current.CancellationToken);
+            }
+
+            DataTable actualData = LoadData(ServerHelper.Connection);
+
+            SqlServerBulkHelper.CompareTables(actualData, expectedData);
+        }
+
+        [Fact]
+        public async Task ThrowOperationCanceledExceptionWhenTokenIsAlreadyCancelled()
+        {
+            DataTable data = CreateExpectedData();
+
+            using (IDataReader reader = data.CreateDataReader())
+            using (var bulkUpdate = new SqlServerBulkUpdate(ServerHelper.Connection))
+            {
+                bulkUpdate.DestinationTableName = TableName;
+                bulkUpdate.PrimaryKeyColumn = PrimaryKeyColumn;
+                await Assert.ThrowsAnyAsync<OperationCanceledException>(
+                    () => bulkUpdate.UpdateAsync(reader, new CancellationToken(canceled: true)));
+            }
+
+            DataTable actualData = LoadData(ServerHelper.Connection);
+            DataRow seedRow = actualData.Rows.Cast<DataRow>().Single(row => (int)row["Id"] == 3);
+            Assert.Equal("ipsum", seedRow["ColShortText"]);
+        }
+
+        [Fact]
+        public async Task ThrowOperationCanceledExceptionWhenTokenIsCancelledDuringUpdate()
+        {
+            using (var cts = new CancellationTokenSource())
+            using (IBulkActionDataReader reader =
+                new CancellingBulkActionDataReader(CreateDataReaderForUpdate(), cts, cancelOnReadNumber: 2))
+            using (var bulkUpdate = new SqlServerBulkUpdate(ServerHelper.Connection))
+            {
+                bulkUpdate.DestinationTableName = TableName;
+                bulkUpdate.PrimaryKeyColumn = PrimaryKeyColumn;
+                await Assert.ThrowsAnyAsync<OperationCanceledException>(() => bulkUpdate.UpdateAsync(reader, cts.Token));
+            }
+
+            DataTable actualData = LoadData(ServerHelper.Connection);
+            DataRow seedRow = actualData.Rows.Cast<DataRow>().Single(row => (int)row["Id"] == 3);
+            Assert.Equal("ipsum", seedRow["ColShortText"]);
+        }
+
+        [Fact]
+        public void SealTokenlessHookOverridesSoSubclassesMustOverrideTokenOverloads()
+        {
+            const BindingFlags flags = BindingFlags.Instance | BindingFlags.NonPublic;
+            MethodInfo? updateDestination = typeof(SqlServerBulkUpdate).GetMethod(
+                "UpdateDestinationTableAsync", flags, null, new[] { typeof(IDataReader), typeof(string), typeof(bool) }, null);
+            MethodInfo? doneTempTable = typeof(SqlServerBulkUpdate).GetMethod(
+                "DoneTempTableAsync", flags, null, new[] { typeof(string), typeof(bool) }, null);
+
+            Assert.NotNull(updateDestination);
+            Assert.NotNull(doneTempTable);
+            Assert.True(updateDestination.IsFinal, "UpdateDestinationTableAsync(reader, tempTableName, useAsync) must be sealed.");
+            Assert.True(doneTempTable.IsFinal, "DoneTempTableAsync(tempTableName, useAsync) must be sealed.");
         }
 
         [Fact]
@@ -338,7 +445,7 @@ INSERT INTO [{CompositeWithIdentity_TableName}] ([Id1], [Value]) VALUES (3, '3 -
 
                 bulkUpdate.DestinationTableName = Identity_TableName;
                 bulkUpdate.PrimaryKeyColumn = nameof(BulkUpdateItemIdentity.Id);
-                await bulkUpdate.UpdateAsync(dataToUpdate);
+                await bulkUpdate.UpdateAsync(dataToUpdate, TestContext.Current.CancellationToken);
 
                 helper.Connection.Open();
                 actualData = LoadDataForTableWithIdentity(helper.Connection);
@@ -371,7 +478,7 @@ INSERT INTO [{CompositeWithIdentity_TableName}] ([Id1], [Value]) VALUES (3, '3 -
 
                 bulkUpdate.DestinationTableName = Composite_TableName;
                 bulkUpdate.PrimaryKeyColumn = nameof(BulkUpdateItemComposite.Id1) + ", " + nameof(BulkUpdateItemComposite.Id2);
-                await bulkUpdate.UpdateAsync(dataToUpdate);
+                await bulkUpdate.UpdateAsync(dataToUpdate, TestContext.Current.CancellationToken);
 
                 helper.Connection.Open();
                 actualData = LoadDataForTableWithCompositePk(helper.Connection, Composite_TableName);
@@ -407,7 +514,7 @@ INSERT INTO [{CompositeWithIdentity_TableName}] ([Id1], [Value]) VALUES (3, '3 -
 
                 bulkUpdate.DestinationTableName = CompositeWithIdentity_TableName;
                 bulkUpdate.PrimaryKeyColumn = nameof(BulkUpdateItemComposite.Id1) + ", " + nameof(BulkUpdateItemComposite.Id2);
-                await bulkUpdate.UpdateAsync(dataToUpdate);
+                await bulkUpdate.UpdateAsync(dataToUpdate, TestContext.Current.CancellationToken);
 
                 helper.Connection.Open();
                 actualData = LoadDataForTableWithCompositePk(helper.Connection, CompositeWithIdentity_TableName);
