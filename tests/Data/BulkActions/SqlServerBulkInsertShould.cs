@@ -156,7 +156,7 @@ $@"CREATE TABLE[dbo].[{TableName}] (
             using (SqlServerBulkInsert bulkInsert = new(ServerHelper.Connection))
             {
                 bulkInsert.DestinationTableName = TableName;
-                await bulkInsert.InsertAsync(expectedData);
+                await bulkInsert.InsertAsync(expectedData, TestContext.Current.CancellationToken);
             }
             DataTable actualData = LoadData(ServerHelper.Connection, TableName);
 
@@ -196,7 +196,7 @@ $@"CREATE TABLE[dbo].[{TableName}] (
                 using (SqlServerBulkInsert bulkInsert = new SqlServerBulkInsert(ServerHelper.Connection))
                 {
                     bulkInsert.DestinationTableName = TableName;
-                    await bulkInsert.InsertAsync(reader);
+                    await bulkInsert.InsertAsync(reader, TestContext.Current.CancellationToken);
                 }
                 actualData = LoadData(ServerHelper.Connection, TableName);
             }
@@ -222,7 +222,7 @@ $@"CREATE TABLE[dbo].[{TableName}] (
                 using (SqlServerBulkInsert bulkInsert = new(ServerHelper.Connection))
                 {
                     bulkInsert.DestinationTableName = TableName;
-                    await bulkInsert.InsertAsync(reader);
+                    await bulkInsert.InsertAsync(reader, TestContext.Current.CancellationToken);
                 }
                 actualData = LoadData(ServerHelper.Connection, TableName);
             }

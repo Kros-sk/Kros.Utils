@@ -229,7 +229,7 @@ INSERT INTO [{CompositeWithIdentity_TableName}] ([Id1], [Value]) VALUES (3, '3 -
             {
                 bulkUpdate.DestinationTableName = TableName;
                 bulkUpdate.PrimaryKeyColumn = PrimaryKeyColumn;
-                await bulkUpdate.UpdateAsync(reader);
+                await bulkUpdate.UpdateAsync(reader, TestContext.Current.CancellationToken);
             }
 
             DataTable actualData = LoadData(ServerHelper.Connection);
@@ -265,7 +265,7 @@ INSERT INTO [{CompositeWithIdentity_TableName}] ([Id1], [Value]) VALUES (3, '3 -
             {
                 bulkUpdate.DestinationTableName = TableName;
                 bulkUpdate.PrimaryKeyColumn = PrimaryKeyColumn;
-                await bulkUpdate.UpdateAsync(reader);
+                await bulkUpdate.UpdateAsync(reader, TestContext.Current.CancellationToken);
             }
 
             DataTable actualData = LoadData(ServerHelper.Connection);
@@ -318,7 +318,7 @@ INSERT INTO [{CompositeWithIdentity_TableName}] ([Id1], [Value]) VALUES (3, '3 -
             {
                 bulkUpdate.DestinationTableName = TableName;
                 bulkUpdate.PrimaryKeyColumn = PrimaryKeyColumn;
-                await bulkUpdate.UpdateAsync(expectedData);
+                await bulkUpdate.UpdateAsync(expectedData, TestContext.Current.CancellationToken);
             }
 
             DataTable actualData = LoadData(ServerHelper.Connection);
@@ -445,7 +445,7 @@ INSERT INTO [{CompositeWithIdentity_TableName}] ([Id1], [Value]) VALUES (3, '3 -
 
                 bulkUpdate.DestinationTableName = Identity_TableName;
                 bulkUpdate.PrimaryKeyColumn = nameof(BulkUpdateItemIdentity.Id);
-                await bulkUpdate.UpdateAsync(dataToUpdate);
+                await bulkUpdate.UpdateAsync(dataToUpdate, TestContext.Current.CancellationToken);
 
                 helper.Connection.Open();
                 actualData = LoadDataForTableWithIdentity(helper.Connection);
@@ -478,7 +478,7 @@ INSERT INTO [{CompositeWithIdentity_TableName}] ([Id1], [Value]) VALUES (3, '3 -
 
                 bulkUpdate.DestinationTableName = Composite_TableName;
                 bulkUpdate.PrimaryKeyColumn = nameof(BulkUpdateItemComposite.Id1) + ", " + nameof(BulkUpdateItemComposite.Id2);
-                await bulkUpdate.UpdateAsync(dataToUpdate);
+                await bulkUpdate.UpdateAsync(dataToUpdate, TestContext.Current.CancellationToken);
 
                 helper.Connection.Open();
                 actualData = LoadDataForTableWithCompositePk(helper.Connection, Composite_TableName);
@@ -514,7 +514,7 @@ INSERT INTO [{CompositeWithIdentity_TableName}] ([Id1], [Value]) VALUES (3, '3 -
 
                 bulkUpdate.DestinationTableName = CompositeWithIdentity_TableName;
                 bulkUpdate.PrimaryKeyColumn = nameof(BulkUpdateItemComposite.Id1) + ", " + nameof(BulkUpdateItemComposite.Id2);
-                await bulkUpdate.UpdateAsync(dataToUpdate);
+                await bulkUpdate.UpdateAsync(dataToUpdate, TestContext.Current.CancellationToken);
 
                 helper.Connection.Open();
                 actualData = LoadDataForTableWithCompositePk(helper.Connection, CompositeWithIdentity_TableName);
