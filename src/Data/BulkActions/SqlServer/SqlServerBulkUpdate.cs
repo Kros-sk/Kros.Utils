@@ -128,7 +128,7 @@ namespace Kros.Data.BulkActions.SqlServer
         }
 
         /// <inheritdoc/>
-        protected override Task UpdateDestinationTableAsync(IDataReader reader, string tempTableName, bool useAsync)
+        protected sealed override Task UpdateDestinationTableAsync(IDataReader reader, string tempTableName, bool useAsync)
             => UpdateDestinationTableAsync(reader, tempTableName, useAsync, CancellationToken.None);
 
         /// <inheritdoc/>
@@ -158,7 +158,7 @@ namespace Kros.Data.BulkActions.SqlServer
         }
 
         /// <inheritdoc/>
-        protected override Task DoneTempTableAsync(string tempTableName, bool useAsync)
+        protected sealed override Task DoneTempTableAsync(string tempTableName, bool useAsync)
             => DoneTempTableAsync(tempTableName, useAsync, CancellationToken.None);
 
         /// <inheritdoc/>

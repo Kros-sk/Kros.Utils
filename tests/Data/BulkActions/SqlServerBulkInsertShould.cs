@@ -299,6 +299,21 @@ $@"CREATE TABLE[dbo].[{TableName}] (
             Assert.Equal(0, LoadData(ServerHelper.Connection, TableName).Rows.Count);
         }
 
+        [Fact]
+        public async Task ThrowOperationCanceledExceptionWhenTokenIsCancelledDuringInsert()
+        {
+            using (var cts = new CancellationTokenSource())
+            using (IBulkActionDataReader reader =
+                new CancellingBulkActionDataReader(CreateIDataReaderDataSource(true), cts, cancelOnReadNumber: 2))
+            using (SqlServerBulkInsert bulkInsert = new(ServerHelper.Connection))
+            {
+                bulkInsert.DestinationTableName = TableName;
+                await Assert.ThrowsAnyAsync<OperationCanceledException>(() => bulkInsert.InsertAsync(reader, cts.Token));
+            }
+
+            Assert.Equal(0, LoadData(ServerHelper.Connection, TableName).Rows.Count);
+        }
+
         private void BulkInsertDataFromIBulkActionDataReaderCore()
         {
             DataTable expectedData = CreateDataTableDataSource();
