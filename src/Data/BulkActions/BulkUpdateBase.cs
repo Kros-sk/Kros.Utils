@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Kros.Data.BulkActions
@@ -102,36 +103,45 @@ namespace Kros.Data.BulkActions
         }
 
         /// <inheritdoc/>
-        public async Task UpdateAsync(IBulkActionDataReader reader)
+        public Task UpdateAsync(IBulkActionDataReader reader) => UpdateAsync(reader, CancellationToken.None);
+
+        /// <inheritdoc/>
+        public async Task UpdateAsync(IBulkActionDataReader reader, CancellationToken cancellationToken)
         {
             using (var bulkUpdateReader = new BulkActionDataReader(reader))
             {
-                await UpdateAsync(bulkUpdateReader);
+                await UpdateAsync(bulkUpdateReader, cancellationToken);
             }
         }
 
         /// <inheritdoc/>
-        public void Update(IDataReader reader) => UpdateCoreAsync(reader, useAsync: false).GetAwaiter().GetResult();
+        public void Update(IDataReader reader)
+            => UpdateCoreAsync(reader, useAsync: false, CancellationToken.None).GetAwaiter().GetResult();
 
         /// <inheritdoc/>
-        public Task UpdateAsync(IDataReader reader) => UpdateCoreAsync(reader, useAsync: true);
+        public Task UpdateAsync(IDataReader reader) => UpdateAsync(reader, CancellationToken.None);
 
-        private async Task UpdateCoreAsync(IDataReader reader, bool useAsync)
+        /// <inheritdoc/>
+        public Task UpdateAsync(IDataReader reader, CancellationToken cancellationToken)
+            => UpdateCoreAsync(reader, useAsync: true, cancellationToken);
+
+        private async Task UpdateCoreAsync(IDataReader reader, bool useAsync, CancellationToken cancellationToken)
         {
             Check.NotNull(reader, nameof(reader));
             if (_primaryKeyColumns.Length == 0)
             {
                 throw new InvalidOperationException(Resources.BulkUpdatePrimaryKeyIsNotSet);
             }
+            cancellationToken.ThrowIfCancellationRequested();
 
             using (ConnectionHelper.OpenConnection(_connection))
             {
                 var tempTableName = CreateTempTable(reader);
 
-                await InsertIntoTempTableAsync(reader, tempTableName, useAsync);
+                await InsertIntoTempTableAsync(reader, tempTableName, useAsync, cancellationToken);
                 InvokeAction(tempTableName);
-                await UpdateDestinationTableAsync(reader, tempTableName, useAsync);
-                await DoneTempTableAsync(tempTableName, useAsync);
+                await UpdateDestinationTableAsync(reader, tempTableName, useAsync, cancellationToken);
+                await DoneTempTableAsync(tempTableName, useAsync, cancellationToken);
             }
         }
 
@@ -145,11 +155,14 @@ namespace Kros.Data.BulkActions
         }
 
         ///<inheritdoc/>
-        public async Task UpdateAsync(DataTable table)
+        public Task UpdateAsync(DataTable table) => UpdateAsync(table, CancellationToken.None);
+
+        ///<inheritdoc/>
+        public async Task UpdateAsync(DataTable table, CancellationToken cancellationToken)
         {
             using (var reader = table.CreateDataReader())
             {
-                await UpdateAsync(reader);
+                await UpdateAsync(reader, cancellationToken);
             }
         }
 
@@ -201,11 +214,36 @@ namespace Kros.Data.BulkActions
         protected abstract Task UpdateDestinationTableAsync(IDataReader reader, string tempTableName, bool useAsync);
 
         /// <summary>
+        /// Executes update on destination table. Base implementation forwards to
+        /// <see cref="UpdateDestinationTableAsync(IDataReader, string, bool)"/> and ignores the token.
+        /// </summary>
+        /// <param name="reader">Reader for accesing data.</param>
+        /// <param name="tempTableName">Temporary table name.</param>
+        /// <param name="useAsync"><see langword="true"/> if action can by executed asynchronously.</param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        protected virtual Task UpdateDestinationTableAsync(
+            IDataReader reader,
+            string tempTableName,
+            bool useAsync,
+            CancellationToken cancellationToken)
+            => UpdateDestinationTableAsync(reader, tempTableName, useAsync);
+
+        /// <summary>
         /// Ends work with temporary table.
         /// </summary>
         /// <param name="tempTableName">Temporary table name.</param>
         /// <param name="useAsync"><see langword="true"/> if action can by executed asynchronously.</param>
         protected virtual Task DoneTempTableAsync(string tempTableName, bool useAsync) => Task.CompletedTask;
+
+        /// <summary>
+        /// Ends work with temporary table. Base implementation forwards to
+        /// <see cref="DoneTempTableAsync(string, bool)"/> and ignores the token.
+        /// </summary>
+        /// <param name="tempTableName">Temporary table name.</param>
+        /// <param name="useAsync"><see langword="true"/> if action can by executed asynchronously.</param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        protected virtual Task DoneTempTableAsync(string tempTableName, bool useAsync, CancellationToken cancellationToken)
+            => DoneTempTableAsync(tempTableName, useAsync);
 
         #endregion
 
@@ -240,14 +278,18 @@ namespace Kros.Data.BulkActions
             return ret.ToString();
         }
 
-        private async Task InsertIntoTempTableAsync(IDataReader reader, string tempTableName, bool useAsync)
+        private async Task InsertIntoTempTableAsync(
+            IDataReader reader,
+            string tempTableName,
+            bool useAsync,
+            CancellationToken cancellationToken)
         {
             using (var bulkInsert = CreateBulkInsert())
             {
                 bulkInsert.DestinationTableName = GetTempTableNameForBulkInsert(tempTableName);
                 if (useAsync)
                 {
-                    await bulkInsert.InsertAsync(reader);
+                    await bulkInsert.InsertAsync(reader, cancellationToken);
                 }
                 else
                 {
