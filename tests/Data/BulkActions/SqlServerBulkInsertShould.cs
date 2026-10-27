@@ -5,6 +5,7 @@ using Nito.AsyncEx;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -227,6 +228,75 @@ $@"CREATE TABLE[dbo].[{TableName}] (
             }
 
             SqlServerBulkHelper.CompareTables(actualData, expectedData);
+        }
+
+        [Fact]
+        public async Task BulkInsertDataFromDataTableAsynchronouslyWithCancellationToken()
+        {
+            DataTable expectedData = CreateDataTableDataSource();
+
+            using (SqlServerBulkInsert bulkInsert = new(ServerHelper.Connection))
+            {
+                bulkInsert.DestinationTableName = TableName;
+                await bulkInsert.InsertAsync(expectedData, TestContext.Current.CancellationToken);
+            }
+            DataTable actualData = LoadData(ServerHelper.Connection, TableName);
+
+            SqlServerBulkHelper.CompareTables(actualData, expectedData);
+        }
+
+        [Fact]
+        public async Task BulkInsertDataFromIDataReaderAsynchronouslyWithCancellationToken()
+        {
+            DataTable expectedData = CreateDataTableDataSource();
+            DataTable actualData;
+
+            using (IDataReader reader = expectedData.CreateDataReader())
+            {
+                using (SqlServerBulkInsert bulkInsert = new(ServerHelper.Connection))
+                {
+                    bulkInsert.DestinationTableName = TableName;
+                    await bulkInsert.InsertAsync(reader, TestContext.Current.CancellationToken);
+                }
+                actualData = LoadData(ServerHelper.Connection, TableName);
+            }
+
+            SqlServerBulkHelper.CompareTables(actualData, expectedData);
+        }
+
+        [Fact]
+        public async Task BulkInsertDataFromIBulkActionDataReaderAsynchronouslyWithCancellationToken()
+        {
+            DataTable expectedData = CreateDataTableDataSource();
+            DataTable actualData;
+
+            using (IBulkActionDataReader reader = CreateIDataReaderDataSource(true))
+            {
+                using (SqlServerBulkInsert bulkInsert = new(ServerHelper.Connection))
+                {
+                    bulkInsert.DestinationTableName = TableName;
+                    await bulkInsert.InsertAsync(reader, TestContext.Current.CancellationToken);
+                }
+                actualData = LoadData(ServerHelper.Connection, TableName);
+            }
+
+            SqlServerBulkHelper.CompareTables(actualData, expectedData);
+        }
+
+        [Fact]
+        public async Task ThrowOperationCanceledExceptionWhenTokenIsAlreadyCancelled()
+        {
+            DataTable data = CreateDataTableDataSource();
+
+            using (IDataReader reader = data.CreateDataReader())
+            using (SqlServerBulkInsert bulkInsert = new(ServerHelper.Connection))
+            {
+                bulkInsert.DestinationTableName = TableName;
+                await Assert.ThrowsAnyAsync<OperationCanceledException>(
+                    () => bulkInsert.InsertAsync(reader, new CancellationToken(canceled: true)));
+            }
+
+            Assert.Equal(0, LoadData(ServerHelper.Connection, TableName).Rows.Count);
         }
 
         private void BulkInsertDataFromIBulkActionDataReaderCore()

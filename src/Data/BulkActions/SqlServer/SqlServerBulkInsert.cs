@@ -4,6 +4,7 @@ using Kros.Utils;
 using Microsoft.Data.SqlClient;
 using System;
 using System.Data;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Kros.Data.BulkActions.SqlServer
@@ -169,22 +170,31 @@ namespace Kros.Data.BulkActions.SqlServer
         }
 
         /// <inheritdoc/>
-        public async Task InsertAsync(IBulkActionDataReader reader)
+        public Task InsertAsync(IBulkActionDataReader reader) => InsertAsync(reader, CancellationToken.None);
+
+        /// <inheritdoc/>
+        public async Task InsertAsync(IBulkActionDataReader reader, CancellationToken cancellationToken)
         {
             using (var bulkInsertReader = new BulkActionDataReader(reader))
             {
-                await InsertAsync(bulkInsertReader);
+                await InsertAsync(bulkInsertReader, cancellationToken);
             }
         }
 
         /// <inheritdoc/>
-        public void Insert(IDataReader reader) => InsertCoreAsync(reader, useAsync: false).GetAwaiter().GetResult();
+        public void Insert(IDataReader reader)
+            => InsertCoreAsync(reader, useAsync: false, CancellationToken.None).GetAwaiter().GetResult();
 
         /// <inheritdoc/>
-        public Task InsertAsync(IDataReader reader) => InsertCoreAsync(reader, useAsync: true);
+        public Task InsertAsync(IDataReader reader) => InsertAsync(reader, CancellationToken.None);
 
-        private async Task InsertCoreAsync(IDataReader reader, bool useAsync)
+        /// <inheritdoc/>
+        public Task InsertAsync(IDataReader reader, CancellationToken cancellationToken)
+            => InsertCoreAsync(reader, useAsync: true, cancellationToken);
+
+        private async Task InsertCoreAsync(IDataReader reader, bool useAsync, CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
             using (ConnectionHelper.OpenConnection(_connection))
             using (SqlBulkCopy bulkCopy = new(_connection, BulkCopyOptions, ExternalTransaction))
             {
@@ -195,7 +205,7 @@ namespace Kros.Data.BulkActions.SqlServer
                 SetColumnMappings(bulkCopy, reader);
                 if (useAsync)
                 {
-                    await bulkCopy.WriteToServerAsync(reader);
+                    await bulkCopy.WriteToServerAsync(reader, cancellationToken);
                 }
                 else
                 {
@@ -329,11 +339,14 @@ namespace Kros.Data.BulkActions.SqlServer
         }
 
         /// <inheritdoc/>
-        public async Task InsertAsync(DataTable table)
+        public Task InsertAsync(DataTable table) => InsertAsync(table, CancellationToken.None);
+
+        /// <inheritdoc/>
+        public async Task InsertAsync(DataTable table, CancellationToken cancellationToken)
         {
             using (var reader = table.CreateDataReader())
             {
-                await InsertAsync(reader);
+                await InsertAsync(reader, cancellationToken);
             }
         }
 
