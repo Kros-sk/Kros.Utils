@@ -295,8 +295,8 @@ ALTER TABLE [dbo].[ChildTableCascade] CHECK CONSTRAINT [FK_ChildTableCascade_Par
             CheckColumnSchema(table.Columns["ColInt64NotNull"], SqlDbType.BigInt, null, false);
             CheckColumnSchema(table.Columns["ColSingle"], SqlDbType.Real, (float)123.456, true, null, 24, 0);
             CheckColumnSchema(table.Columns["ColDouble"], SqlDbType.Float, (double)654.321, true, null, 53, 0);
-            CheckColumnSchema(table.Columns["ColDecimal"], SqlDbType.Decimal, (decimal)1234.5678, true, null, 18, 5);
-            CheckColumnSchema(table.Columns["ColCurrency"], SqlDbType.Money, (decimal)1234.5678, true, null, null, null);
+            CheckColumnSchema(table.Columns["ColDecimal"], SqlDbType.Decimal, 1234.5678m, true, null, 18, 5);
+            CheckColumnSchema(table.Columns["ColCurrency"], SqlDbType.Money, 1234.5678m, true, null, null, null);
             CheckColumnSchema(table.Columns["ColVarChar"], SqlDbType.NVarChar, null, true, 100, null, null);
             CheckColumnSchema(table.Columns["ColVarCharNotNull"], SqlDbType.NVarChar, "Lorem ipsum", false, 200, null, null);
             CheckColumnSchema(table.Columns["ColText"], SqlDbType.NText, null, true);
