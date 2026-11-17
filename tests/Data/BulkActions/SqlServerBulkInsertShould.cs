@@ -50,10 +50,10 @@ namespace Kros.Utils.UnitTests.Data.BulkActions
         private const float FloatMaximum = -(float)999999999999999999999.999999999999;
         private const double DoubleMinimum = FloatMinimum;
         private const double DoubleMaximum = FloatMaximum;
-        private const decimal DecimalMinimum = (decimal)-999999999.99999;
-        private const decimal DecimalMaximum = (decimal)999999999.99999;
-        private const decimal MoneyMinimum = (decimal)-99999999999999.9999999999;
-        private const decimal MoneyMaximum = (decimal)99999999999999.9999999999;
+        private const decimal DecimalMinimum = -999999999.99999m;
+        private const decimal DecimalMaximum = 999999999.99999m;
+        private const decimal MoneyMinimum = -99999999999999.9999m;
+        private const decimal MoneyMaximum = 99999999999999.9999m;
 
         private const string DATABASE_NAME = "KrosUtilsTestBulkInsert";
         private const string TableName = "BulkInsertTest";
@@ -441,7 +441,7 @@ $@"CREATE TABLE[dbo].[{TableName}] (
                 "ColDecimal",
                 new Dictionary<string, object>
                 {
-                    { "Decimal - 123.456", (decimal) 123456.6543 },
+                    { "Decimal - 123.456", 123456.6543m },
                     { "Decimal - MinValue", DecimalMinimum },
                     { "Decimal - MaxValue", DecimalMaximum },
                 }
@@ -450,7 +450,7 @@ $@"CREATE TABLE[dbo].[{TableName}] (
                 "ColCurrency",
                 new Dictionary<string, object>
                 {
-                    { "Currency - 123.456", (decimal) 123456.6543 },
+                    { "Currency - 123.456", 123456.6543m },
                     { "Currency - MinValue", MoneyMinimum },
                     { "Currency - MaxValue", MoneyMaximum },
                 }
